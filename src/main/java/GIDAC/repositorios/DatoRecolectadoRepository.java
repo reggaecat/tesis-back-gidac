@@ -54,11 +54,9 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
             " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto"+
             " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto"+
-            " JOIN equivalencia_variable eq"+
-            " JOIN variable v on v.id_variable=eq.id_variable"+
-            " JOIN catalogo_organizacion co on co.id_variable_organizacion=eq.id_variable_organizacion"+
-            " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable=v.id_variable)" +
-            " WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND co.id_variable_organizacion = :idVar" +
+            " JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset" +
+            " JOIN variable v on v.id_variable= d.id_variable"+
+            " WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND v.id_variable = :idVar" +
             " GROUP BY p.coordenadaX, p.coordenadaY, pr.profundidad_maxima,pr.profundidad_minima, m.abreviatura, v.nombre_variable"+
              " ORDER BY 3",
             nativeQuery=true)
