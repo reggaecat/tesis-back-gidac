@@ -22,8 +22,8 @@ public class modeloDescarga{
     private String coordenadaX;
     private String coordenadaY;
     private float areaParcela;
-    private String profundidadMinima;
-    private String profundidadMaxima;
+    private Double profundidadMinima;
+    private Double profundidadMaxima;
     private String unidadMedidaArea;
     private String unidadMedidaProfundidad;
     private Integer idProfundidad;
@@ -189,19 +189,19 @@ public class modeloDescarga{
         this.sector = sector;
     }
 
-    public String getProfundidadMinima() {
+    public Double getProfundidadMinima() {
         return profundidadMinima;
     }
 
-    public String getProfundidadMaxima() {
+    public Double getProfundidadMaxima() {
         return profundidadMaxima;
     }
 
-    public void setProfundidadMinima(String profundidadMinima) {
+    public void setProfundidadMinima(Double profundidadMinima) {
         this.profundidadMinima = profundidadMinima;
     }
 
-    public void setProfundidadMaxima(String profundidadMaxima) {
+    public void setProfundidadMaxima(Double profundidadMaxima) {
         this.profundidadMaxima = profundidadMaxima;
     }
     

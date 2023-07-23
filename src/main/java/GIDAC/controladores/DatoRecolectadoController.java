@@ -126,8 +126,8 @@ public class DatoRecolectadoController {
         for (Object[] dato : datos) {
             String coordenadaX = (String) dato[0];
             String coordenadaY = (String) dato[1];
-            String profundidadMaxima = (String) dato[2];
-            String profundidadMinima = (String) dato[3];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
             String unidadMedida = (String) dato[4];
             String tipoVariable = (String) dato[5];
             Double valor = (Double) dato[6];
@@ -171,8 +171,8 @@ public class DatoRecolectadoController {
         for (Object[] dato : datos) {
             String coordenadaX = (String) dato[0];
             String coordenadaY = (String) dato[1];
-            String profundidadMaxima = (String) dato[2];
-            String profundidadMinima = (String) dato[3];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
             String unidadMedida = (String) dato[4];
             String tipoVariable = (String) dato[5];
             Double valor = (Double) dato[6];
@@ -537,8 +537,8 @@ public class DatoRecolectadoController {
     private String unidadMedidaArea;
     
     //purfundidad
-    private String profundidadMinima;
-    private String profundidadMaxima;
+    private Double profundidadMinima;
+    private Double profundidadMaxima;
     private String unidadMedidaProfundidad;
     
     //dataset
@@ -720,13 +720,13 @@ public class DatoRecolectadoController {
                                 controlColumnas=13;
                                 break;
                             case 13:
-                                if(dato.equals("")){profundidadMinima="NA";}
-                                else{profundidadMinima=dato.replaceAll("\\,",".");}
+                                if(dato.equals("")){profundidadMinima=0.0;}
+                                else{dato=dato.replaceAll("\\,",".");profundidadMinima=Double.parseDouble(dato);}
                                 controlColumnas=14;
                                 break;
                             case 14:
-                                if(dato.equals("")){profundidadMaxima="NA";}
-                                else{profundidadMaxima=dato.replaceAll("\\,","."); }
+                                if(dato.equals("")){profundidadMaxima=0.0;}
+                                else{dato=dato.replaceAll("\\,",".");profundidadMaxima=Double.parseDouble(dato); }
                                 controlColumnas=15;
                                 break;
                             case 15:

@@ -54,6 +54,8 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/appWeb/mostrar-informacion-app-web",
+                        "/variable/listar-variable",
+                        "/api/listar-director-proyecto/{id}",
                         "/dato-recolectado/listar-todos-datos/{id}",
                         "/dato-recolectado/listar-todos-datos-catalogo/{id}",
                         "/catalogo-organizacion/listar-catalogo-organizacion",

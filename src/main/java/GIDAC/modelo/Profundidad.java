@@ -20,9 +20,9 @@ public class Profundidad {
     @JoinColumn(name = "id_unidad_medida")
     private UnidadMedida unidadMedida;
     
-    private String profundidadMinima;
+    private Double profundidadMinima;
     
-    private String profundidadMaxima;
+    private Double profundidadMaxima;
     
     private boolean vigencia=true;
 
@@ -50,19 +50,19 @@ public class Profundidad {
         this.vigencia = vigencia;
     }
 
-    public String getProfundidadMinima() {
+    public Double getProfundidadMinima() {
         return profundidadMinima;
     }
 
-    public String getProfundidadMaxima() {
+    public Double getProfundidadMaxima() {
         return profundidadMaxima;
     }
 
-    public void setProfundidadMinima(String profundidadMinima) {
+    public void setProfundidadMinima(Double profundidadMinima) {
         this.profundidadMinima = profundidadMinima;
     }
 
-    public void setProfundidadMaxima(String profundidadMaxima) {
+    public void setProfundidadMaxima(Double profundidadMaxima) {
         this.profundidadMaxima = profundidadMaxima;
     }
 

@@ -15,7 +15,7 @@ import java.util.List;
 public interface ProfundidadService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
-    public T buscarPorProfundidadMinimaProfundidadMaximaAbreviatura(String profundidadMinima, String profundidadMaxima, String abreviatura);
+    public T buscarPorProfundidadMinimaProfundidadMaximaAbreviatura(Double profundidadMinima, Double profundidadMaxima, String abreviatura);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
     public List<T> buscarPorMedida(Integer id);

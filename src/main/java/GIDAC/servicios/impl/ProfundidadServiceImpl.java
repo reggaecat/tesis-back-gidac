@@ -46,7 +46,7 @@ public class ProfundidadServiceImpl implements ProfundidadService {
     }
 
     @Override
-    public Object buscarPorProfundidadMinimaProfundidadMaximaAbreviatura(String profundidadMinima, String profundidadMaxima, String abreviatura) {
+    public Object buscarPorProfundidadMinimaProfundidadMaximaAbreviatura(Double profundidadMinima, Double profundidadMaxima, String abreviatura) {
         return repository.findByProfundidadMinimaAndProfundidadMaximaAndUnidadMedida_Abreviatura(profundidadMinima, profundidadMaxima, abreviatura);
     }
 }

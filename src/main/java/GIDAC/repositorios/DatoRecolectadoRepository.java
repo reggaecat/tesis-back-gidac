@@ -26,7 +26,7 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable=v.id_variable)" +
             " WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2" +
             " GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima,pr.profundidad_minima, m.abreviatura, v.nombre_variable"+
-            " ORDER BY 3 DESC",
+            " ORDER BY 3 ASC",
             nativeQuery=true)
     List<Object[]> obtenerPromedioValores();
     

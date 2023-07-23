@@ -7,5 +7,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ProfundidadRepository extends JpaRepository<Profundidad,Integer> {
     List<Profundidad> findByUnidadMedida(UnidadMedida medida);
-    Profundidad findByProfundidadMinimaAndProfundidadMaximaAndUnidadMedida_Abreviatura(String profundidadMinima, String profundidadMaxima, String abreviatura);
+    Profundidad findByProfundidadMinimaAndProfundidadMaximaAndUnidadMedida_Abreviatura(Double profundidadMinima, Double profundidadMaxima, String abreviatura);
 }
