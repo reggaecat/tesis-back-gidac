@@ -52,7 +52,7 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
     }
     
     @Override
-    public List buscarPorVigenciaVariable(Boolean vigencia, Integer id) {
+    public List buscarPorVigenciaVariable(Boolean vigencia, String id) {
         Variable variable=new Variable();
         variable.setIdVariable(id);
         return repository.findByVigenciaAndVariable(vigencia,variable);
@@ -64,18 +64,43 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
     }
 
     @Override
-    public List<Object[]> listarTodosLosDatos() {
-        return repository.obtenerPromedioValores();
+    public List<Object[]> listarTodosLosDatosNumerico() {
+        return repository.obtenerPromedioValoresNumerico();
+    }
+    
+    @Override
+    public List<Object[]> listarTodosLosDatosNominal() {
+        return repository.obtenerPromedioValoresNominal();
     }
 
     @Override
-    public List<Object[]> listarTodosLosDatosProyecto(Integer idProyecto) {
-        return repository.obtenerPromedioValoresProyecto(idProyecto);
+    public List<Object[]> listarTodosLosDatosProyectoNumerico(Integer idProyecto) {
+        return repository.obtenerPromedioValoresProyectoNumerico(idProyecto);
     }
 
     @Override
-    public List listarTodosLosDatosVariable(Integer idVariable) {
-        return repository.obtenerPromedioValoresCatalogo(idVariable);
+    public List listarTodosLosDatosVariableNumerico(String idVariable) {
+        return repository.obtenerPromedioValoresCatalogoNumerico(idVariable);
+    }
+    
+    @Override
+    public List listarTodosLosDatosProyectoVariableNumerico(Integer idProyecto, String idVariable) {
+        return repository.obtenerPromedioValoresProyectoVariableNumerico(idProyecto, idVariable);
+    }
+    
+    @Override
+    public List<Object[]> listarTodosLosDatosProyectoNominal(Integer idProyecto) {
+        return repository.obtenerPromedioValoresProyectoNominal(idProyecto);
+    }
+
+    @Override
+    public List listarTodosLosDatosVariableNominal(String idVariable) {
+        return repository.obtenerPromedioValoresCatalogoNominal(idVariable);
+    }
+    
+    @Override
+    public List listarTodosLosDatosProyectoVariableNominal(Integer idProyecto, String idVariable) {
+        return repository.obtenerPromedioValoresProyectoVariableNominal(idProyecto, idVariable);
     }
 
 }

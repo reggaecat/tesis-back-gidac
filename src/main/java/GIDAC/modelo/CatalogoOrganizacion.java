@@ -19,6 +19,8 @@ public class CatalogoOrganizacion {
     @JsonIgnore
     private Set<EquivalenciaVariable> equivalenciaVariable = new HashSet<>();
     
+    private boolean vigencia=true;
+    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_organizacion")
     private Organizacion organizacion;
@@ -63,4 +65,13 @@ public class CatalogoOrganizacion {
         return organizacion;
     }
 
+    public boolean isVigencia() {
+        return vigencia;
+    }
+
+    public void setVigencia(boolean vigencia) {
+        this.vigencia = vigencia;
+    }
+
+    
 }

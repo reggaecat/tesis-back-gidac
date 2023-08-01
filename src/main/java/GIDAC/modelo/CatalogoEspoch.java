@@ -9,7 +9,8 @@ import javax.persistence.*;
 public class CatalogoEspoch {
 
     @Id
-    private String codigoVariableEspoch;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer codigoVariableEspoch;
     
     private String nombreVariableEspoch;
     private String descripcion;
@@ -17,12 +18,14 @@ public class CatalogoEspoch {
     @OneToMany(mappedBy = "catalogoEspoch",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<EquivalenciaVariable> equivalenciaVariable = new HashSet<>();
+    
+    private boolean vigencia=true;
 
-    public String getCodigoVariableEspoch() {
+    public Integer getCodigoVariableEspoch() {
         return codigoVariableEspoch;
     }
 
-    public void setCodigoVariableEspoch(String codigoVariableEspoch) {
+    public void setCodigoVariableEspoch(Integer codigoVariableEspoch) {
         this.codigoVariableEspoch = codigoVariableEspoch;
     }
     
@@ -50,6 +53,14 @@ public class CatalogoEspoch {
 
     public void setDescripcion(String descripcion) {
         this.descripcion = descripcion;
+    }
+
+    public boolean isVigencia() {
+        return vigencia;
+    }
+
+    public void setVigencia(boolean vigencia) {
+        this.vigencia = vigencia;
     }
 
     

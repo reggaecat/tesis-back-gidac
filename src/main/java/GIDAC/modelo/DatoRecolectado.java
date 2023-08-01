@@ -14,7 +14,7 @@ public class DatoRecolectado {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDatoRecolectado;
     
-    private float valor;
+    private String valor;
     private boolean vigencia=true;
     private boolean editable=true;
     private Date fechaCreacion;
@@ -31,6 +31,10 @@ public class DatoRecolectado {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable")
     private Variable variable;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_variable_unidad_medida")
+    private VariableUnidadMedida variableUnidadMedida;
 
     public Integer getIdDatoRecolectado() {
         return idDatoRecolectado;
@@ -48,7 +52,7 @@ public class DatoRecolectado {
         this.variable = variable;
     }
 
-    public float getValor() {
+    public String getValor() {
         return valor;
     }
 
@@ -68,7 +72,7 @@ public class DatoRecolectado {
 
    
 
-    public void setValor(float valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
 
@@ -108,6 +112,15 @@ public class DatoRecolectado {
         return fechaActualizacion;
     }
 
+    public VariableUnidadMedida getVariableUnidadMedida() {
+        return variableUnidadMedida;
+    }
+
+    public void setVariableUnidadMedida(VariableUnidadMedida variableUnidadMedida) {
+        this.variableUnidadMedida = variableUnidadMedida;
+    }
+
+    
     
     
     

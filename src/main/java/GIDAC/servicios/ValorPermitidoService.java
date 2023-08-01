@@ -15,6 +15,6 @@ public interface ValorPermitidoService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
     public List<T> buscarTodos();
-    public List<T> obtenerPorVariable(Integer id);
+    public List<T> obtenerPorVariableUnidadMedida(Integer id);
     public void eliminar(Integer id);
 }

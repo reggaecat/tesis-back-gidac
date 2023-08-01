@@ -7,9 +7,10 @@ package GIDAC.modelo;
 public class Perfilado{
     
     
-    private Integer idVariable;
+    private String idVariable;
     private Integer numeroColumna;
     private String nombreVariable;
+    private String nombreVariableEspoch;
     private String nombreTipoVariable;
     private Integer cantidadNulos;
     private Integer cantidadFueraRanngo;
@@ -18,7 +19,7 @@ public class Perfilado{
     private Integer cantidadDatosCorrectos;
     
 
-    public void setIdVariable(Integer idVariable) {
+    public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
 
@@ -26,7 +27,7 @@ public class Perfilado{
         this.numeroColumna = numeroColumna;
     }
 
-    public Integer getIdVariable() {
+    public String getIdVariable() {
         return idVariable;
     }
 
@@ -90,7 +91,16 @@ public class Perfilado{
         this.cantidadDatosCorrectos = cantidadDatosCorrectos;
     }
 
+    public String getNombreVariableEspoch() {
+        return nombreVariableEspoch;
+    }
+
+    public void setNombreVariableEspoch(String nombreVariableEspoch) {
+        this.nombreVariableEspoch = nombreVariableEspoch;
+    }
+
    
+    
     
     
 }

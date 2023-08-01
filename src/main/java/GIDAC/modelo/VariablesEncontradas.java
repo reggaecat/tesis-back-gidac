@@ -6,16 +6,17 @@ package GIDAC.modelo;
 
 public class VariablesEncontradas{
     
-    
-    private Integer idVariable;
+    private Integer idVariableUnidadMedida;
+    private String idVariable;
     private Integer numeroColumna;
     private Integer cantidadDatos;
     private String nombreVariable;
-    private String nombreVariableOrganizacion;
-    private String nombreTipoVariable;
     private String nombreOrganizacion;
+    private String nombreVariableEspoch;
+    private String nombreTipoVariable;
+    private String unidadMedida;
 
-    public void setIdVariable(Integer idVariable) {
+    public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
 
@@ -23,7 +24,7 @@ public class VariablesEncontradas{
         this.numeroColumna = numeroColumna;
     }
 
-    public Integer getIdVariable() {
+    public String getIdVariable() {
         return idVariable;
     }
 
@@ -35,20 +36,12 @@ public class VariablesEncontradas{
         this.nombreVariable = nombreVariable;
     }
 
-    public void setNombreVariableOrganizacion(String nombreVariableOrganizacion) {
-        this.nombreVariableOrganizacion = nombreVariableOrganizacion;
-    }
-
     public void setNombreTipoVariable(String nombreTipoVariable) {
         this.nombreTipoVariable = nombreTipoVariable;
     }
 
     public String getNombreVariable() {
         return nombreVariable;
-    }
-
-    public String getNombreVariableOrganizacion() {
-        return nombreVariableOrganizacion;
     }
 
     public String getNombreTipoVariable() {
@@ -71,7 +64,32 @@ public class VariablesEncontradas{
         return cantidadDatos;
     }
 
+    public Integer getIdVariableUnidadMedida() {
+        return idVariableUnidadMedida;
+    }
+
+    public String getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    public void setIdVariableUnidadMedida(Integer idVariableUnidadMedida) {
+        this.idVariableUnidadMedida = idVariableUnidadMedida;
+    }
+
+    public void setUnidadMedida(String unidadMedida) {
+        this.unidadMedida = unidadMedida;
+    }
+
+    public String getNombreVariableEspoch() {
+        return nombreVariableEspoch;
+    }
+
+    public void setNombreVariableEspoch(String nombreVariableEspoch) {
+        this.nombreVariableEspoch = nombreVariableEspoch;
+    }
+
     
+   
     
     
     

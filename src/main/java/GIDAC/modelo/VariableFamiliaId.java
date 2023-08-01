@@ -7,69 +7,52 @@ package GIDAC.modelo;
 import java.io.Serializable;
 import java.util.Objects;
 
-public class EquivalenciaVariableId implements Serializable {
+public class VariableFamiliaId implements Serializable {
     
     
     private String idVariable;
-    private String codigoVariableOrganizacion;
-    private Integer codigoVariableEspoch;
+    private Integer idFamilia;
 
-    public EquivalenciaVariableId() {
-        // Constructor sin argumentos
+    public VariableFamiliaId() {
+        
     }
 
-    public EquivalenciaVariableId(String idVariable, String codigoVariableOrganizacion, Integer codigoVariableEspoch) {
+    public VariableFamiliaId(String idVariable, Integer idFamilia) {
         this.idVariable = idVariable;
-        this.codigoVariableOrganizacion = codigoVariableOrganizacion;
-        this.codigoVariableEspoch = codigoVariableEspoch;
+        this.idFamilia = idFamilia;
     }
 
     
-
     public String getIdVariable() {
         return idVariable;
     }
 
-    
 
     public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
 
-    public String getCodigoVariableOrganizacion() {
-        return codigoVariableOrganizacion;
+    public Integer getIdFamilia() {
+        return idFamilia;
     }
 
-    public Integer getCodigoVariableEspoch() {
-        return codigoVariableEspoch;
+    public void setIdFamilia(Integer idFamilia) {
+        this.idFamilia = idFamilia;
     }
-
-    public void setCodigoVariableOrganizacion(String codigoVariableOrganizacion) {
-        this.codigoVariableOrganizacion = codigoVariableOrganizacion;
-    }
-
-    public void setCodigoVariableEspoch(Integer codigoVariableEspoch) {
-        this.codigoVariableEspoch = codigoVariableEspoch;
-    }
-
     
-
-    
-
     // Equals y HashCode
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        EquivalenciaVariableId that = (EquivalenciaVariableId) o;
+        VariableFamiliaId that = (VariableFamiliaId) o;
         return Objects.equals(idVariable, that.idVariable) &&
-                Objects.equals(codigoVariableEspoch, that.codigoVariableEspoch) &&
-                Objects.equals(codigoVariableOrganizacion, that.codigoVariableOrganizacion);
+                Objects.equals(idFamilia, that.idFamilia);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(idVariable, codigoVariableEspoch, codigoVariableOrganizacion);
+        return Objects.hash(idVariable, idFamilia);
     }
 }
 

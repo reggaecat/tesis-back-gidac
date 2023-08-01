@@ -15,6 +15,7 @@ import java.util.List;
 public interface CatalogoOrganizacionService<T>{
     public T guardar(T objeto);
     public T buscarPorId(String id);
+    public List<T> buscarPorVigencia(Boolean vigencia);
     public List<T> buscarTodos();
     public void eliminar(String id);
 }

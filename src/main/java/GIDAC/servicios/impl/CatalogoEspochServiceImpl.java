@@ -23,7 +23,7 @@ public class CatalogoEspochServiceImpl implements CatalogoEspochService {
     }
 
     @Override
-    public CatalogoEspoch buscarPorId(String id) {
+    public CatalogoEspoch buscarPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -33,8 +33,13 @@ public class CatalogoEspochServiceImpl implements CatalogoEspochService {
     }
 
     @Override
-    public void eliminar(String id) {
+    public void eliminar(Integer id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
     }
 
 }

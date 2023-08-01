@@ -5,15 +5,23 @@ import GIDAC.modelo.CatalogoEspoch;
 import GIDAC.modelo.CatalogoOrganizacion;
 import GIDAC.modelo.DatosVariable;
 import GIDAC.modelo.EquivalenciaVariable;
+import GIDAC.modelo.Familia;
 import GIDAC.modelo.ProyectoInvestigacion;
+import GIDAC.modelo.UnidadMedida;
 import GIDAC.modelo.ValorPermitido;
+import GIDAC.modelo.ValorPermitidoUnidadMedida;
 import GIDAC.modelo.Variable;
+import GIDAC.modelo.VariableFamilia;
+import GIDAC.modelo.VariableUnidadMedida;
 import GIDAC.modelo.VariablesEncontradas;
 import GIDAC.servicios.CatalogoEspochService;
 import GIDAC.servicios.CatalogoOrganizacionService;
 import GIDAC.servicios.EquivalenciaVariableService;
 import GIDAC.servicios.TipoVariableService;
+import GIDAC.servicios.UnidadMedidaService;
+import GIDAC.servicios.UnidadMedidaVariableService;
 import GIDAC.servicios.ValorPermitidoService;
+import GIDAC.servicios.VariableFamiliaService;
 import GIDAC.servicios.VariableService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -46,40 +54,98 @@ public class EquivalenciaVariableController {
     
     @Autowired
     private ValorPermitidoService valorPermitidoService;
+    
+    @Autowired
+    private UnidadMedidaVariableService unidadMedidaVariableService;
+    
+    @Autowired
+    private UnidadMedidaService unidadMedidaService;
+    
+    @Autowired
+    private VariableFamiliaService variableFamiliaService;
+    
 
     @PostMapping("/guardar-equivalencia-variable")
-    public Object guardar(@RequestParam("equivalenciaVariables") String datosJson, @RequestParam("listaValoresPermitidos") String datosJsonVariables) throws JsonProcessingException{
-        
-        ObjectMapper objectMapper=new ObjectMapper();
-        EquivalenciaVariable oC = new ObjectMapper().readValue(datosJson, EquivalenciaVariable.class);
-        List<ValorPermitido> valoresPermitidos = objectMapper.readValue(datosJsonVariables, new TypeReference<List<ValorPermitido>>() {});
-        
-        
-        CatalogoOrganizacion catalogoOrganizacion=(CatalogoOrganizacion) catalogoOrganizacionService.buscarPorId(oC.getCatalogoOrganizacion().getCodigoVariableOrganizacion());
-        
+    public Object guardarEquivalencia(@RequestBody EquivalenciaVariable oC) throws JsonProcessingException{
+               
         Variable variable=new Variable();
-        variable.setNombreVariable(catalogoOrganizacion.getNombreVariableOrganizacion());
-        variable.setTipoVariable(oC.getVariable().getTipoVariable());
-        Variable variableAux=(Variable) variableService.guardar(variable);
-        
-        
-        CatalogoEspoch catalogoEspoch=new CatalogoEspoch();
-        catalogoEspoch.setNombreVariableEspoch(oC.getCatalogoEspoch().getNombreVariableEspoch());
-        CatalogoEspoch catalogoEspochAux=(CatalogoEspoch) catalogoEspochService.guardar(catalogoEspoch);
-        
-        oC.setVariable(variableAux);
-        oC.setCatalogoEspoch(catalogoEspochAux);
-        oC.setIdVariable(variableAux.getIdVariable());
-        oC.setCodigoVariableEspoch(catalogoEspochAux.getCodigoVariableEspoch());
-        oC.setCatalogoOrganizacion(catalogoOrganizacion);
-        oC.setCodigoVariableOrganizacion(catalogoOrganizacion.getCodigoVariableOrganizacion());
-        
-        for(ValorPermitido valorPermitido:valoresPermitidos) {
-            valorPermitido.setVariable(variableAux);
-            valorPermitidoService.guardar(valorPermitido);
+        if(variableService.buscarPorId(oC.getVariable().getIdVariable())==null){
+            variable.setIdVariable(oC.getVariable().getIdVariable());
+            variable.setNombreVariable(oC.getVariable().getNombreVariable());
+            variable=(Variable) variableService.guardar(variable);
         }
         
+        oC.setIdVariable(oC.getVariable().getIdVariable());
+        oC.setCodigoVariableEspoch(oC.getCatalogoEspoch().getCodigoVariableEspoch());
+        oC.setCodigoVariableOrganizacion(oC.getCatalogoOrganizacion().getCodigoVariableOrganizacion());
+        
         return service.guardar(oC);    
+    }
+    
+    @PostMapping("/guardar-datos-variable")
+    public Object guardarDatosVariable(@RequestParam("variable") String datosJson, @RequestParam("listaValoresPermitidos") String datosJsonVariables, @RequestParam("listaFamilia") String datosJsonFamilia) throws JsonProcessingException{
+        
+        ObjectMapper objectMapper=new ObjectMapper();
+        Variable variableAux = new ObjectMapper().readValue(datosJson, Variable.class);
+        System.out.println("Seraliza variable");
+        List<ValorPermitidoUnidadMedida> valoresPermitidos = objectMapper.readValue(datosJsonVariables, new TypeReference<List<ValorPermitidoUnidadMedida>>() {});
+        System.out.println("Seraliza valores permitidos");
+        List<Familia> familias = objectMapper.readValue(datosJsonFamilia, new TypeReference<List<Familia>>() {});
+        System.out.println("Seraliza familia");
+       
+        
+        for(Familia familia:familias) {
+            VariableFamilia oVariableFamilia=new VariableFamilia();
+            Familia oFamilia=new Familia();
+            oFamilia.setIdFamilia(familia.getIdFamilia());
+                    
+            oVariableFamilia.setFamilia(oFamilia);
+            oVariableFamilia.setVariable(variableAux);
+            oVariableFamilia.setIdVariable(variableAux.getIdVariable());
+            oVariableFamilia.setIdFamilia(oFamilia.getIdFamilia());
+            variableFamiliaService.guardar(oVariableFamilia);
+        }
+        
+        if(variableAux.getTipoVariable().getIdTipoVariable()==1){
+            for(ValorPermitidoUnidadMedida valorPermitido:valoresPermitidos) {
+                VariableUnidadMedida VUM=new VariableUnidadMedida();
+                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable(), true)==null){
+                    UnidadMedida unidadMedidaAux=new UnidadMedida();
+                    unidadMedidaAux.setIdUnidadMedida(valorPermitido.getIdUnidadMedida());
+                    VUM.setVariable(variableAux);
+                    VUM.setUnidadMedida(unidadMedidaAux);
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                }else{
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable(), true);
+                }
+                ValorPermitido ValorPermitidoGuardar=new ValorPermitido();
+                ValorPermitidoGuardar.setVariableUnidadMedida(VUM);
+                ValorPermitidoGuardar.setValorMaximo(valorPermitido.getValorMaximo());
+                ValorPermitidoGuardar.setValorMinimo(valorPermitido.getValorMinimo());
+                ValorPermitidoGuardar.setValorPermitido(valorPermitido.getValorPermitido());
+                valorPermitidoService.guardar(ValorPermitidoGuardar);
+            }
+        }else{
+            for(ValorPermitidoUnidadMedida valorPermitido:valoresPermitidos) {
+                VariableUnidadMedida VUM=new VariableUnidadMedida();
+                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(0, variableAux.getIdVariable(), true)==null){
+                    UnidadMedida unidadMedidaAux=new UnidadMedida();
+                    unidadMedidaAux.setIdUnidadMedida(0);
+                    VUM.setVariable(variableAux);
+                    VUM.setUnidadMedida(unidadMedidaAux);
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                }else{
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(0, variableAux.getIdVariable(), true);
+                }
+                ValorPermitido ValorPermitidoGuardar=new ValorPermitido();
+                ValorPermitidoGuardar.setVariableUnidadMedida(VUM);
+                ValorPermitidoGuardar.setValorMaximo(valorPermitido.getValorMaximo());
+                ValorPermitidoGuardar.setValorMinimo(valorPermitido.getValorMinimo());
+                ValorPermitidoGuardar.setValorPermitido(valorPermitido.getValorPermitido());
+                valorPermitidoService.guardar(ValorPermitidoGuardar);
+            }
+        }
+        return variableService.guardar(variableAux);
     }
     
     @GetMapping("/listar-equivalencia-variable")

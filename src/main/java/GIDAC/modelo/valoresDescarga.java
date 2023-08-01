@@ -7,11 +7,11 @@ package GIDAC.modelo;
 public class valoresDescarga{
     
     
-    private Integer idVariable;
+    private String idVariable;
     private String nombreVariable;
-    private float valor;
+    private String valor;
 
-    public Integer getIdVariable() {
+    public String getIdVariable() {
         return idVariable;
     }
 
@@ -19,11 +19,11 @@ public class valoresDescarga{
         return nombreVariable;
     }
 
-    public float getValor() {
+    public String getValor() {
         return valor;
     }
 
-    public void setIdVariable(Integer idVariable) {
+    public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
 
@@ -31,7 +31,7 @@ public class valoresDescarga{
         this.nombreVariable = nombreVariable;
     }
 
-    public void setValor(float valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
 

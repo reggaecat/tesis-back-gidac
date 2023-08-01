@@ -12,11 +12,11 @@ import java.util.List;
  *
  * @author My Notebook
  */
-public interface UnidadMedidaVariableService<T>{
+public interface VariableFamiliaService<T>{
     public T guardar(T objeto);
-    public T buscarPorId(Integer id);
-    public T buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, String idVariable, Boolean vigencia);
+    public T buscarPorId(String idVariable, Integer idFamilia, Boolean vigencia);
     public List<T> buscarTodos(Boolean vigencia);
-    public void eliminar(Integer id);
+    public void eliminar(String idVariable, Integer idFamilia);
+    public List<Object[]> listarFamiliasDifusion();
 }
 

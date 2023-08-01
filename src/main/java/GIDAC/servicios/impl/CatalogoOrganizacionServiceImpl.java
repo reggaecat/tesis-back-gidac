@@ -37,4 +37,8 @@ public class CatalogoOrganizacionServiceImpl implements CatalogoOrganizacionServ
         repository.deleteById(id);
     }
 
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
+    }
 }

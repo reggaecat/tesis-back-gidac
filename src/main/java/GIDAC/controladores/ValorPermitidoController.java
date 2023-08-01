@@ -43,7 +43,7 @@ public class ValorPermitidoController {
     @GetMapping("/listar-valor-permitido/por-variable/{id}")
     public List<ValorPermitido> listarPorVariable(@PathVariable Integer id)
     {
-        return service.obtenerPorVariable(id);
+        return service.obtenerPorVariableUnidadMedida(id);
     }
     
     

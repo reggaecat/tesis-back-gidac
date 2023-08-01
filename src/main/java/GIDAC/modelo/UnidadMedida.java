@@ -26,7 +26,7 @@ public class UnidadMedida {
     
     @OneToMany(mappedBy = "unidadMedida",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<UnidadMedidaVariable> unidadMedidaVariable = new HashSet<>();
+    private Set<VariableUnidadMedida> unidadMedidaVariable = new HashSet<>();
 
     private String unidadMedida;
     private String magnitud;
@@ -101,11 +101,11 @@ public class UnidadMedida {
     }
 
 
-    public Set<UnidadMedidaVariable> getUnidadMedidaVariable() {
+    public Set<VariableUnidadMedida> getUnidadMedidaVariable() {
         return unidadMedidaVariable;
     }
 
-    public void setUnidadMedidaVariable(Set<UnidadMedidaVariable> unidadMedidaVariable) {
+    public void setUnidadMedidaVariable(Set<VariableUnidadMedida> unidadMedidaVariable) {
         this.unidadMedidaVariable = unidadMedidaVariable;
     }
     

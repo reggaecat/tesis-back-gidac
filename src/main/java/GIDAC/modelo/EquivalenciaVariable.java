@@ -18,11 +18,11 @@ public class EquivalenciaVariable {
     
     @Id
     @Column(name = "codigo_variable_espoch")
-    private String codigoVariableEspoch;
+    private Integer codigoVariableEspoch;
         
     @Id
     @Column(name = "id_variable")
-    private Integer idVariable;
+    private String idVariable;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable", insertable = false, updatable = false)
@@ -36,14 +36,14 @@ public class EquivalenciaVariable {
     @JoinColumn(name = "codigo_variable_espoch", insertable = false, updatable = false)
     private CatalogoEspoch catalogoEspoch;
 
-    public Integer getIdVariable() {
+    public String getIdVariable() {
         return idVariable;
     }
     
      public Variable getVariable() {
         return variable;
     }
-     public void setIdVariable(Integer idVariable) {
+     public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
     public void setVariable(Variable variable) {
@@ -54,7 +54,7 @@ public class EquivalenciaVariable {
         return codigoVariableOrganizacion;
     }
 
-    public String getCodigoVariableEspoch() {
+    public Integer getCodigoVariableEspoch() {
         return codigoVariableEspoch;
     }
 
@@ -62,7 +62,7 @@ public class EquivalenciaVariable {
         this.codigoVariableOrganizacion = codigoVariableOrganizacion;
     }
 
-    public void setCodigoVariableEspoch(String codigoVariableEspoch) {
+    public void setCodigoVariableEspoch(Integer codigoVariableEspoch) {
         this.codigoVariableEspoch = codigoVariableEspoch;
     }
 

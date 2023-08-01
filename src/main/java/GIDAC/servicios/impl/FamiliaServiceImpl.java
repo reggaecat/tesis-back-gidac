@@ -41,6 +41,36 @@ public class FamiliaServiceImpl implements FamiliaService {
     public List buscarPorVigencia(Boolean vigencia) {
         return repository.findByVigencia(vigencia);
     }
+    
+    @Override
+    public List<Familia> findAllFinalChildren() {
+        return repository.findAllFinalChildren();
+    }
+
+    @Override
+    public List<Object[]> buscarPadres() {
+        return repository.obtenerPadres();
+    }
+
+    @Override
+    public List<Object[]> buscarHijos(Integer idPadre) {
+        return repository.obtenerHijosRecursivos(idPadre);
+    }
+
+    @Override
+    public List buscarPadresUsuarioComun() {
+        return repository.obtenerPadresUsuarioComun();
+    }
+
+    @Override
+    public List buscarHijosUsuarioComun(Integer idPadre) {
+        return repository.obtenerHijosRecursivosUsuarioComun(idPadre);
+    }
+
+    @Override
+    public List<Object[]>  obtenerPorIdAux(Integer id) {
+        return repository.obtenerPorId(id);
+    }
 
 
 }

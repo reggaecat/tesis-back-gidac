@@ -2,6 +2,7 @@ package GIDAC;
 
 
 
+import GIDAC.controladores.cValidaciones;
 import GIDAC.excepciones.UsuarioFoundException;
 import GIDAC.modelo.GrupoInvestigacion;
 import GIDAC.modelo.ProyectoInvestigacion;
@@ -18,6 +19,9 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.HashSet;
 import java.util.Set;
 import GIDAC.servicios.UsuarioService;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 
 
@@ -44,7 +48,7 @@ public class AppProyecto implements CommandLineRunner {
 	@Override
 	public void run(String... args) throws Exception {
             
-           
+        
 			try{
                             
                             

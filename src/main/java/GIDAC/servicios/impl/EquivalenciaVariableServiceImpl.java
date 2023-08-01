@@ -32,5 +32,9 @@ public class EquivalenciaVariableServiceImpl implements EquivalenciaVariableServ
 //        return repository.findByCatalogoEspochProyectoInvestigacionIdProyecto(idProyecto);
 //    }
 
+    @Override
+    public List<Object[]> listarCatalogoParaPerfilado() {
+        return repository.obtenerVariablesParaCatalogo();
+    }
 
 }

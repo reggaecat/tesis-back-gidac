@@ -37,4 +37,9 @@ public class OrganizacionServiceImpl implements OrganizacionService {
         repository.deleteById(id);
     }
 
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
+    }
+
 }

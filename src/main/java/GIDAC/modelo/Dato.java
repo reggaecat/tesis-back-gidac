@@ -11,9 +11,9 @@ public class Dato{
     
     private String profundidades;
     private String medida;
-    private Double valor;
+    private String valor;
 
-    public Dato(String profundidades, Double valor) {
+    public Dato(String profundidades, String valor) {
         this.profundidades = profundidades;
         this.valor = valor;
     }
@@ -24,7 +24,7 @@ public class Dato{
         return profundidades;
     }
 
-    public Double getValor() {
+    public String getValor() {
         return valor;
     }
 

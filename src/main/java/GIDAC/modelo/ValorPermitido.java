@@ -15,12 +15,17 @@ public class ValorPermitido {
     private float valorMaximo;
     private float valorMinimo;
     private String ValorPermitido;
-    
+    private boolean vigencia=true;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable")
     private Variable variable;
 
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_variable_unidad_medida")
+    private VariableUnidadMedida variableUnidadMedida;
+    
     
 
     public float getValorMaximo() {
@@ -63,6 +68,22 @@ public class ValorPermitido {
 
     public void setVariable(Variable variable) {
         this.variable = variable;
+    }
+
+    public VariableUnidadMedida getVariableUnidadMedida() {
+        return variableUnidadMedida;
+    }
+
+    public void setVariableUnidadMedida(VariableUnidadMedida variableUnidadMedida) {
+        this.variableUnidadMedida = variableUnidadMedida;
+    }
+
+    public boolean isVigencia() {
+        return vigencia;
+    }
+
+    public void setVigencia(boolean vigencia) {
+        this.vigencia = vigencia;
     }
 
     

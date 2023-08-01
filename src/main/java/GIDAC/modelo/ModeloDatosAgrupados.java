@@ -14,7 +14,7 @@ public class ModeloDatosAgrupados{
     private float profundidadMaxima;
     private String abreviatura;
     private String nombreVariable;
-    private Double valor;
+    private String valor;
 
     public Integer getIdDato() {
         return idDato;
@@ -48,7 +48,7 @@ public class ModeloDatosAgrupados{
         return nombreVariable;
     }
 
-    public Double getValor() {
+    public String getValor() {
         return valor;
     }
 
@@ -76,7 +76,7 @@ public class ModeloDatosAgrupados{
         this.nombreVariable = nombreVariable;
     }
 
-    public void setValor(Double valor) {
+    public void setValor(String valor) {
         this.valor = valor;
     }
     

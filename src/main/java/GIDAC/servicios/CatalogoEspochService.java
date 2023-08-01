@@ -14,8 +14,9 @@ import java.util.List;
  */
 public interface CatalogoEspochService<T>{
     public T guardar(T objeto);
-    public T buscarPorId(String id);
+    public T buscarPorId(Integer id);
+    public List<T> buscarPorVigencia(Boolean vigencia);
     public List<T> buscarTodos();
-    public void eliminar(String id);
+    public void eliminar(Integer id);
 }
 

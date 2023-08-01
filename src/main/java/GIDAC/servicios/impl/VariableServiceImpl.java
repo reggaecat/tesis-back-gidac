@@ -23,7 +23,7 @@ public class VariableServiceImpl implements VariableService {
     }
 
     @Override
-    public Variable buscarPorId(Integer id) {
+    public Variable buscarPorId(String id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -33,8 +33,38 @@ public class VariableServiceImpl implements VariableService {
     }
 
     @Override
-    public void eliminar(Integer id) {
+    public void eliminar(String id) {
         repository.deleteById(id);
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesCompletas() {
+        return repository.obtenerVariablesCompletas();
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesIncompletas() {
+        return repository.obtenerVariablesImcompletas();
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesConDatosSinFamilia() {
+        return repository.obtenerVariablesConDatosSinFamilia();
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesConDatosConFiltroFamilia(Integer idFamilia) {
+        return repository.obtenerVariablesConDatosFiltradoPorFamilia(idFamilia);
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesConDatosSinFamiliaInvestigador(Integer idProyecto) {
+        return repository.obtenerVariablesConDatosSinFamiliaInvestigador(idProyecto);
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesConDatosConFiltroFamiliaInvestigador(Integer idFamilia, Integer idProyecto) {
+        return repository.obtenerVariablesConDatosFiltradoPorFamiliaInvestigador(idFamilia,idProyecto);
     }
 
 }

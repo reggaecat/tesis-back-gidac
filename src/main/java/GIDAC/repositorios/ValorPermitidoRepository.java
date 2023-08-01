@@ -6,6 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 public interface ValorPermitidoRepository extends JpaRepository<ValorPermitido,Integer> {
-    List<ValorPermitido> findByVariable_IdVariable(Integer idvariable);
+    
+    List<ValorPermitido> findByVigenciaAndVariableUnidadMedidaIdVariableUnidadMedidaAndVariableUnidadMedidaVigencia(Boolean vigencia1, Integer id, Boolean vigencia2);
+    
     
 }

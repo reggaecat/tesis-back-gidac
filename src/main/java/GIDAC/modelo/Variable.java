@@ -10,8 +10,7 @@ import javax.persistence.*;
 public class Variable {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer idVariable;
+    private String idVariable;
     
     
     private String nombreVariable;
@@ -22,7 +21,11 @@ public class Variable {
     
     @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<UnidadMedidaVariable> unidadMedidaVariable = new HashSet<>();
+    private Set<VariableFamilia> variableFamilia = new HashSet<>();
+    
+    @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
+    @JsonIgnore
+    private Set<VariableUnidadMedida> unidadMedidaVariable = new HashSet<>();
 
     @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -37,11 +40,11 @@ public class Variable {
     private TipoVariable tipoVariable;
     
 
-    public Integer getIdVariable() {
+    public String getIdVariable() {
         return idVariable;
     }
 
-    public void setIdVariable(Integer idVariable) {
+    public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
 
@@ -86,15 +89,22 @@ public class Variable {
         this.tipoVariable = tipoVariable;
     }
 
-    public Set<UnidadMedidaVariable> getUnidadMedidaVariable() {
+    public Set<VariableUnidadMedida> getUnidadMedidaVariable() {
         return unidadMedidaVariable;
     }
 
-    public void setUnidadMedidaVariable(Set<UnidadMedidaVariable> unidadMedidaVariable) {
+    public void setUnidadMedidaVariable(Set<VariableUnidadMedida> unidadMedidaVariable) {
         this.unidadMedidaVariable = unidadMedidaVariable;
     }
 
+    public Set<VariableFamilia> getVariableFamilia() {
+        return variableFamilia;
+    }
 
+    public void setVariableFamilia(Set<VariableFamilia> variableFamilia) {
+        this.variableFamilia = variableFamilia;
+    }
+    
     
     
 }

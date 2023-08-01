@@ -20,6 +20,7 @@ import GIDAC.modelo.ProfundidadParcela;
 import GIDAC.modelo.ProyectoInvestigacion;
 import GIDAC.modelo.ValorPermitido;
 import GIDAC.modelo.Variable;
+import GIDAC.modelo.VariableUnidadMedida;
 import GIDAC.modelo.VariablesEncontradas;
 import GIDAC.modelo.modeloDescarga;
 import GIDAC.modelo.valoresDescarga;
@@ -63,6 +64,7 @@ import GIDAC.servicios.UnidadMedidaService;
 @CrossOrigin("*")
 public class DatoRecolectadoController {
 
+    
     
     @Autowired
     private DatoRecolectadoService service;
@@ -115,11 +117,19 @@ public class DatoRecolectadoController {
         return parcelaService.buscarTodos();
     }
     
+    //-----------------------------------------------------------------------------------------------------
     @GetMapping("/listar-todos-datos-catalogo/{id}")
-    public  Object  listarTodosLosDatoCatalogo(@PathVariable Integer id)
+    public  Object  listarTodosLosDatoCatalogo(@PathVariable String id)
     {
         //return service.listarTodosLosDatos();
-        List<Object[]> datos= service.listarTodosLosDatosVariable(id);   
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("-----------------------------------------------------------"+id);
+        List<Object[]> datos; 
+        if(id.equals("0")){
+            datos = service.listarTodosLosDatosNumerico();   
+        }else{
+            datos = service.listarTodosLosDatosVariableNumerico(id);
+        }
         // Mapa para almacenar los datos agrupados
         Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
         // Agrupar los datos por coordenadas, tipos de variables y profundidades
@@ -128,12 +138,15 @@ public class DatoRecolectadoController {
             String coordenadaY = (String) dato[1];
             Double profundidadMaxima = (Double) dato[2];
             Double profundidadMinima = (Double) dato[3];
-            String unidadMedida = (String) dato[4];
-            String tipoVariable = (String) dato[5];
-            Double valor = (Double) dato[6];
-            BigDecimal bd = new BigDecimal(valor);
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
-            valor = bd.doubleValue();
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
             String coordenadas = coordenadaX + "," + coordenadaY;
             String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
             //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
@@ -153,17 +166,17 @@ public class DatoRecolectadoController {
         return ResponseEntity.ok(datosAgrupados);  
     }
     
-    @GetMapping("/listar-todos-datos/{id}")
-    public  Object  listarTodosLosDato(@PathVariable Integer id)
+    @GetMapping("/listar-todos-datos-catalogo-nominal/{id}")
+    public  Object  listarTodosLosDatoCatalogoNominal(@PathVariable String id)
     {
-        //return service.listarTodosLosDatos
-        
-        System.out.println("-------------------------------------------------------llega a listar los datos");
-        List<Object[]> datos;
-        if(id==0){
-            datos = service.listarTodosLosDatos();   
+        //return service.listarTodosLosDatos();
+        System.out.println("-----------------------------------------------------------");
+        System.out.println("-----------------------------------------------------------"+id);
+        List<Object[]> datos; 
+        if(id.equals("0")){
+            datos = service.listarTodosLosDatosNominal();   
         }else{
-            datos = service.listarTodosLosDatosProyecto(id);   
+            datos = service.listarTodosLosDatosVariableNominal(id);
         }
         // Mapa para almacenar los datos agrupados
         Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
@@ -175,10 +188,83 @@ public class DatoRecolectadoController {
             Double profundidadMinima = (Double) dato[3];
             String unidadMedida = (String) dato[4];
             String tipoVariable = (String) dato[5];
-            Double valor = (Double) dato[6];
-            BigDecimal bd = new BigDecimal(valor);
+            String valor = (String) dato[6];
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        
+        
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    @GetMapping("/listar-todos-datos-catalogo-unidos/{id}")
+    public  Object  listarTodosLosDatoCatalogoUnido(@PathVariable String id)
+    {
+        
+        List<Object[]> datos;
+        List<Object[]> datosNominales;
+        if(id.equals("0")){
+            datos = service.listarTodosLosDatosNumerico();
+            datosNominales = service.listarTodosLosDatosNominal();   
+        }else{
+            datos = service.listarTodosLosDatosVariableNumerico(id);
+            datosNominales = service.listarTodosLosDatosVariableNominal(id);
+        }
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
-            valor = bd.doubleValue();
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        
+        for (Object[] dato : datosNominales) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedida = (String) dato[4];
+            String tipoVariable = (String) dato[5];
+            String valor = (String) dato[6];
             String coordenadas = coordenadaX + "," + coordenadaY;
             String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
             //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
@@ -197,6 +283,351 @@ public class DatoRecolectadoController {
         }
         return ResponseEntity.ok(datosAgrupados);  
     }
+    
+    //-----------------------------------------------------------------------------------------------------
+    
+    @GetMapping("/listar-todos-datos/{id}")
+    public  Object  listarTodosLosDato(@PathVariable Integer id)
+    {
+        //return service.listarTodosLosDatos
+        
+        System.out.println("-------------------------------------------------------llega a listar los datos");
+        List<Object[]> datos;
+        if(id==0){
+            datos = service.listarTodosLosDatosNumerico();   
+        }else{
+            datos = service.listarTodosLosDatosProyectoNumerico(id);   
+        }
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            BigDecimal bd = new BigDecimal(valorAux);
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    @GetMapping("/listar-todos-datos-nominal/{id}")
+    public  Object  listarTodosLosDatoNominal(@PathVariable Integer id)
+    {
+        //return service.listarTodosLosDatos
+        
+        System.out.println("-------------------------------------------------------llega a listar los datos");
+        List<Object[]> datos;
+        if(id==0){
+            datos = service.listarTodosLosDatosNominal();   
+        }else{
+            datos = service.listarTodosLosDatosProyectoNominal(id);   
+        }
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedida = (String) dato[4];
+            String tipoVariable = (String) dato[5];
+            String valor = (String) dato[6];
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    @GetMapping("/listar-todos-datos-unidos/{id}")
+    public  Object  listarTodosLosDatoUnidos(@PathVariable Integer id)
+    {
+        List<Object[]> datos;
+        List<Object[]> datosNominales;
+        
+        if(id==0){
+            datos = service.listarTodosLosDatosNumerico();
+            datosNominales = service.listarTodosLosDatosNominal();   
+        }else{
+            datos = service.listarTodosLosDatosProyectoNumerico(id);
+            datosNominales = service.listarTodosLosDatosProyectoNominal(id);
+        }
+        System.out.println("----------------------------------------------------------------------");
+        System.out.println("id: "+id);
+        System.out.println("tamaño a: "+datos.size());
+        System.out.println("tamaño a: "+datosNominales.size());
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            BigDecimal bd = new BigDecimal(valorAux);
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+            System.out.println("--------------------------------------------------------------------- numerico");
+            System.out.println("--------------------------------------------------------------------- llega a los datos "+dato[7]);
+        }
+        
+        for (Object[] dato : datosNominales) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedida = (String) dato[4];
+            String tipoVariable = (String) dato[5];
+            String valor = (String) dato[6];
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+            System.out.println("--------------------------------------------------------------------- nominal");
+            System.out.println("--------------------------------------------------------------------- llega a los datos "+dato[6]);
+        }
+        System.out.println("--------------------------------------------------------------------- nominal");
+        return ResponseEntity.ok(datosAgrupados); 
+    }
+    
+    //-----------------------------------------------------------------------------------------------------
+    
+    @GetMapping("/listar-todos-datos-proyecto-variable/{idProyecto}/{idVariable}")
+    public  Object  listarTodosLosDatoProyectoVariable(@PathVariable Integer idProyecto, @PathVariable String idVariable)
+    {
+        //return service.listarTodosLosDatos
+        
+        System.out.println("-------------------------------------------------------llega a listar los datos");
+        List<Object[]> datos;
+        if(idVariable.equals("0")){
+            datos = service.listarTodosLosDatosProyectoNumerico(idProyecto);   
+        }else{
+            datos = service.listarTodosLosDatosProyectoVariableNumerico(idProyecto, idVariable);   
+        }
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            BigDecimal bd = new BigDecimal(valorAux);
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    @GetMapping("/listar-todos-datos-proyecto-variable-nominal/{idProyecto}/{idVariable}")
+    public  Object  listarTodosLosDatoProyectoVariableNominal(@PathVariable Integer idProyecto, @PathVariable String idVariable)
+    {
+        //return service.listarTodosLosDatos
+        
+        System.out.println("-------------------------------------------------------llega a listar los datos");
+        List<Object[]> datos;
+        if(idVariable.equals("0")){
+            datos = service.listarTodosLosDatosProyectoNominal(idProyecto);   
+        }else{
+            datos = service.listarTodosLosDatosProyectoVariableNominal(idProyecto, idVariable);   
+        }
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedida = (String) dato[4];
+            String tipoVariable = (String) dato[5];
+            String valor = (String) dato[6];
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    @GetMapping("/listar-todos-datos-proyecto-variable-unidos/{idProyecto}/{idVariable}")
+    public  Object  listarTodosLosDatoProyectoVariableUnido(@PathVariable Integer idProyecto, @PathVariable String idVariable)
+    {
+        //return service.listarTodosLosDatos
+        
+        List<Object[]> datos;
+        List<Object[]> datosNominales;
+        if(idVariable.equals("0")){
+            datos = service.listarTodosLosDatosProyectoNumerico(idProyecto);
+            datosNominales = service.listarTodosLosDatosProyectoNominal(idProyecto);
+        }else{
+            datos = service.listarTodosLosDatosProyectoVariableNumerico(idProyecto, idVariable);   
+            datosNominales = service.listarTodosLosDatosProyectoVariableNominal(idProyecto, idVariable);   
+        }
+        
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            BigDecimal bd = new BigDecimal(valorAux);
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        
+        for (Object[] dato : datosNominales) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedida = (String) dato[4];
+            String tipoVariable = (String) dato[5];
+            String valor = (String) dato[6];
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    //-----------------------------------------------------------------------------------------------------
     
     @GetMapping("/obtener-dato-recolectado/{id}")
     public Object obtener(@PathVariable Integer id)
@@ -251,7 +682,7 @@ public class DatoRecolectadoController {
     public boolean comprobarXLS(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
         
         ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
-        System.out.println("Llega el id proyecto "+oC1.getIdProyecto());
+        
         
         int fila=1;
         int cont=1;
@@ -267,87 +698,87 @@ public class DatoRecolectadoController {
                 System.out.println(dato);
                 switch(cont){
                     case 1:
-                        if(dato.equals("Altitud minima")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Altitud minima")){estado=true;}
                         else{ estado=false; break;}
                         cont=2;
                         break;
                     case 2:
-                        if(dato.equals("Altitud maxima")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Altitud maxima")){estado=true;}
                         else{ estado=false; break;}
                         cont=3;
                         break;
                     case 3:
-                        if(dato.equals("Unidad de medidad altitud")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Unidad de medidad altitud")){estado=true;}
                         else{ estado=false; break;}
                         cont=4;
                         break;
                     case 4:
-                        if(dato.equals("Código conglomerado")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Código conglomerado")){estado=true;}
                         else{ estado=false; break;}
                         cont=5;
                         break;
                     case 5:
-                        if(dato.equals("Nombre conglomerado")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Nombre conglomerado")){estado=true;}
                         else{ estado=false; break;}
                         cont=6;
                         break;
                     case 6:
-                        if(dato.equals("Sector")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Sector")){estado=true;}
                         else{ estado=false; break;}
                         cont=7;
                         break;
                     case 7:
-                        if(dato.equals("Código parcela")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Código parcela")){estado=true;}
                         else{ estado=false; break;}
                         cont=8;
                         break;
                     case 8:
-                        if(dato.equals("Nombre parcela")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Nombre parcela")){estado=true;}
                         else{ estado=false; break;}
                         cont=9;
                         break;
                     case 9:
-                        if(dato.equals("Coordenada x")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Coordenada x")){estado=true;}
                         else{ estado=false; break;}
                         cont=10;
                         break;
                     case 10:
-                        if(dato.equals("Coordenada y")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Coordenada y")){estado=true;}
                         else{ estado=false; break;}
                         cont=11;
                         break;
                     case 11:
-                        if(dato.equals("Area parcela")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Area parcela")){estado=true;}
                         else{ estado=false; break;}
                         cont=12;
                         break;
                     case 12:
-                        if(dato.equals("Unidad de medida parcela")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Unidad de medida parcela")){estado=true;}
                         else{ estado=false; break;}
                         cont=13;
                         break;
                     case 13:
-                        if(dato.equals("Profundidad minima")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Profundidad minima")){estado=true;}
                         else{ estado=false; break;}
                         cont=14;
                         break;
                     case 14:
-                        if(dato.equals("Profundidad maxima")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Profundidad maxima")){estado=true;}
                         else{ estado=false; break;}
                         cont=15;
                         break;
                     case 15:
-                        if(dato.equals("Unidad de medidad profundidad")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Unidad de medidad profundidad")){estado=true;}
                         else{ estado=false; break;}
                         cont=16;
                         break;
                     case 16:
-                        if(dato.equals("Fecha inicial")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Fecha inicial")){estado=true;}
                         else{ estado=false; break;}
                         cont=17;
                         break;
                     case 17:
-                        if(dato.equals("Fecha final")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Fecha final")){estado=true;}
                         else{ estado=false; break;}
                         cont=1;
                         break;
@@ -378,8 +809,23 @@ public class DatoRecolectadoController {
         ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
         System.out.println("Llega el id proyecto "+oC1.getIdProyecto());
         
-        List<EquivalenciaVariable> listaEquivalencia=equivalenciaVariableService.buscarTodos();
+        //List<EquivalenciaVariable> listaEquivalencia=equivalenciaVariableService.buscarTodos();
         List<VariablesEncontradas> variablesEncontradas=new ArrayList();
+        
+        List<Object[]> listaObject= equivalenciaVariableService.listarCatalogoParaPerfilado();
+        List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
+        for (Object[] objeto : listaObject) {
+            VariablesEncontradas variable = new VariablesEncontradas();
+            variable.setIdVariableUnidadMedida((Integer) objeto[0]);
+            variable.setIdVariable((String) objeto[1]);
+            variable.setNombreVariable((String) objeto[2]);
+            variable.setNombreOrganizacion((String) objeto[3]);
+            variable.setNombreVariableEspoch((String) objeto[4]);
+            variable.setNombreTipoVariable((String) objeto[5]);
+            variable.setUnidadMedida((String) objeto[6]);
+
+            listaEquivalencia.add(variable);
+        }
         
         int fila=1;
         int numColumnas=0;
@@ -399,22 +845,101 @@ public class DatoRecolectadoController {
             }else{
                 String dato;
                 for(int colm=17;colm<numColumnas;colm++){
+                    boolean controladorEncontrado=false;
                     dato=hoja.getCell(colm,fila).getContents();
-                    for(EquivalenciaVariable equivalencia:listaEquivalencia) {
-                        if(dato.equals(equivalencia.getVariable().getNombreVariable())){
-                            VariablesEncontradas variableEncontrada=new VariablesEncontradas();
-                            variableEncontrada.setIdVariable(equivalencia.getVariable().getIdVariable());
-                            variableEncontrada.setNombreVariable(equivalencia.getVariable().getNombreVariable());
-                            variableEncontrada.setNombreVariableOrganizacion(equivalencia.getVariable().getNombreVariable());
-                            variableEncontrada.setNombreTipoVariable(equivalencia.getVariable().getTipoVariable().getNombreTipoVariable());
-                            variableEncontrada.setNombreOrganizacion(equivalencia.getCatalogoOrganizacion().getOrganizacion().getNombreOrganizacion());
-                            variableEncontrada.setNumeroColumna(colm+1);
-                            variableEncontrada.setCantidadDatos(numFilas-2);
-                            variablesEncontradas.add(variableEncontrada);
-                            System.out.println("------------------------llega a ser iguales "+equivalencia.getCatalogoEspoch().getNombreVariableEspoch());
-                            System.out.println("------------------------llega a ser iguales "+dato);
+                    System.out.println("------------------------dato analizar "+dato);
+                    for(VariablesEncontradas equivalencia:listaEquivalencia) {
+                        if(equivalencia.getNombreTipoVariable().equals("Numérico")){
+                            String datoAux="";
+                            try{
+                                datoAux=hoja.getCell(colm+1,fila).getContents();
+                            }catch(Exception E){
+                                System.out.println("Carga incorrecta");
+                            }
+                            if(compararCadenasCaracteres(dato,equivalencia.getNombreVariable()) && compararCadenasCaracteres(datoAux,equivalencia.getUnidadMedida())){
+                                VariablesEncontradas variableEncontrada=new VariablesEncontradas();
+                                variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
+                                variableEncontrada.setIdVariable(equivalencia.getIdVariable());
+                                variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
+                                variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
+                                variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
+                                variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
+                                variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
+                                variableEncontrada.setNumeroColumna(colm+1);
+                                variableEncontrada.setCantidadDatos(numFilas-2);
+                                variablesEncontradas.add(variableEncontrada);
+                                System.out.println("------------------------llega a ser iguales "+dato);
+                                colm=colm+1;
+                                controladorEncontrado=true;
+                                break;
+                            } 
+                        }else{
+                            if(compararCadenasCaracteres(dato,equivalencia.getNombreVariable())){
+                                VariablesEncontradas variableEncontrada=new VariablesEncontradas();
+                                variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
+                                variableEncontrada.setIdVariable(equivalencia.getIdVariable());
+                                variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
+                                variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
+                                variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
+                                variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
+                                variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
+                                variableEncontrada.setNumeroColumna(colm+1);
+                                variableEncontrada.setCantidadDatos(numFilas-2);
+                                variablesEncontradas.add(variableEncontrada);
+                                System.out.println("------------------------llega a ser iguales "+dato);
+                                controladorEncontrado=true;
+                                break;
+                            } 
+                            
                         }
-                        
+                    }
+                    
+                    if(controladorEncontrado==false){
+                        for(VariablesEncontradas equivalencia:listaEquivalencia) {
+                            if(equivalencia.getNombreTipoVariable().equals("Numérico")){
+                                String datoAux="";
+                                try{
+                                    datoAux=hoja.getCell(colm+1,fila).getContents();
+                                }catch(Exception E){
+                                    System.out.println("Carga incorrecta");
+                                }
+                                if(compararCadenasCaracteres(dato,equivalencia.getNombreVariableEspoch()) && compararCadenasCaracteres(datoAux,equivalencia.getUnidadMedida())){
+                                    VariablesEncontradas variableEncontrada=new VariablesEncontradas();
+                                    variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
+                                    variableEncontrada.setIdVariable(equivalencia.getIdVariable());
+                                    variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
+                                    variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
+                                    variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
+                                    variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
+                                    variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
+                                    variableEncontrada.setNumeroColumna(colm+1);
+                                    variableEncontrada.setCantidadDatos(numFilas-2);
+                                    variablesEncontradas.add(variableEncontrada);
+                                    System.out.println("------------------------llega a ser iguales "+dato);
+                                    colm=colm+1;
+                                    controladorEncontrado=true;
+                                    break;
+                                }
+                            }else{
+                                if(compararCadenasCaracteres(dato,equivalencia.getNombreVariableEspoch())){
+                                    VariablesEncontradas variableEncontrada=new VariablesEncontradas();
+                                    variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
+                                    variableEncontrada.setIdVariable(equivalencia.getIdVariable());
+                                    variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
+                                    variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
+                                    variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
+                                    variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
+                                    variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
+                                    variableEncontrada.setNumeroColumna(colm+1);
+                                    variableEncontrada.setCantidadDatos(numFilas-2);
+                                    variablesEncontradas.add(variableEncontrada);
+                                    System.out.println("------------------------llega a ser iguales "+dato);
+                                    controladorEncontrado=true;
+                                    break;
+                                } 
+                                 
+                            }
+                        }
                     }
                 } 
                 System.out.println("--------------------------------------------tiene mas de 15 lienas");
@@ -426,6 +951,12 @@ public class DatoRecolectadoController {
         }
     }
     
+    
+     public static boolean compararCadenasCaracteres(String cadena1, String cadena2) {
+        String formattedCadena1 = cadena1.replaceAll("\\s", "").toLowerCase();
+        String formattedCadena2 = cadena2.replaceAll("\\s", "").toLowerCase();
+        return formattedCadena1.equals(formattedCadena2);
+    }
 
     //perfilar datos
     @PostMapping("/perfilar-datos")
@@ -453,13 +984,15 @@ public class DatoRecolectadoController {
                 
                 perfil.setIdVariable(variableEncontrada.getIdVariable());
                 perfil.setNombreVariable(variableEncontrada.getNombreVariable());
+                perfil.setNombreVariableEspoch(variableEncontrada.getNombreVariableEspoch());
                 perfil.setNombreTipoVariable(variableEncontrada.getNombreTipoVariable());
+                
                 perfil.setNumeroColumna(variableEncontrada.getNumeroColumna());
-                perfil.setCantidadDato(numFilas);
+                perfil.setCantidadDato(numFilas-2);
                 //aqui guardar datos
                 
                 int contadorRestantes=0;
-                List<ValorPermitido> valoresPermitidos=valorPermitidoService.obtenerPorVariable(variableEncontrada.getIdVariable());
+                List<ValorPermitido> valoresPermitidos=valorPermitidoService.obtenerPorVariableUnidadMedida(variableEncontrada.getIdVariableUnidadMedida());
                 
                 int contadorFaltantes=0;
                 int contadorFueraRango=0;
@@ -471,9 +1004,9 @@ public class DatoRecolectadoController {
                         contadorFaltantes++;
                     }else{
                         boolean aux=false;
-                        if(variableEncontrada.getNombreTipoVariable().equals("Nominal")){
+                        if(compararCadenasCaracteres(variableEncontrada.getNombreTipoVariable(),"Nominal")){
                             for(ValorPermitido valor:valoresPermitidos){
-                                if(valor.getIdValorPermitido().equals(dato)){
+                                if(compararCadenasCaracteres(valor.getValorPermitido(),dato)){
                                     aux=true;
                                     contadorRestantes++;
                                     break;
@@ -545,7 +1078,7 @@ public class DatoRecolectadoController {
     private Date fechaInicio;
     private Date fechaFin;
     
-    private float valor;
+    private String valor;
     private boolean vigencia=true;
     
     
@@ -603,6 +1136,7 @@ public class DatoRecolectadoController {
                     ProfundidadParcela profundidadParcela=new ProfundidadParcela();
                     Dataset dataset=new Dataset();
                     Variable variable=new Variable();
+                    VariableUnidadMedida variableUnidadMedida=new VariableUnidadMedida();
                     
                 
                     for(int colm=0;colm<numColumnas;colm++){
@@ -787,12 +1321,14 @@ public class DatoRecolectadoController {
                                         System.out.println("-------------------------------------------------------------------------------------");
                                         System.out.println("------------------------------------------------------------------columna registrada");
                                         System.out.println("------------------------------------------------------------------columna: "+auxCol);
-                                        if(dato.equals("")){valor=0;}
-                                        else{dato=dato.replaceAll("\\,","."); valor=Float.parseFloat(dato);}
-                                        variable.setIdVariable(variableEncontrada.getIdVariable());
+                                        if(dato.equals("")){valor="NA";}
+                                        else{dato=dato.replaceAll("\\,","."); valor=dato;}
+                                        variableUnidadMedida.setIdVariableUnidadMedida(variableEncontrada.getIdVariableUnidadMedida());
+                                        //variable.setIdVariable(variableEncontrada.getIdVariable());
                                         datoRecolectado.setDataset(dataset);
                                         datoRecolectado.setValor(valor);
-                                        datoRecolectado.setVariable(variable);
+                                        datoRecolectado.setVariableUnidadMedida(variableUnidadMedida);
+                                        //datoRecolectado.setVariable(variable);
                                         datoRecolectado.setFechaCreacion(oF.fechaActual());
                                         datoRecolectado=(DatoRecolectado) service.guardar(datoRecolectado);
                                     }

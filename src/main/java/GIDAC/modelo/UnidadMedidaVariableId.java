@@ -10,20 +10,20 @@ import java.util.Objects;
 public class UnidadMedidaVariableId implements Serializable {
     
     
-    private Integer idVariable;
+    private String idVariable;
     private Integer idUnidadMedida;
 
     public UnidadMedidaVariableId() {
         // Constructor sin argumentos
     }
 
-    public UnidadMedidaVariableId(Integer idVariable, Integer idUnidadMedida) {
+    public UnidadMedidaVariableId(String idVariable, Integer idUnidadMedida) {
         this.idVariable = idVariable;
         this.idUnidadMedida = idUnidadMedida;
     }
 
     
-    public Integer getIdVariable() {
+    public String getIdVariable() {
         return idVariable;
     }
 
@@ -31,7 +31,7 @@ public class UnidadMedidaVariableId implements Serializable {
         return idUnidadMedida;
     }
 
-    public void setIdVariable(Integer idVariable) {
+    public void setIdVariable(String idVariable) {
         this.idVariable = idVariable;
     }
 
