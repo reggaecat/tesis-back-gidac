@@ -49,11 +49,13 @@ public class ConglomeradoServiceImpl implements ConglomeradoService {
     }
 
     @Override
-    public Object buscarPorCodigoConglomeradoProyectoInvestigacionAlturaMaximaAlturaMinima(String codigoConglomerado, Integer idProyecto, float alturaMinima, float alturaMaxima) {
+    public Object buscarPorCodigoConglomeradoProyectoInvestigacionAltura(String codigoConglomerado, Integer idProyecto, Integer idAltura) {
         
         ProyectoInvestigacion proyecto=new ProyectoInvestigacion();
         proyecto.setIdProyecto(idProyecto);
-        return repository.findByCodigoConglomeradoAndProyectoInvestigacionAndAlturaAlturaMinimaAndAlturaAlturaMaxima(codigoConglomerado, proyecto, alturaMaxima, alturaMaxima);
+        Altura altura=new Altura();
+        altura.setIdAltura(idAltura);
+        return repository.findByCodigoConglomeradoAndProyectoInvestigacionAndAltura(codigoConglomerado, proyecto, altura);
     }
 
     @Override

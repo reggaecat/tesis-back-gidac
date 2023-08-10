@@ -45,6 +45,12 @@ public class UnidadMedidaVariableController {
         return service.buscarPorId(id);
     }
     
+    @GetMapping("/listar")
+    public List<VariableUnidadMedida> listarVigentes1()
+    {    
+        return service.buscarTodos(true);
+    }
+    
     @GetMapping("/listar-equivalencia-variable-vigentes")
     public List<EquivalenciaVariable> listarVigentes()
     {    

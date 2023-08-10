@@ -16,6 +16,7 @@ public interface EquivalenciaVariableService<T>{
     public T guardar(T objeto);
     public List<T> buscarTodos();
     public List<Object[]> listarCatalogoParaPerfilado();
+    public List<Object[]> listarCatalogoParaPerfiladoPorProyecto(Integer id);
     //public List<T> buscarPorProyecto(Integer idProyecto);
 }
 

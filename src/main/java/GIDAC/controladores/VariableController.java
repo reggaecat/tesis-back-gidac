@@ -4,6 +4,7 @@ package GIDAC.controladores;
 import GIDAC.modelo.Variable;
 import GIDAC.modelo.VariableDifusion;
 import GIDAC.modelo.VariableView;
+import GIDAC.modelo.VariablesEncontradas;
 import GIDAC.servicios.VariableService;
 import java.util.ArrayList;
 import java.util.List;
@@ -37,16 +38,63 @@ public class VariableController {
         return service.buscarTodos();
     }
     
+//    @GetMapping("/listar-variable-completas")
+//    public List<VariableView> listarCompletas()
+//    {
+//        return service.litsarVairbalesCompletas();
+//    }
+    
     @GetMapping("/listar-variable-completas")
-    public List<VariableView> listarCompletas()
+    public List<VariablesEncontradas> listarCompletas()
     {
-        return service.litsarVairbalesCompletas();
+        
+        List<Object[]> listaObject= service.litsarVairbalesCompletas();
+        List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
+        for (Object[] objeto : listaObject) {
+            VariablesEncontradas variable = new VariablesEncontradas();
+            variable.setIdVariable((String) objeto[0]);
+            variable.setNombreVariable((String) objeto[1]);
+            variable.setNombreOrganizacion((String) objeto[2]);
+            variable.setNombreTipoVariable((String) objeto[3]);
+            listaEquivalencia.add(variable);
+        }
+        return listaEquivalencia;   
     }
     
-    @GetMapping("/listar-variable-incompletas")
-    public List<VariableView> listarIncompletas()
+    @GetMapping("/listar-variable-completas-investigador")
+    public List<VariablesEncontradas> listarCompletasInvestigador()
     {
-        return service.litsarVairbalesIncompletas();
+        
+        List<Object[]> listaObject= service.litsarVairbalesCompletasInvestigador();
+        List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
+        for (Object[] objeto : listaObject) {
+            VariablesEncontradas variable = new VariablesEncontradas();
+            variable.setIdVariable((String) objeto[0]);
+            variable.setNombreVariable((String) objeto[1]);
+            variable.setNombreOrganizacion((String) objeto[2]);
+            variable.setNombreTipoVariable((String) objeto[3]);
+            variable.setNombreVariableEspoch((String) objeto[4]);
+            variable.setUnidadMedida((String) objeto[5]);
+            listaEquivalencia.add(variable);
+        }
+        return listaEquivalencia;   
+    }
+    
+    
+    @GetMapping("/listar-variable-incompletas-investigador")
+    public List<VariablesEncontradas> listarIncompletas()
+    {
+        
+        List<Object[]> listaObject= service.litsarVairbalesIncompletas();
+        List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
+        for (Object[] objeto : listaObject) {
+            VariablesEncontradas variable = new VariablesEncontradas();
+            variable.setIdVariable((String) objeto[0]);
+            variable.setNombreVariable((String) objeto[1]);
+            variable.setNombreOrganizacion((String) objeto[2]);
+            listaEquivalencia.add(variable);
+        }
+        return listaEquivalencia;   
     }
     
     @GetMapping("/listar-variable-difucion/{id}")

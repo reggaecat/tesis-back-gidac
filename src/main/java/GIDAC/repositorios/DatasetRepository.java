@@ -6,5 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface DatasetRepository extends JpaRepository<Dataset,Integer> {
     List<Dataset> findByProfundidadParcela_idParcela(Integer idParcela);
-    Dataset findByProfundidadParcela_idParcelaAndProfundidadParcela_idProfundidad(Integer idParcela, Integer idProfundidad);
+    Dataset findByProfundidadParcelaParcelaIdParcelaAndProfundidadParcelaProfundidadIdProfundidad(Integer idParcela, Integer idProfundidad);
 }

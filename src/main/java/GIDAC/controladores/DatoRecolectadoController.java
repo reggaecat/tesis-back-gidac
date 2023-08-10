@@ -4,6 +4,7 @@ package GIDAC.controladores;
 import GIDAC.modelo.Altura;
 import GIDAC.modelo.Area;
 import GIDAC.modelo.Conglomerado;
+import GIDAC.modelo.DashDatos;
 import GIDAC.modelo.Dataset;
 import GIDAC.modelo.Dato;
 import GIDAC.modelo.DatoRecolectado;
@@ -1186,8 +1187,8 @@ public class DatoRecolectadoController {
                                 if(dato.equals("")){sector="NA";}
                                 else{ sector=dato;}
                                 //if(conglomeradoService.buscarPorCodigoConglomeradoProyectoInvestigacionAlturaMaximaAlturaMinima(codigoConglomerado, oC1.getIdProyecto(), alturaMinima, alturaMaxima)!=null){
-                                if(conglomeradoService.buscarPorCodigoConglomeradoProyectoInvestigacion(codigoConglomerado, oC1.getIdProyecto())!=null){
-                                    conglomerado=(Conglomerado) conglomeradoService.buscarPorCodigoConglomeradoProyectoInvestigacion(codigoConglomerado, oC1.getIdProyecto());
+                                if(conglomeradoService.buscarPorCodigoConglomeradoProyectoInvestigacionAltura(codigoConglomerado, oC1.getIdProyecto(), altura.getIdAltura())!=null){
+                                    conglomerado=(Conglomerado) conglomeradoService.buscarPorCodigoConglomeradoProyectoInvestigacionAltura(codigoConglomerado, oC1.getIdProyecto(),altura.getIdAltura());
                                 }else{
                                     
                                     conglomerado.setCodigoConglomerado(codigoConglomerado);
@@ -1279,7 +1280,7 @@ public class DatoRecolectadoController {
                                 }
                                 
                                 if(profundidadParcelaService.buscarPorParcelaProfundidad(parcela.getIdParcela(), profundidad.getIdProfundidad())!=null){
-                                    dataset=(Dataset) datasetService.buscarPorParcelaProfundidad(parcela.getIdParcela(), profundidad.getIdProfundidad());
+                                    profundidadParcela=(ProfundidadParcela) profundidadParcelaService.buscarPorParcelaProfundidad(parcela.getIdParcela(), profundidad.getIdProfundidad());
                                 }else{
                                     profundidadParcela.setIdParcela(parcela.getIdParcela());
                                     profundidadParcela.setIdProfundidad(profundidad.getIdProfundidad());
@@ -1295,11 +1296,17 @@ public class DatoRecolectadoController {
                                 controlColumnas=17;
                                 break;
                             case 17:
+                                
                                 if(dato.equals("")){fechaFin=oF.fechaDumi();}
                                 else{ fechaFin=oF.Fecha(dato);}
+                                System.out.println("    .................................................................................................................................");
+                                System.out.println("parcela: "+parcela.getIdParcela());
+                                System.out.println("parcela: "+profundidad.getIdProfundidad());
                                 if(datasetService.buscarPorParcelaProfundidad(parcela.getIdParcela(), profundidad.getIdProfundidad())!=null){
+                                    System.out.println("lo encuentra");
                                     dataset=(Dataset) datasetService.buscarPorParcelaProfundidad(parcela.getIdParcela(), profundidad.getIdProfundidad());
                                 }else{
+                                    System.out.println("entra al no encuentra");
                                     dataset.setProfundidadParcela(profundidadParcela);
                                     dataset.setFechaFin(fechaFin);
                                     dataset.setFechaInicio(fechaInicio);
@@ -1353,12 +1360,12 @@ public class DatoRecolectadoController {
     public List unirDatos(@RequestParam("equivalenciasVariables") String datosJsonVariables) throws JsonProcessingException{
         
         ObjectMapper objectMapper=new ObjectMapper();
-        List<EquivalenciaVariable> equivalenciasVariables = objectMapper.readValue(datosJsonVariables, new TypeReference<List<EquivalenciaVariable>>() {});
+        List<VariablesEncontradas> equivalenciasVariables = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
         List<DatoRecolectado> listaCompleta = new ArrayList();
         List<modeloDescarga> modelosDescarga = new ArrayList();
         int aux=0;
-        for(EquivalenciaVariable variable:equivalenciasVariables){
-            List<DatoRecolectado> listaDatoRecolectadoVariable=service.buscarPorVigenciaVariable(true, variable.getIdVariable());            
+        for(VariablesEncontradas variable:equivalenciasVariables){
+            List<DatoRecolectado> listaDatoRecolectadoVariable=service.buscarPorVigenciaVariableUnidadMedida(true, variable.getIdVariableUnidadMedida());            
             listaCompleta.addAll(listaDatoRecolectadoVariable);
         }
         List<DatoRecolectado> listaCompletaAux=listaCompleta;
@@ -1388,7 +1395,7 @@ public class DatoRecolectadoController {
             modeloDescargaDato.setUnidadMedidaArea(dato.getDataset().getProfundidadParcela().getParcela().getArea().getUnidadMedida().getAbreviatura());
             
             
-            modeloDescargaDato.setProfundidadMinima(dato.getDataset().getProfundidadParcela().getProfundidad().getProfundidadMaxima());
+            modeloDescargaDato.setProfundidadMinima(dato.getDataset().getProfundidadParcela().getProfundidad().getProfundidadMinima());
             modeloDescargaDato.setProfundidadMaxima(dato.getDataset().getProfundidadParcela().getProfundidad().getProfundidadMaxima());
             modeloDescargaDato.setUnidadMedidaProfundidad(dato.getDataset().getProfundidadParcela().getProfundidad().getUnidadMedida().getAbreviatura());
             
@@ -1399,9 +1406,10 @@ public class DatoRecolectadoController {
                 if(datoAux.getIdDatoRecolectado()!=-1){
                 valoresDescarga valorDescarga=new valoresDescarga();
                 if(dato.getDataset().getProfundidadParcela().getIdProfundidad()==datoAux.getDataset().getProfundidadParcela().getIdProfundidad() && dato.getDataset().getProfundidadParcela().getIdParcela()==datoAux.getDataset().getProfundidadParcela().getIdParcela()){
-                    valorDescarga.setIdVariable(datoAux.getVariable().getIdVariable());
-                    valorDescarga.setNombreVariable(datoAux.getVariable().getNombreVariable());
+                    valorDescarga.setIdVariable(datoAux.getVariableUnidadMedida().getVariable().getIdVariable());
+                    valorDescarga.setNombreVariable(datoAux.getVariableUnidadMedida().getVariable().getNombreVariable());
                     valorDescarga.setValor(datoAux.getValor());
+                    valorDescarga.setVariableUnidadMedida(datoAux.getVariableUnidadMedida().getUnidadMedida().getAbreviatura());
                     valoresDescarga.add(valorDescarga);
                     datoAux.setIdDatoRecolectado(-1);
                     listaCompletaAux.set(j,datoAux);
@@ -1441,10 +1449,31 @@ public class DatoRecolectadoController {
             
             for(valoresDescarga eq:mod.getValorDescarga()){
                 lista.add(eq.getNombreVariable());
+                lista.add(eq.getVariableUnidadMedida());
                 lista.add(eq.getValor());
             }
             listaDeListas.add(lista);
         }
         return listaDeListas;
     }
+    
+    
+    
+    public boolean buscarElementoString(List<List<Object>> listaDeListas, String elementoBuscado) {
+        for (List<Object> lista : listaDeListas) {
+            for (Object obj : lista) {
+                if (obj instanceof String) {
+                    String elemento = (String) obj;
+                    if (elemento.equals(elementoBuscado)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
+    }
+    
+    
+    
+    
 }

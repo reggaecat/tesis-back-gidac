@@ -15,7 +15,7 @@ import java.util.List;
 public interface ConglomeradoService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
-    public T buscarPorCodigoConglomeradoProyectoInvestigacionAlturaMaximaAlturaMinima(String codigoConglomerado, Integer idProyecto, float altuaMinima, float alturaMinima);
+    public T buscarPorCodigoConglomeradoProyectoInvestigacionAltura(String codigoConglomerado, Integer idProyecto, Integer idAltura);
     public T buscarPorCodigoConglomeradoProyectoInvestigacion(String codigoConglomerado, Integer idProyecto);
     public List<T> buscarTodos();
     public void eliminar(Integer id);

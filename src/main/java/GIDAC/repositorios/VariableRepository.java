@@ -18,6 +18,19 @@ public interface VariableRepository extends JpaRepository<Variable,String> {
             nativeQuery=true)
     List<Object[]> obtenerVariablesImcompletas();
     
+    @Query(value="SELECT DISTINCT co.codigo_variable_organizacion as idVariable, co.nombre_variable_organizacion as nombreVariable, o.siglas as siglas, tv.nombre_tipo_variable, ce.nombre_variable_espoch, um.abreviatura" +
+            "   FROM variable v JOIN variable_unidad_medida vum on vum.id_variable=v.id_variable" +
+            "   JOIN unidad_medida um on um.id_unidad_medida=vum.id_unidad_medida"+
+            "	JOIN valor_permitido vp ON vp.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "   JOIN tipo_variable tv ON tv.id_tipo_variable=v.id_tipo_variable"+
+            "   JOIN variable_familia vf ON vf.id_variable=v.id_variable" +
+            "	JOIN equivalencia_variable eq ON v.id_variable=eq.id_variable" +
+            "	JOIN catalogo_organizacion co ON co.codigo_variable_organizacion=eq.codigo_variable_organizacion" +
+            "   JOIN catalogo_espoch ce on ce.codigo_variable_espoch=eq.codigo_variable_espoch"+
+            "   JOIN organizacion o ON o.id_organizacion=co.id_organizacion",
+            nativeQuery=true)
+    List<Object[]> obtenerVariablesCompletasInvestigador();
+    
     @Query(value="SELECT DISTINCT co.codigo_variable_organizacion as idVariable, co.nombre_variable_organizacion as nombreVariable, o.siglas as siglas, tv.nombre_tipo_variable" +
             "   FROM variable v JOIN variable_unidad_medida vum on vum.id_variable=v.id_variable" +
             "	JOIN valor_permitido vp ON vp.id_variable_unidad_medida=vum.id_variable_unidad_medida" +

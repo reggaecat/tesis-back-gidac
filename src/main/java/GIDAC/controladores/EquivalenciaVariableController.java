@@ -64,7 +64,10 @@ public class EquivalenciaVariableController {
     @Autowired
     private VariableFamiliaService variableFamiliaService;
     
-
+    @Autowired
+    private EquivalenciaVariableService equivalenciaVariableService;
+    
+    
     @PostMapping("/guardar-equivalencia-variable")
     public Object guardarEquivalencia(@RequestBody EquivalenciaVariable oC) throws JsonProcessingException{
                
@@ -176,6 +179,24 @@ public class EquivalenciaVariableController {
 //        return service.buscarPorProyecto(id);
 //    }
     
+    @GetMapping("/listar-variable-descargar-proyecto/{id}")
+    public List<VariablesEncontradas> listarVariablesDescarga(@PathVariable Integer id)
+    {
+        
+        List<Object[]> listaObject= equivalenciaVariableService.listarCatalogoParaPerfiladoPorProyecto(id);
+        List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
+        for (Object[] objeto : listaObject) {
+            VariablesEncontradas variable = new VariablesEncontradas();
+            variable.setIdVariableUnidadMedida((Integer) objeto[0]);
+            variable.setIdVariable((String) objeto[1]);
+            variable.setNombreVariable((String) objeto[2]);
+            variable.setNombreOrganizacion((String) objeto[3]);
+            variable.setNombreTipoVariable((String) objeto[4]);
+            variable.setUnidadMedida((String) objeto[5]);
+            listaEquivalencia.add(variable);
+        }
+        return listaEquivalencia;   
+    }
     
     
 }

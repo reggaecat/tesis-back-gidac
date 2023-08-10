@@ -8,7 +8,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface ConglomeradoRepository extends JpaRepository<Conglomerado,Integer> {
     List<Conglomerado> findByProyectoInvestigacion(ProyectoInvestigacion proyectoInvestigacion);
-    Conglomerado findByCodigoConglomeradoAndProyectoInvestigacionAndAlturaAlturaMinimaAndAlturaAlturaMaxima(String codigoConglomerado,ProyectoInvestigacion proyectoInvestigacion, float alturaMin, float alturaMax);
+    Conglomerado findByCodigoConglomeradoAndProyectoInvestigacionAndAltura(String codigoConglomerado,ProyectoInvestigacion proyectoInvestigacion, Altura altura);
     Conglomerado findByCodigoConglomeradoAndProyectoInvestigacion(String codigoConglomerado,ProyectoInvestigacion proyectoInvestigacion);
     
 }

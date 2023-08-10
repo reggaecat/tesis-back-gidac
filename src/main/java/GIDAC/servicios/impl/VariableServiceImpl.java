@@ -42,6 +42,13 @@ public class VariableServiceImpl implements VariableService {
         return repository.obtenerVariablesCompletas();
     }
 
+    
+    @Override
+    public List<Object[]>  litsarVairbalesCompletasInvestigador() {
+        return repository.obtenerVariablesCompletasInvestigador();
+    }
+
+    
     @Override
     public List<Object[]>  litsarVairbalesIncompletas() {
         return repository.obtenerVariablesImcompletas();

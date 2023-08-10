@@ -3,6 +3,8 @@ package GIDAC.repositorios;
 import GIDAC.modelo.Dataset;
 import GIDAC.modelo.DatoRecolectado;
 import GIDAC.modelo.Variable;
+import GIDAC.modelo.VariableUnidadMedida;
+import java.math.BigInteger;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -11,6 +13,7 @@ import org.springframework.data.repository.query.Param;
 public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado,Integer> {
     List<DatoRecolectado> findByVigenciaAndDataset(Boolean vigencia,Dataset dataset);
     List<DatoRecolectado> findByVigenciaAndVariable(Boolean vigencia, Variable variable);
+    List<DatoRecolectado> findByVigenciaAndVariableUnidadMedida(Boolean vigencia, VariableUnidadMedida variableUnidadMedida);
     List<DatoRecolectado> findByVigenciaAndDatasetProyectoInvestigacionIdProyecto(Boolean vigencia, Integer idProyecto);
     List<DatoRecolectado> findByEditable(Boolean editable);
     
@@ -221,4 +224,535 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             nativeQuery=true)
     List<Object[]> obtenerPromedioValoresProyectoVariableNominal(@Param("idProy") Integer idProy, @Param("idVar") String idVariable);
 
+    //---------------------------------------------------------------------------------------------
+    //DASH INVESTIGADOR
+    
+     @Query(value="SELECT a.altura_minima, a.altura_maxima, um.abreviatura, COUNT(a.id_altura)" +
+                    "   FROM altura a JOIN unidad_medida um on um.id_unidad_medida=a.id_unidad_medida" +
+                    "   JOIN conglomerado c on c.id_altura=a.id_altura" +
+                    "   WHERE um.vigencia=true" +
+                    "   GROUP BY a.altura_minima, a.altura_maxima, um.abreviatura" +
+                    "   ORDER BY 4 DESC" +
+                    "   LIMIT 5",
+            nativeQuery=true)
+    List<Object[]> obtenerAlturasMasUsuadas();
+    
+    
+    
+    @Query(value="SELECT um.unidad_medida, um.abreviatura, COUNT(um.id_unidad_medida)" +
+                    "   FROM dato_recolectado dr JOIN variable_unidad_medida vum on vum.id_variable_unidad_medida=dr.id_variable_unidad_medida" +
+                    "	JOIN unidad_medida um on um.id_unidad_medida=vum.id_unidad_medida" +
+                    "   JOIN variable v ON v.id_variable=vum.id_variable"+
+                    "   WHERE um.vigencia=true AND v.id_tipo_variable=1" +
+                    "   GROUP BY um.unidad_medida, um.abreviatura" +
+                    "   ORDER BY 3 DESC" +
+                    "   LIMIT 5",
+            nativeQuery=true)
+    List<Object[]> obtenerUnidadesDeMedidaMasUsuadas();
+    
+    
+    
+    @Query(value="SELECT p.profundidad_minima,p.profundidad_maxima, um.abreviatura, COUNT(dt.id_dataset)" +
+                "   FROM dataset dt JOIN profundidad_parcela pp on (pp.id_parcela=dt.id_parcela AND pp.id_profundidad=dt.id_profundidad)" +
+                "	JOIN profundidad p on p.id_profundidad=pp.id_profundidad" +
+                "	JOIN unidad_medida um on um.id_unidad_medida=p.id_unidad_medida" +
+                "	JOIN parcela pa on pa.id_parcela=pp.id_parcela" +
+                "   WHERE um.vigencia=true" +
+                "   GROUP BY p.profundidad_minima,p.profundidad_maxima, um.abreviatura" +
+                "   ORDER BY 4 DESC" +
+                "   LIMIT 5",
+            nativeQuery=true)
+    List<Object[]> obteneProfundidadesMasUsuadas();
+    
+    @Query(value="SELECT v.nombre_variable,um.abreviatura, AVG(CAST(dr.valor AS DOUBLE))" +
+                "   FROM dato_recolectado dr JOIN variable_unidad_medida vum on vum.id_variable_unidad_medida=dr.id_variable_unidad_medida" +
+                "    JOIN variable v on v.id_variable=vum.id_variable" +
+                "   JOIN unidad_medida um on um.id_unidad_medida=vum.id_unidad_medida"+
+                "   WHERE v.id_tipo_variable=1" +
+                "   GROUP BY  v.nombre_variable" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obteneValorPromedioVariablesNumericas();
+    
+    @Query(value="SELECT v.nombre_variable, COUNT(dr.id_dato_recolectado)" +
+                "   FROM dato_recolectado dr JOIN variable_unidad_medida vum on vum.id_variable_unidad_medida=dr.id_variable_unidad_medida" +
+                "    JOIN variable v on v.id_variable=vum.id_variable" +
+                "   JOIN unidad_medida um on um.id_unidad_medida=vum.id_unidad_medida"+
+                "   WHERE v.id_tipo_variable=1" +
+                "   GROUP BY  v.nombre_variable,dr.id_variable_unidad_medida" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obteneCantidadDatosPorVariable();
+
+    
+    //---------------------------------------------------------------------------------------------
+    //DASH ADMIN
+    
+    
+    @Query(value="SELECT a.nombre_area_investigacion, COUNT(pi.id_proyecto)" +
+                "   FROM area_investigacion a JOIN area_investigacion_proyecto ai on ai.id_area_investigacion=a.id_area_investigacion" +
+                "	JOIN proyecto_investigacion pi on pi.id_proyecto=ai.id_proyecto" +
+                "   WHERE a.vigencia=true AND pi.vigencia=true AND ai.vigencia=true" +
+                "   GROUP BY a.nombre_area_investigacion" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorAreaInvestigacion();
+    
+    @Query(value="SELECT ai.nombre_area_investigacion" +
+                "   FROM area_investigacion ai" +
+                "   WHERE ai.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorAreaInvestigacionNulos();
+    
+    
+    
+    @Query(value="SELECT s.nombre_sector_impacto, COUNT(pi.id_proyecto)" +
+                "   FROM sector_impacto s JOIN sector_impacto_proyecto si on si.id_sector_impacto=s.id_sector_impacto" +
+                "	JOIN proyecto_investigacion pi on pi.id_proyecto=si.id_proyecto" +
+                "   WHERE s.vigencia=true AND pi.vigencia=true" +
+                "   GROUP BY s.nombre_sector_impacto" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorSectorImpacto();
+    
+    @Query(value="SELECT si.nombre_sector_impacto" +
+                "   FROM sector_impacto si" +
+                "   WHERE si.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorSectorImpactoNulos();
+    
+    
+    
+    
+    @Query(value="SELECT l.nombre_linea_investigacion, COUNT(pi.id_proyecto)" +
+                "   FROM linea_investigacion l JOIN linea_investigacion_proyecto li on li.id_linea_investigacion=l.id_linea_investigacion" +
+                "	JOIN proyecto_investigacion pi on pi.id_proyecto=li.id_proyecto" +
+                "   WHERE l.vigencia=true AND pi.vigencia=true AND li.vigencia=true" +
+                "   GROUP BY l.nombre_linea_investigacion" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorLineaInvestigacion();
+    
+    @Query(value="SELECT l.nombre_linea_investigacion" +
+                "   FROM linea_investigacion l" +
+                "   WHERE l.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorLineaInvestigacionNulos();
+    
+    
+    
+    @Query(value="SELECT t.nombre_tipo_proyecto, COUNT(pi.id_proyecto)" +
+                "   FROM tipo_proyecto t JOIN proyecto_investigacion pi on pi.id_tipo_proyecto=t.id_tipo_proyecto" +
+                "   WHERE t.vigencia=true AND pi.vigencia=true" +
+                "   GROUP BY t.nombre_tipo_proyecto" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorTipoProyecto();
+    
+    @Query(value="SELECT t.nombre_tipo_proyecto" +
+                "   FROM tipo_proyecto t" +
+                "    WHERE t.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorTipoProyectoNulos();
+    
+    
+    
+    @Query(value="SELECT t.nombre_tipo_investigacion, COUNT(pi.id_proyecto)" +
+                "   FROM tipo_investigacion t JOIN proyecto_investigacion pi on pi.id_tipo_investigacion=t.id_tipo_investigacion" +
+                "   WHERE t.vigencia=true AND pi.vigencia=true" +
+                "   GROUP BY t.nombre_tipo_investigacion" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorTipoInvestigacion();
+    
+     @Query(value="SELECT t.nombre_tipo_investigacion" +
+                "   FROM tipo_investigacion t" +
+                "   WHERE t.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorTipoInvestigacionNulos();
+    
+    
+    
+    @Query(value="SELECT e.nombre_estado_proyecto, COUNT(pi.id_proyecto)" +
+                "   FROM estado_proyecto_investigacion e JOIN proyecto_investigacion pi on pi.id_estado_proyecto=e.id_estado_proyecto" +
+                "   GROUP BY e.nombre_estado_proyecto" +
+                "   ORDER BY 2 DESC",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorEstadoProyecto();
+    
+    @Query(value="SELECT e.nombre_estado_proyecto" +
+                "   FROM estado_proyecto_investigacion e",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorEstadoProyectoNulos();
+    
+    
+    
+    
+    @Query(value="SELECT u.nombre_usuario, u.apellido_usuario, COUNT(pi.id_proyecto)" +
+                " FROM usuario u JOIN grupo_investigacion gi on gi.id_usuario=u.id_usuario" +
+                "    JOIN proyecto_investigacion pi on pi.id_proyecto = gi.id_proyecto" +
+                " WHERE u.id_rol=2 and u.vigencia=true AND pi.vigencia=true AND gi.vigencia=true" +
+                " GROUP BY  u.nombre_usuario, u.apellido_usuario" +
+                " ORDER BY 3 DESC;",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorDirector();
+    
+    @Query(value="SELECT u.nombre_usuario, u.apellido_usuario" +
+                "   FROM usuario u" +
+                "   WHERE u.id_rol=2 and u.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerCantidadProyectosPorDirectorNulos();
+    
+    
+    //Director
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto=epi.id_estado_proyecto" +
+                "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+                "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+                "   WHERE pi.vigencia=true AND u.id_usuario = :idUsuario AND pi.id_estado_proyecto=1",
+                nativeQuery=true)
+    BigInteger obtenerCantidadProyectosPorEstadoPrivado(@Param("idUsuario") Integer idUsuario);
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto=epi.id_estado_proyecto" +
+                "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+                "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+                "   WHERE pi.vigencia=true AND u.id_usuario = :idUsuario AND pi.id_estado_proyecto=2",
+            nativeQuery=true)
+    BigInteger obtenerCantidadProyectosPorEstadoPublico(@Param("idUsuario") Integer idUsuario);
+    
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM proyecto_investigacion pi JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+                "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+                "   WHERE pi.vigencia=true AND u.id_usuario=:idUsuario",
+            nativeQuery=true)
+    BigInteger obtenerCantidadProyectosVigentes(@Param("idUsuario") Integer idUsuario);
+    
+    
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM proyecto_investigacion pi JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+                "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+                "   WHERE pi.vigencia=false AND u.id_usuario=:idUsuario",
+            nativeQuery=true)
+    BigInteger obtenerCantidadProyectosEliminados(@Param("idUsuario") Integer idUsuario);
+    
+    
+    
+    @Query(value="SELECT COUNT(sd.id_solicitud_descarga)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on 	pi.id_estado_proyecto=epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_descarga sd on sd.id_proyecto=pi.id_proyecto" +
+            "   WHERE u.id_usuario = :idUsuario",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesDescarga(@Param("idUsuario") Integer idUsuario);
+    
+    
+    @Query(value="SELECT COUNT(sd.id_solicitud_descarga)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on 	pi.id_estado_proyecto=epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_descarga sd on sd.id_proyecto=pi.id_proyecto" +
+            "   WHERE u.id_usuario = :idUsuario AND sd.id_estado_descarga=1",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesDescargaSolicitada(@Param("idUsuario") Integer idUsuario);
+    
+    
+    @Query(value="SELECT COUNT(sd.id_solicitud_descarga)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on 	pi.id_estado_proyecto=epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_descarga sd on sd.id_proyecto=pi.id_proyecto" +
+            "   WHERE u.id_usuario = :idUsuario AND sd.id_estado_descarga=2",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesDescargaAprobadas(@Param("idUsuario") Integer idUsuario);
+    
+    
+    
+    
+    @Query(value="SELECT COUNT(sd.id_solicitud_descarga)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on 	pi.id_estado_proyecto=epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_descarga sd on sd.id_proyecto=pi.id_proyecto" +
+            "   WHERE u.id_usuario =:idUsuario AND sd.id_estado_descarga=3",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesDescargaRechazadas(@Param("idUsuario") Integer idUsuario);
+    
+    
+    
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON sa.id_proyecto=gi.id_proyecto" +
+            "   WHERE u.id_usuario=:idUsuario",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesActualizar(@Param("idUsuario") Integer idUsuario);
+    
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON sa.id_proyecto=gi.id_proyecto" +
+            "   WHERE u.id_usuario=:idUsuario AND sa.id_estado_solictud_actualizar=1",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesActualizarSolicitadas(@Param("idUsuario") Integer idUsuario);
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON sa.id_proyecto=gi.id_proyecto" +
+            "   WHERE u.id_usuario=:idUsuario AND sa.id_estado_solictud_actualizar=2",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesActualizarAceptado(@Param("idUsuario") Integer idUsuario);
+    
+    
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON sa.id_proyecto=gi.id_proyecto" +
+            "   WHERE u.id_usuario=:idUsuario AND sa.id_estado_solictud_actualizar=3",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesRechazado(@Param("idUsuario") Integer idUsuario);
+    
+    //grafica solictudes por mes
+    
+    @Query(value="SELECT YEAR(sd.fecha_envio_solicitud) AS anio, "+ 
+            " COUNT(sd.id_solicitud_descarga) AS total_registros" +
+            "   FROM solicitud_descarga sd JOIN proyecto_investigacion pi ON pi.id_proyecto=sd.id_proyecto" +
+            "	JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "    JOIN usuario u ON u.id_usuario=gi.id_usuario" +
+            "   WHERE u.id_usuario=:idUsuario" +
+            "   GROUP BY YEAR(sd.fecha_envio_solicitud)" +
+            "   ORDER BY 1",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaSolicitudesPorAnio(@Param("idUsuario") Integer idUsuario);
+    
+     @Query(value="SELECT YEAR(sd.fecha_envio_solicitud) AS anio, "+ 
+             "  MONTH(sd.fecha_envio_solicitud)," +
+             "  CASE MONTH(sd.fecha_envio_solicitud)" +
+                "        WHEN 1 THEN 'Enero'" +
+                "        WHEN 2 THEN 'Febrero'" +
+                "        WHEN 3 THEN 'Marzo'" +
+                "        WHEN 4 THEN 'Abril'" +
+                "        WHEN 5 THEN 'Mayo'" +
+                "        WHEN 6 THEN 'Junio'" +
+                "        WHEN 7 THEN 'Julio'" +
+                "        WHEN 8 THEN 'Agosto'" +
+                "        WHEN 9 THEN 'Septiembre'" +
+                "        WHEN 10 THEN 'Octubre'" +
+                "        WHEN 11 THEN 'Noviembre'" +
+                "        WHEN 12 THEN 'Diciembre'" +
+                "    END AS mes, " + 
+            " COUNT(sd.id_solicitud_descarga) AS total_registros" +
+            "   FROM solicitud_descarga sd JOIN proyecto_investigacion pi ON pi.id_proyecto=sd.id_proyecto" +
+            "	JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "    JOIN usuario u ON u.id_usuario=gi.id_usuario" +
+            "   WHERE u.id_usuario=:idUsuario" +
+            "   GROUP BY YEAR(sd.fecha_envio_solicitud), MONTH(sd.fecha_envio_solicitud)" +
+            "   ORDER BY 1,2",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaSolicitudesPorMes(@Param("idUsuario") Integer idUsuario);
+    
+    @Query(value="SELECT YEAR(sd.fecha_envio_solicitud) AS anio, "+ 
+            "  MONTH(sd.fecha_envio_solicitud)," +
+             "  CASE MONTH(sd.fecha_envio_solicitud)" +
+                "        WHEN 1 THEN 'Enero'" +
+                "        WHEN 2 THEN 'Febrero'" +
+                "        WHEN 3 THEN 'Marzo'" +
+                "        WHEN 4 THEN 'Abril'" +
+                "        WHEN 5 THEN 'Mayo'" +
+                "        WHEN 6 THEN 'Junio'" +
+                "        WHEN 7 THEN 'Julio'" +
+                "        WHEN 8 THEN 'Agosto'" +
+                "        WHEN 9 THEN 'Septiembre'" +
+                "        WHEN 10 THEN 'Octubre'" +
+                "        WHEN 11 THEN 'Noviembre'" +
+                "        WHEN 12 THEN 'Diciembre'" +
+                "    END AS mes, " + 
+            " DAY(sd.fecha_envio_solicitud) AS dia,"+
+            " COUNT(sd.id_solicitud_descarga) AS total_registros" +
+            "   FROM solicitud_descarga sd JOIN proyecto_investigacion pi ON pi.id_proyecto=sd.id_proyecto" +
+            "	JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "    JOIN usuario u ON u.id_usuario=gi.id_usuario" +
+            "   WHERE u.id_usuario=:idUsuario" +
+            "   GROUP BY YEAR(sd.fecha_envio_solicitud), MONTH(sd.fecha_envio_solicitud)" +
+            "   ORDER BY 1,2, 4",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaSolicitudesPorDia(@Param("idUsuario") Integer idUsuario);
+    
+    
+    //solicitud actualizar
+    
+    @Query(value="SELECT YEAR(sa.fecha_envio_solicitud) AS anio, " +
+            "   COUNT(sa.id_solicitud_actualizar) AS total_registros" +
+            "   FROM solicitud_actualizar_dato sa JOIN grupo_investigacion gi on gi.id_proyecto=sa.id_proyecto" +
+            "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
+            "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
+            "   WHERE u.id_usuario=:idUsuario" +
+            "   GROUP BY YEAR(sa.fecha_envio_solicitud), MONTH(sa.fecha_envio_solicitud)" +
+            "   ORDER BY 1,2",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaSolicitudesActualizarPorAnio(@Param("idUsuario") Integer idUsuario);
+    
+    @Query(value="SELECT YEAR(sa.fecha_envio_solicitud) AS anio, " +
+            "  MONTH(sa.fecha_envio_solicitud)," +
+            "  CASE MONTH(sa.fecha_envio_solicitud)" +
+                "        WHEN 1 THEN 'Enero'" +
+                "        WHEN 2 THEN 'Febrero'" +
+                "        WHEN 3 THEN 'Marzo'" +
+                "        WHEN 4 THEN 'Abril'" +
+                "        WHEN 5 THEN 'Mayo'" +
+                "        WHEN 6 THEN 'Junio'" +
+                "        WHEN 7 THEN 'Julio'" +
+                "        WHEN 8 THEN 'Agosto'" +
+                "        WHEN 9 THEN 'Septiembre'" +
+                "        WHEN 10 THEN 'Octubre'" +
+                "        WHEN 11 THEN 'Noviembre'" +
+                "        WHEN 12 THEN 'Diciembre'" +
+                "    END AS mes, " + 
+            "   COUNT(sa.id_solicitud_actualizar) AS total_registros" +
+            "   FROM solicitud_actualizar_dato sa JOIN grupo_investigacion gi on gi.id_proyecto=sa.id_proyecto" +
+            "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
+            "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
+            "   WHERE u.id_usuario=:idUsuario" +
+            "   GROUP BY YEAR(sa.fecha_envio_solicitud), MONTH(sa.fecha_envio_solicitud)" +
+            "   ORDER BY 1,2",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaSolicitudesActualizarPorMes(@Param("idUsuario") Integer idUsuario);
+    
+    @Query(value="SELECT YEAR(sa.fecha_envio_solicitud) AS anio, " +
+            "  MONTH(sa.fecha_envio_solicitud)," +
+            "  CASE MONTH(sa.fecha_envio_solicitud)" +
+                "        WHEN 1 THEN 'Enero'" +
+                "        WHEN 2 THEN 'Febrero'" +
+                "        WHEN 3 THEN 'Marzo'" +
+                "        WHEN 4 THEN 'Abril'" +
+                "        WHEN 5 THEN 'Mayo'" +
+                "        WHEN 6 THEN 'Junio'" +
+                "        WHEN 7 THEN 'Julio'" +
+                "        WHEN 8 THEN 'Agosto'" +
+                "        WHEN 9 THEN 'Septiembre'" +
+                "        WHEN 10 THEN 'Octubre'" +
+                "        WHEN 11 THEN 'Noviembre'" +
+                "        WHEN 12 THEN 'Diciembre'" +
+                "    END AS mes, " + 
+            "   DAY(sa.fecha_envio_solicitud) AS dia,"+
+            "   COUNT(sa.id_solicitud_actualizar) AS total_registros" +
+            "   FROM solicitud_actualizar_dato sa JOIN grupo_investigacion gi on gi.id_proyecto=sa.id_proyecto" +
+            "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
+            "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
+            "   WHERE u.id_usuario=:idUsuario" +
+            "   GROUP BY YEAR(sa.fecha_envio_solicitud), MONTH(sa.fecha_envio_solicitud)" +
+            "   ORDER BY 1,2,4",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaSolicitudesActualizarPorDia(@Param("idUsuario") Integer idUsuario);
+    
+    
+   
+     @Query(value="SELECT YEAR(a.fecha_acceso) AS anio, " +
+            "   COUNT(a.id_acceso) AS total_registros" +
+            "   FROM acceso a JOIN usuario u ON u.id_usuario=a.id_usuario" +
+            "   GROUP BY YEAR(a.fecha_acceso)" +
+            "   ORDER BY 1",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaAccesoPorAnio();
+    
+    @Query(value="SELECT YEAR(a.fecha_acceso) AS anio, " +
+            "  MONTH(a.fecha_acceso)," +
+            "  CASE MONTH(a.fecha_acceso)" +
+                "        WHEN 1 THEN 'Enero'" +
+                "        WHEN 2 THEN 'Febrero'" +
+                "        WHEN 3 THEN 'Marzo'" +
+                "        WHEN 4 THEN 'Abril'" +
+                "        WHEN 5 THEN 'Mayo'" +
+                "        WHEN 6 THEN 'Junio'" +
+                "        WHEN 7 THEN 'Julio'" +
+                "        WHEN 8 THEN 'Agosto'" +
+                "        WHEN 9 THEN 'Septiembre'" +
+                "        WHEN 10 THEN 'Octubre'" +
+                "        WHEN 11 THEN 'Noviembre'" +
+                "        WHEN 12 THEN 'Diciembre'" +
+                "    END AS mes, " + 
+            "   COUNT(a.id_acceso) AS total_registros" +
+            "   FROM acceso a JOIN usuario u ON u.id_usuario=a.id_usuario" +
+            "   GROUP BY YEAR(a.fecha_acceso), MONTH(a.fecha_acceso)" +
+            "   ORDER BY 1,2",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaAccesoPorMes();
+    
+    @Query(value="SELECT YEAR(a.fecha_acceso) AS anio, " +
+            "  MONTH(a.fecha_acceso)," +
+            "  CASE MONTH(a.fecha_acceso)" +
+                "        WHEN 1 THEN 'Enero'" +
+                "        WHEN 2 THEN 'Febrero'" +
+                "        WHEN 3 THEN 'Marzo'" +
+                "        WHEN 4 THEN 'Abril'" +
+                "        WHEN 5 THEN 'Mayo'" +
+                "        WHEN 6 THEN 'Junio'" +
+                "        WHEN 7 THEN 'Julio'" +
+                "        WHEN 8 THEN 'Agosto'" +
+                "        WHEN 9 THEN 'Septiembre'" +
+                "        WHEN 10 THEN 'Octubre'" +
+                "        WHEN 11 THEN 'Noviembre'" +
+                "        WHEN 12 THEN 'Diciembre'" +
+                "    END AS mes, " + 
+            "   DAY(a.fecha_acceso) AS dia,"+
+            "   COUNT(a.id_acceso) AS total_registros" +
+            "   FROM acceso a JOIN usuario u ON u.id_usuario=a.id_usuario" +
+            "   GROUP BY YEAR(a.fecha_acceso), MONTH(a.fecha_acceso),  DAY(a.fecha_acceso)" +
+            "   ORDER BY 1,2,4",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaAccesoPorDia();
+    
+    
+    @Query(value="SELECT r.nombre_rol, COUNT(u.id_usuario)" +
+            "   FROM usuario u JOIN rol r on r.id_rol=u.id_rol" +
+            "   WHERE u.vigencia=true" +
+            "   GROUP BY r.nombre_rol",
+            nativeQuery=true)
+    List<Object[]> obtenerGraficaUsuariosPorRol();
+    
+    
+    // usuario solicitudes
+    
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON (sa.id_proyecto=gi.id_proyecto AND gi.id_usuario=sa.id_usuario)" +
+            "   WHERE u.id_usuario=:idUsuario",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesActualizarInvestigador(@Param("idUsuario") Integer idUsuario);
+    
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON (sa.id_proyecto=gi.id_proyecto AND gi.id_usuario=sa.id_usuario)" +
+            "   WHERE u.id_usuario=:idUsuario AND sa.id_estado_solictud_actualizar=2",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesActualizarAcesptadoInvestigador(@Param("idUsuario") Integer idUsuario);
+    
+    @Query(value="SELECT COUNT(sa.id_solicitud_actualizar)" +
+            "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto = epi.id_estado_proyecto" +
+            "   JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
+            "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
+            "   JOIN solicitud_actualizar_dato sa ON (sa.id_proyecto=gi.id_proyecto AND gi.id_usuario=sa.id_usuario)" +
+            "   WHERE u.id_usuario=:idUsuario AND sa.id_estado_solictud_actualizar=3",
+            nativeQuery=true)
+    BigInteger obtenerCantidadSolicitudesActualizarRechazadoInvestigador(@Param("idUsuario") Integer idUsuario);
+   
+    
 }

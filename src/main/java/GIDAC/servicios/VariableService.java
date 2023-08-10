@@ -17,6 +17,7 @@ public interface VariableService<T>{
     public T buscarPorId(String id);
     public List<T> buscarTodos();
     public List<Object[]> litsarVairbalesCompletas();
+    public List<Object[]> litsarVairbalesCompletasInvestigador();
     public List<Object[]> litsarVairbalesConDatosSinFamilia();
     public List<Object[]> litsarVairbalesConDatosConFiltroFamilia(Integer idFamilia);
     public List<Object[]> litsarVairbalesConDatosSinFamiliaInvestigador(Integer idProyecto);

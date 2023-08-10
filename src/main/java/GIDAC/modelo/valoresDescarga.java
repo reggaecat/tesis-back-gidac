@@ -10,6 +10,7 @@ public class valoresDescarga{
     private String idVariable;
     private String nombreVariable;
     private String valor;
+    private String variableUnidadMedida;
 
     public String getIdVariable() {
         return idVariable;
@@ -35,6 +36,16 @@ public class valoresDescarga{
         this.valor = valor;
     }
 
+    public String getVariableUnidadMedida() {
+        return variableUnidadMedida;
+    }
+
+    public void setVariableUnidadMedida(String variableUnidadMedida) {
+        this.variableUnidadMedida = variableUnidadMedida;
+    }
+
+   
+    
     
     
 }
