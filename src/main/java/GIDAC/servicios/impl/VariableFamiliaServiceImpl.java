@@ -41,7 +41,7 @@ public class VariableFamiliaServiceImpl implements VariableFamiliaService {
     }
 
     @Override
-    public void eliminar(String idVariable, Integer idFamilia) {
+    public void eliminar(Integer idVariable, Integer idFamilia) {
         VariableFamiliaId variableFamiliaId =new VariableFamiliaId();
         variableFamiliaId.setIdFamilia(idFamilia);
         variableFamiliaId.setIdVariable(idVariable);

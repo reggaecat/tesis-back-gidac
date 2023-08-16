@@ -1,9 +1,7 @@
 package GIDAC.controladores;
 
 
-import GIDAC.modelo.CatalogoEspoch;
 import GIDAC.modelo.CatalogoOrganizacion;
-import GIDAC.modelo.EquivalenciaVariable;
 import GIDAC.modelo.VariableUnidadMedida;
 import GIDAC.modelo.ValorPermitido;
 import GIDAC.modelo.Variable;
@@ -52,13 +50,13 @@ public class UnidadMedidaVariableController {
     }
     
     @GetMapping("/listar-equivalencia-variable-vigentes")
-    public List<EquivalenciaVariable> listarVigentes()
+    public List<VariableUnidadMedida> listarVigentes()
     {    
         return service.buscarTodos(true);
     }
     
     @GetMapping("/listar-equivalencia-variable-eliminados")
-    public List<EquivalenciaVariable> listarEliminados()
+    public List<VariableUnidadMedida> listarEliminados()
     {    
         return service.buscarTodos(false);
     }

@@ -10,14 +10,15 @@ import javax.persistence.*;
 public class Variable {
 
     @Id
-    private String idVariable;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idVariable;
     
-    
+    private String codigoVariable;
     private String nombreVariable;
     
     @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
-    private Set<EquivalenciaVariable> equivalenciaVariable = new HashSet<>();
+    private Set<CatalogoOrganizacion> catalogoOrganizacion = new HashSet<>();
     
     @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -27,62 +28,43 @@ public class Variable {
     @JsonIgnore
     private Set<VariableUnidadMedida> unidadMedidaVariable = new HashSet<>();
 
-    @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<DatoRecolectado> datoRecolectado = new HashSet<>();
     
-    @OneToMany(mappedBy = "variable",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<ValorPermitido> valorPermitido = new HashSet<>();
+    
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_tipo_variable")
     private TipoVariable tipoVariable;
     
 
-    public String getIdVariable() {
+    public Integer getIdVariable() {
         return idVariable;
     }
 
-    public void setIdVariable(String idVariable) {
+    public void setIdVariable(Integer idVariable) {
         this.idVariable = idVariable;
     }
 
-    public Set<EquivalenciaVariable> getEquivalenciaVariable() {
-        return equivalenciaVariable;
-    }
-    
-    public void setEquivalenciaVariable(Set<EquivalenciaVariable> equivalenciaVariable) {
-        this.equivalenciaVariable = equivalenciaVariable;
-    }
 
     public String getNombreVariable() {
         return nombreVariable;
     }
 
+    public void setCodigoVariable(String codigoVariable) {
+        this.codigoVariable = codigoVariable;
+    }
+
+    public String getCodigoVariable() {
+        return codigoVariable;
+    }
+
+    
+    
     public void setNombreVariable(String nombreVariable) {
         this.nombreVariable = nombreVariable;
-    }
-   
-    
-    public Set<DatoRecolectado> getDatoRecolectado() {
-        return datoRecolectado;
-    }
-
-    public void setDatoRecolectado(Set<DatoRecolectado> datoRecolectado) {
-        this.datoRecolectado = datoRecolectado;
-    }
-
-    public Set<ValorPermitido> getValorPermitido() {
-        return valorPermitido;
     }
 
     public TipoVariable getTipoVariable() {
         return tipoVariable;
-    }
-
-    public void setValorPermitido(Set<ValorPermitido> valorPermitido) {
-        this.valorPermitido = valorPermitido;
     }
 
     public void setTipoVariable(TipoVariable tipoVariable) {
@@ -103,6 +85,14 @@ public class Variable {
 
     public void setVariableFamilia(Set<VariableFamilia> variableFamilia) {
         this.variableFamilia = variableFamilia;
+    }
+
+    public Set<CatalogoOrganizacion> getCatalogoOrganizacion() {
+        return catalogoOrganizacion;
+    }
+
+    public void setCatalogoOrganizacion(Set<CatalogoOrganizacion> catalogoOrganizacion) {
+        this.catalogoOrganizacion = catalogoOrganizacion;
     }
     
     

@@ -17,11 +17,7 @@ public class ValorPermitido {
     private String ValorPermitido;
     private boolean vigencia=true;
     
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_variable")
-    private Variable variable;
 
-    
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable_unidad_medida")
     private VariableUnidadMedida variableUnidadMedida;
@@ -40,9 +36,6 @@ public class ValorPermitido {
         return ValorPermitido;
     }
 
-    public Variable getVariable() {
-        return variable;
-    }
 
     public Integer getIdValorPermitido() {
         return idValorPermitido;
@@ -66,9 +59,6 @@ public class ValorPermitido {
         this.ValorPermitido = ValorPermitido;
     }
 
-    public void setVariable(Variable variable) {
-        this.variable = variable;
-    }
 
     public VariableUnidadMedida getVariableUnidadMedida() {
         return variableUnidadMedida;

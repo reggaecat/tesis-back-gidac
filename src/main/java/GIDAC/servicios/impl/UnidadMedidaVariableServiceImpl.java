@@ -1,11 +1,8 @@
 package GIDAC.servicios.impl;
 
 
-import GIDAC.modelo.EquivalenciaVariable;
 import GIDAC.modelo.VariableUnidadMedida;
-import GIDAC.repositorios.EquivalenciaVariableRepository;
 import GIDAC.repositorios.UnidadMedidaVariableRepository;
-import GIDAC.servicios.EquivalenciaVariableService;
 import GIDAC.servicios.UnidadMedidaVariableService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +43,7 @@ public class UnidadMedidaVariableServiceImpl implements UnidadMedidaVariableServ
     }
 
     @Override
-    public Object buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, String idVariable, Boolean vigencia) {
+    public Object buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia) {
         return repository.findByUnidadMedidaIdUnidadMedidaAndVariableIdVariableAndVigencia(idUnidadMedida, idVariable, vigencia);
     }
 

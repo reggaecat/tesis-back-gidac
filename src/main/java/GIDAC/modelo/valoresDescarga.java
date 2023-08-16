@@ -7,12 +7,12 @@ package GIDAC.modelo;
 public class valoresDescarga{
     
     
-    private String idVariable;
+    private Integer idVariable;
     private String nombreVariable;
     private String valor;
     private String variableUnidadMedida;
 
-    public String getIdVariable() {
+    public Integer getIdVariable() {
         return idVariable;
     }
 
@@ -24,7 +24,7 @@ public class valoresDescarga{
         return valor;
     }
 
-    public void setIdVariable(String idVariable) {
+    public void setIdVariable(Integer idVariable) {
         this.idVariable = idVariable;
     }
 

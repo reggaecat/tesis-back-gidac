@@ -36,8 +36,10 @@ public class InformacionEcoAndesController {
     @PostMapping("/guardar-informacion-app-web")
     public Object guardarInformacionAppweb(@RequestBody InformacionEcoAndes oC)
     {
+        
         cValidaciones validaciones = new cValidaciones();
         if(informacionAppWebService.findByVigencia()!=null){
+            
             InformacionEcoAndes informacionEcoAndes=(InformacionEcoAndes) informacionAppWebService.findByVigencia();
             informacionEcoAndes.setVigencia(false);
             informacionAppWebService.save(informacionEcoAndes);

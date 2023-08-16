@@ -9,24 +9,36 @@ import javax.persistence.*;
 public class CatalogoOrganizacion {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer idVariableOrganizacion;
+    
+    
     private String codigoVariableOrganizacion;
     
     private String nombreVariableOrganizacion;
     
     private String descripcion;
     
-    @OneToMany(mappedBy = "catalogoOrganizacion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<EquivalenciaVariable> equivalenciaVariable = new HashSet<>();
+   
     
     private boolean vigencia=true;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_organizacion")
     private Organizacion organizacion;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_variable")
+    private Variable variable;
 
-    public Set<EquivalenciaVariable> getEquivalenciaVariable() {
-        return equivalenciaVariable;
+    
+    
+    public Integer getIdVariableOrganizacion() {
+        return idVariableOrganizacion;
+    }
+
+    public void setIdVariableOrganizacion(Integer idVariableOrganizacion) {
+        this.idVariableOrganizacion = idVariableOrganizacion;
     }
 
     public String getCodigoVariableOrganizacion() {
@@ -37,9 +49,7 @@ public class CatalogoOrganizacion {
         this.codigoVariableOrganizacion = codigoVariableOrganizacion;
     }
     
-    public void setEquivalenciaVariable(Set<EquivalenciaVariable> equivalenciaVariable) {
-        this.equivalenciaVariable = equivalenciaVariable;
-    }
+
 
     public String getNombreVariableOrganizacion() {
         return nombreVariableOrganizacion;
@@ -73,5 +83,14 @@ public class CatalogoOrganizacion {
         this.vigencia = vigencia;
     }
 
+    public Variable getVariable() {
+        return variable;
+    }
+
+    public void setVariable(Variable variable) {
+        this.variable = variable;
+    }
+
+    
     
 }

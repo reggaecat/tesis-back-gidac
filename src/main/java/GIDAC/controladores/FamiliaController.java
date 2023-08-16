@@ -1,7 +1,9 @@
 package GIDAC.controladores;
 
 import GIDAC.modelo.Familia;
+import GIDAC.modelo.FamiliaDatos;
 import GIDAC.servicios.FamiliaService;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -44,15 +46,25 @@ public class FamiliaController {
     }
     
     @GetMapping("/listar-por-categoria/{id}")
-    public List<Object[]>listarPorCategoria(@PathVariable Integer id)
+    public List<FamiliaDatos>listarPorCategoria(@PathVariable Integer id)
     {
+        List<Object[]> listaObject;
         if(id==0){
-            return service.buscarPadres();
+            listaObject= service.buscarPadres();
         }else{
-            System.out.println("----------------------------------------------------------------");
-            System.out.println("ingresa al 2");
-            return service.buscarHijos(id);
+            listaObject= service.buscarHijos(id);
         }
+        
+        List<FamiliaDatos> listaFamilia = new ArrayList<>();
+        for (Object[] objeto : listaObject) {
+            FamiliaDatos dato = new FamiliaDatos();
+            dato.setIdFamilia((Integer) objeto[0]);
+            dato.setCodigo((String) objeto[1]);
+            dato.setDescripcion((String) objeto[2]);
+            dato.setIdPadre((Integer) objeto[3]);
+            listaFamilia.add(dato);
+        }
+        return listaFamilia;  
         
     }
     

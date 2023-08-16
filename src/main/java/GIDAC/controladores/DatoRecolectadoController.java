@@ -8,7 +8,6 @@ import GIDAC.modelo.DashDatos;
 import GIDAC.modelo.Dataset;
 import GIDAC.modelo.Dato;
 import GIDAC.modelo.DatoRecolectado;
-import GIDAC.modelo.EquivalenciaVariable;
 import GIDAC.modelo.MapaCoordenadas;
 import GIDAC.modelo.MapaProfundidadValor;
 import GIDAC.modelo.MapaVariable;
@@ -30,7 +29,6 @@ import GIDAC.servicios.AreaService;
 import GIDAC.servicios.ConglomeradoService;
 import GIDAC.servicios.DataSetService;
 import GIDAC.servicios.DatoRecolectadoService;
-import GIDAC.servicios.EquivalenciaVariableService;
 import GIDAC.servicios.ParcelaService;
 import GIDAC.servicios.ProfundidadParcelaService;
 import GIDAC.servicios.ProfundidadService;
@@ -58,6 +56,7 @@ import static org.hibernate.criterion.Projections.id;
 import org.springframework.http.ResponseEntity;
 import GIDAC.servicios.UsuarioService;
 import GIDAC.servicios.UnidadMedidaService;
+import GIDAC.servicios.VariableService;
         
 
 @RestController
@@ -70,8 +69,6 @@ public class DatoRecolectadoController {
     @Autowired
     private DatoRecolectadoService service;
     
-    @Autowired
-    private EquivalenciaVariableService equivalenciaVariableService;
     
     @Autowired
     private ValorPermitidoService valorPermitidoService;
@@ -100,6 +97,9 @@ public class DatoRecolectadoController {
     @Autowired
     private UnidadMedidaService medidaService;
     
+    @Autowired
+    private VariableService variableService;
+    
     //ejemplo .--eliminar
     @Autowired
     private UsuarioService usuarioService;
@@ -120,7 +120,7 @@ public class DatoRecolectadoController {
     
     //-----------------------------------------------------------------------------------------------------
     @GetMapping("/listar-todos-datos-catalogo/{id}")
-    public  Object  listarTodosLosDatoCatalogo(@PathVariable String id)
+    public  Object  listarTodosLosDatoCatalogo(@PathVariable Integer id)
     {
         //return service.listarTodosLosDatos();
         System.out.println("-----------------------------------------------------------");
@@ -143,7 +143,12 @@ public class DatoRecolectadoController {
             String unidadMedida = (String) dato[5];
             String tipoVariable = (String) dato[6];
             Double valorAux = (Double) dato[7];
-            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            if(unidadMedidaVariable.equals("NA")){
+                unidadMedidaVariable="";
+            }else{
+                unidadMedidaVariable=" ("+unidadMedidaVariable+")";
+            }
+            tipoVariable=tipoVariable+unidadMedidaVariable;
             BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             valorAux = bd.doubleValue();
@@ -168,7 +173,7 @@ public class DatoRecolectadoController {
     }
     
     @GetMapping("/listar-todos-datos-catalogo-nominal/{id}")
-    public  Object  listarTodosLosDatoCatalogoNominal(@PathVariable String id)
+    public  Object  listarTodosLosDatoCatalogoNominal(@PathVariable Integer id)
     {
         //return service.listarTodosLosDatos();
         System.out.println("-----------------------------------------------------------");
@@ -211,79 +216,7 @@ public class DatoRecolectadoController {
         return ResponseEntity.ok(datosAgrupados);  
     }
     
-    @GetMapping("/listar-todos-datos-catalogo-unidos/{id}")
-    public  Object  listarTodosLosDatoCatalogoUnido(@PathVariable String id)
-    {
-        
-        List<Object[]> datos;
-        List<Object[]> datosNominales;
-        if(id.equals("0")){
-            datos = service.listarTodosLosDatosNumerico();
-            datosNominales = service.listarTodosLosDatosNominal();   
-        }else{
-            datos = service.listarTodosLosDatosVariableNumerico(id);
-            datosNominales = service.listarTodosLosDatosVariableNominal(id);
-        }
-        // Mapa para almacenar los datos agrupados
-        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
-        // Agrupar los datos por coordenadas, tipos de variables y profundidades
-        for (Object[] dato : datos) {
-            String coordenadaX = (String) dato[0];
-            String coordenadaY = (String) dato[1];
-            Double profundidadMaxima = (Double) dato[2];
-            Double profundidadMinima = (Double) dato[3];
-            String unidadMedidaVariable = (String) dato[4];
-            String unidadMedida = (String) dato[5];
-            String tipoVariable = (String) dato[6];
-            Double valorAux = (Double) dato[7];
-            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
-            BigDecimal bd = new BigDecimal(valorAux);
-            bd = bd.setScale(3, RoundingMode.HALF_UP);
-            valorAux = bd.doubleValue();
-            String valor=valorAux.toString();
-            String coordenadas = coordenadaX + "," + coordenadaY;
-            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
-            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
-            // Verificar si las coordenadas existen en el mapa
-            if (!datosAgrupados.containsKey(coordenadas)) {
-                datosAgrupados.put(coordenadas, new HashMap<>());
-            }
-            // Verificar si el tipo de variable existe en el mapa de coordenadas
-            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
-            if (!variablesMapa.containsKey(tipoVariable)) {
-                variablesMapa.put(tipoVariable, new ArrayList<>());
-            }
-            // Agregar el dato a la lista correspondiente en el mapa
-            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
-            listaDatos.add(new Dato(profundidades, valor));
-        }
-        
-        for (Object[] dato : datosNominales) {
-            String coordenadaX = (String) dato[0];
-            String coordenadaY = (String) dato[1];
-            Double profundidadMaxima = (Double) dato[2];
-            Double profundidadMinima = (Double) dato[3];
-            String unidadMedida = (String) dato[4];
-            String tipoVariable = (String) dato[5];
-            String valor = (String) dato[6];
-            String coordenadas = coordenadaX + "," + coordenadaY;
-            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
-            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
-            // Verificar si las coordenadas existen en el mapa
-            if (!datosAgrupados.containsKey(coordenadas)) {
-                datosAgrupados.put(coordenadas, new HashMap<>());
-            }
-            // Verificar si el tipo de variable existe en el mapa de coordenadas
-            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
-            if (!variablesMapa.containsKey(tipoVariable)) {
-                variablesMapa.put(tipoVariable, new ArrayList<>());
-            }
-            // Agregar el dato a la lista correspondiente en el mapa
-            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
-            listaDatos.add(new Dato(profundidades, valor));
-        }
-        return ResponseEntity.ok(datosAgrupados);  
-    }
+    
     
     //-----------------------------------------------------------------------------------------------------
     
@@ -311,7 +244,12 @@ public class DatoRecolectadoController {
             String unidadMedida = (String) dato[5];
             String tipoVariable = (String) dato[6];
             Double valorAux = (Double) dato[7];
-            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            if(unidadMedidaVariable.equals("NA")){
+                unidadMedidaVariable="";
+            }else{
+                unidadMedidaVariable=" ("+unidadMedidaVariable+")";
+            }
+            tipoVariable=tipoVariable+unidadMedidaVariable;
             BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             valorAux = bd.doubleValue();
@@ -377,18 +315,35 @@ public class DatoRecolectadoController {
         return ResponseEntity.ok(datosAgrupados);  
     }
     
-    @GetMapping("/listar-todos-datos-unidos/{id}")
-    public  Object  listarTodosLosDatoUnidos(@PathVariable Integer id)
+    
+    //----------------------------------------- listar datos unidos
+    @GetMapping("/listar-todos-datos-unidos/{id}/{idVariable}")
+    public  Object  listarTodosLosDatoUnidos(@PathVariable Integer id, @PathVariable Integer idVariable)
     {
         List<Object[]> datos;
         List<Object[]> datosNominales;
         
         if(id==0){
-            datos = service.listarTodosLosDatosNumerico();
-            datosNominales = service.listarTodosLosDatosNominal();   
+            if(idVariable==0){
+                System.out.println("-------------------------------------------------------------------------- llega 1");
+                datos = service.listarTodosLosDatosNumerico();
+                System.out.println("-------------------------------------------------------------------------- llega 2");
+                datosNominales = service.listarTodosLosDatosNominal();     
+                System.out.println("-------------------------------------------------------------------------- llega 3");
+            }else{
+                datos = service.listarTodosLosDatosNumericoVariable(idVariable);
+                datosNominales = service.listarTodosLosDatosNominalVariable(idVariable); 
+            }
+              
         }else{
-            datos = service.listarTodosLosDatosProyectoNumerico(id);
-            datosNominales = service.listarTodosLosDatosProyectoNominal(id);
+            if(idVariable==0){
+                datos = service.listarTodosLosDatosProyectoNumerico(id);
+                datosNominales = service.listarTodosLosDatosProyectoNominal(id);
+            }else{
+                datos = service.listarTodosLosDatosProyectoNumericoVariable(id,idVariable);
+                datosNominales = service.listarTodosLosDatosProyectoNominalVariable(id,idVariable);
+            }
+            
         }
         System.out.println("----------------------------------------------------------------------");
         System.out.println("id: "+id);
@@ -406,7 +361,12 @@ public class DatoRecolectadoController {
             String unidadMedida = (String) dato[5];
             String tipoVariable = (String) dato[6];
             Double valorAux = (Double) dato[7];
-            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            if(unidadMedidaVariable.equals("NA")){
+                unidadMedidaVariable="";
+            }else{
+                unidadMedidaVariable=" ("+unidadMedidaVariable+")";
+            }
+            tipoVariable=tipoVariable+unidadMedidaVariable;
             BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             valorAux = bd.doubleValue();
@@ -460,16 +420,99 @@ public class DatoRecolectadoController {
         return ResponseEntity.ok(datosAgrupados); 
     }
     
+    
+    
+    @GetMapping("/listar-todos-datos-catalogo-unidos/{id}")
+    public  Object  listarTodosLosDatoCatalogoUnido(@PathVariable Integer id)
+    {
+        
+        List<Object[]> datos;
+        List<Object[]> datosNominales;
+        if(id.equals("0")){
+            datos = service.listarTodosLosDatosNumerico();
+            datosNominales = service.listarTodosLosDatosNominal();   
+        }else{
+            datos = service.listarTodosLosDatosVariableNumerico(id);
+            datosNominales = service.listarTodosLosDatosVariableNominal(id);
+        }
+        // Mapa para almacenar los datos agrupados
+        Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
+        // Agrupar los datos por coordenadas, tipos de variables y profundidades
+        for (Object[] dato : datos) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedidaVariable = (String) dato[4];
+            String unidadMedida = (String) dato[5];
+            String tipoVariable = (String) dato[6];
+            Double valorAux = (Double) dato[7];
+            if(unidadMedidaVariable.equals("NA")){
+                unidadMedidaVariable="";
+            }else{
+                unidadMedidaVariable=" ("+unidadMedidaVariable+")";
+            }
+            tipoVariable=tipoVariable+unidadMedidaVariable;
+            BigDecimal bd = new BigDecimal(valorAux);
+            bd = bd.setScale(3, RoundingMode.HALF_UP);
+            valorAux = bd.doubleValue();
+            String valor=valorAux.toString();
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        
+        for (Object[] dato : datosNominales) {
+            String coordenadaX = (String) dato[0];
+            String coordenadaY = (String) dato[1];
+            Double profundidadMaxima = (Double) dato[2];
+            Double profundidadMinima = (Double) dato[3];
+            String unidadMedida = (String) dato[4];
+            String tipoVariable = (String) dato[5];
+            String valor = (String) dato[6];
+            String coordenadas = coordenadaX + "," + coordenadaY;
+            String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
+            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
+            // Verificar si las coordenadas existen en el mapa
+            if (!datosAgrupados.containsKey(coordenadas)) {
+                datosAgrupados.put(coordenadas, new HashMap<>());
+            }
+            // Verificar si el tipo de variable existe en el mapa de coordenadas
+            Map<String, List<Dato>> variablesMapa = datosAgrupados.get(coordenadas);
+            if (!variablesMapa.containsKey(tipoVariable)) {
+                variablesMapa.put(tipoVariable, new ArrayList<>());
+            }
+            // Agregar el dato a la lista correspondiente en el mapa
+            List<Dato> listaDatos = variablesMapa.get(tipoVariable);
+            listaDatos.add(new Dato(profundidades, valor));
+        }
+        return ResponseEntity.ok(datosAgrupados);  
+    }
+    
+    
+    
     //-----------------------------------------------------------------------------------------------------
     
     @GetMapping("/listar-todos-datos-proyecto-variable/{idProyecto}/{idVariable}")
-    public  Object  listarTodosLosDatoProyectoVariable(@PathVariable Integer idProyecto, @PathVariable String idVariable)
+    public  Object  listarTodosLosDatoProyectoVariable(@PathVariable Integer idProyecto, @PathVariable Integer idVariable)
     {
         //return service.listarTodosLosDatos
         
         System.out.println("-------------------------------------------------------llega a listar los datos");
         List<Object[]> datos;
-        if(idVariable.equals("0")){
+        if(idVariable==0){
             datos = service.listarTodosLosDatosProyectoNumerico(idProyecto);   
         }else{
             datos = service.listarTodosLosDatosProyectoVariableNumerico(idProyecto, idVariable);   
@@ -486,7 +529,12 @@ public class DatoRecolectadoController {
             String unidadMedida = (String) dato[5];
             String tipoVariable = (String) dato[6];
             Double valorAux = (Double) dato[7];
-            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            if(unidadMedidaVariable.equals("NA")){
+                unidadMedidaVariable="";
+            }else{
+                unidadMedidaVariable=" ("+unidadMedidaVariable+")";
+            }
+            tipoVariable=tipoVariable+unidadMedidaVariable;
             BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             valorAux = bd.doubleValue();
@@ -511,13 +559,13 @@ public class DatoRecolectadoController {
     }
     
     @GetMapping("/listar-todos-datos-proyecto-variable-nominal/{idProyecto}/{idVariable}")
-    public  Object  listarTodosLosDatoProyectoVariableNominal(@PathVariable Integer idProyecto, @PathVariable String idVariable)
+    public  Object  listarTodosLosDatoProyectoVariableNominal(@PathVariable Integer idProyecto, @PathVariable Integer idVariable)
     {
         //return service.listarTodosLosDatos
         
         System.out.println("-------------------------------------------------------llega a listar los datos");
         List<Object[]> datos;
-        if(idVariable.equals("0")){
+        if(idVariable==0){
             datos = service.listarTodosLosDatosProyectoNominal(idProyecto);   
         }else{
             datos = service.listarTodosLosDatosProyectoVariableNominal(idProyecto, idVariable);   
@@ -553,15 +601,20 @@ public class DatoRecolectadoController {
     }
     
     @GetMapping("/listar-todos-datos-proyecto-variable-unidos/{idProyecto}/{idVariable}")
-    public  Object  listarTodosLosDatoProyectoVariableUnido(@PathVariable Integer idProyecto, @PathVariable String idVariable)
+    public  Object  listarTodosLosDatoProyectoVariableUnido(@PathVariable Integer idProyecto, @PathVariable Integer idVariable)
     {
         //return service.listarTodosLosDatos
         
         List<Object[]> datos;
         List<Object[]> datosNominales;
-        if(idVariable.equals("0")){
+        
+        if(idVariable==0){
             datos = service.listarTodosLosDatosProyectoNumerico(idProyecto);
             datosNominales = service.listarTodosLosDatosProyectoNominal(idProyecto);
+            System.out.println("...................................................................................");
+        System.out.println("-                                                                                      -");
+        System.out.println("id: "+idProyecto);
+        System.out.println("id: "+idVariable);
         }else{
             datos = service.listarTodosLosDatosProyectoVariableNumerico(idProyecto, idVariable);   
             datosNominales = service.listarTodosLosDatosProyectoVariableNominal(idProyecto, idVariable);   
@@ -579,7 +632,12 @@ public class DatoRecolectadoController {
             String unidadMedida = (String) dato[5];
             String tipoVariable = (String) dato[6];
             Double valorAux = (Double) dato[7];
-            tipoVariable=tipoVariable+" ("+unidadMedidaVariable+")";
+            if(unidadMedidaVariable.equals("NA")){
+                unidadMedidaVariable="";
+            }else{
+                unidadMedidaVariable=" ("+unidadMedidaVariable+")";
+            }
+            tipoVariable=tipoVariable+unidadMedidaVariable;
             BigDecimal bd = new BigDecimal(valorAux);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             valorAux = bd.doubleValue();
@@ -813,18 +871,18 @@ public class DatoRecolectadoController {
         //List<EquivalenciaVariable> listaEquivalencia=equivalenciaVariableService.buscarTodos();
         List<VariablesEncontradas> variablesEncontradas=new ArrayList();
         
-        List<Object[]> listaObject= equivalenciaVariableService.listarCatalogoParaPerfilado();
+        List<Object[]> listaObject= variableService.listarCatalogoParaPerfilado();
         List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
         for (Object[] objeto : listaObject) {
             VariablesEncontradas variable = new VariablesEncontradas();
             variable.setIdVariableUnidadMedida((Integer) objeto[0]);
-            variable.setIdVariable((String) objeto[1]);
-            variable.setNombreVariable((String) objeto[2]);
-            variable.setNombreOrganizacion((String) objeto[3]);
-            variable.setNombreVariableEspoch((String) objeto[4]);
-            variable.setNombreTipoVariable((String) objeto[5]);
-            variable.setUnidadMedida((String) objeto[6]);
-
+            variable.setIdVariable((Integer) objeto[1]);
+            variable.setCodigoVariable((String) objeto[2]);
+            variable.setNombreVariable((String) objeto[3]);
+            variable.setNombreOrganizacion((String) objeto[4]);
+            variable.setNombreVariableOrganizacion((String) objeto[5]);
+            variable.setNombreTipoVariable((String) objeto[6]);
+            variable.setUnidadMedida((String) objeto[7]);
             listaEquivalencia.add(variable);
         }
         
@@ -846,7 +904,6 @@ public class DatoRecolectadoController {
             }else{
                 String dato;
                 for(int colm=17;colm<numColumnas;colm++){
-                    boolean controladorEncontrado=false;
                     dato=hoja.getCell(colm,fila).getContents();
                     System.out.println("------------------------dato analizar "+dato);
                     for(VariablesEncontradas equivalencia:listaEquivalencia) {
@@ -857,12 +914,12 @@ public class DatoRecolectadoController {
                             }catch(Exception E){
                                 System.out.println("Carga incorrecta");
                             }
-                            if(compararCadenasCaracteres(dato,equivalencia.getNombreVariable()) && compararCadenasCaracteres(datoAux,equivalencia.getUnidadMedida())){
+                            if(compararCadenasCaracteres(dato,equivalencia.getNombreVariableOrganizacion()) && compararCadenasCaracteres(datoAux,equivalencia.getUnidadMedida())){
                                 VariablesEncontradas variableEncontrada=new VariablesEncontradas();
                                 variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
                                 variableEncontrada.setIdVariable(equivalencia.getIdVariable());
                                 variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
-                                variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
+                                variableEncontrada.setNombreVariableOrganizacion(equivalencia.getNombreVariableOrganizacion());
                                 variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
                                 variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
                                 variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
@@ -871,16 +928,15 @@ public class DatoRecolectadoController {
                                 variablesEncontradas.add(variableEncontrada);
                                 System.out.println("------------------------llega a ser iguales "+dato);
                                 colm=colm+1;
-                                controladorEncontrado=true;
                                 break;
                             } 
                         }else{
-                            if(compararCadenasCaracteres(dato,equivalencia.getNombreVariable())){
+                            if(compararCadenasCaracteres(dato,equivalencia.getNombreVariableOrganizacion())){
                                 VariablesEncontradas variableEncontrada=new VariablesEncontradas();
                                 variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
                                 variableEncontrada.setIdVariable(equivalencia.getIdVariable());
                                 variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
-                                variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
+                                variableEncontrada.setNombreVariableOrganizacion(equivalencia.getNombreVariableOrganizacion());
                                 variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
                                 variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
                                 variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
@@ -888,58 +944,9 @@ public class DatoRecolectadoController {
                                 variableEncontrada.setCantidadDatos(numFilas-2);
                                 variablesEncontradas.add(variableEncontrada);
                                 System.out.println("------------------------llega a ser iguales "+dato);
-                                controladorEncontrado=true;
                                 break;
                             } 
                             
-                        }
-                    }
-                    
-                    if(controladorEncontrado==false){
-                        for(VariablesEncontradas equivalencia:listaEquivalencia) {
-                            if(equivalencia.getNombreTipoVariable().equals("Numérico")){
-                                String datoAux="";
-                                try{
-                                    datoAux=hoja.getCell(colm+1,fila).getContents();
-                                }catch(Exception E){
-                                    System.out.println("Carga incorrecta");
-                                }
-                                if(compararCadenasCaracteres(dato,equivalencia.getNombreVariableEspoch()) && compararCadenasCaracteres(datoAux,equivalencia.getUnidadMedida())){
-                                    VariablesEncontradas variableEncontrada=new VariablesEncontradas();
-                                    variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
-                                    variableEncontrada.setIdVariable(equivalencia.getIdVariable());
-                                    variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
-                                    variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
-                                    variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
-                                    variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
-                                    variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
-                                    variableEncontrada.setNumeroColumna(colm+1);
-                                    variableEncontrada.setCantidadDatos(numFilas-2);
-                                    variablesEncontradas.add(variableEncontrada);
-                                    System.out.println("------------------------llega a ser iguales "+dato);
-                                    colm=colm+1;
-                                    controladorEncontrado=true;
-                                    break;
-                                }
-                            }else{
-                                if(compararCadenasCaracteres(dato,equivalencia.getNombreVariableEspoch())){
-                                    VariablesEncontradas variableEncontrada=new VariablesEncontradas();
-                                    variableEncontrada.setIdVariableUnidadMedida(equivalencia.getIdVariableUnidadMedida());
-                                    variableEncontrada.setIdVariable(equivalencia.getIdVariable());
-                                    variableEncontrada.setNombreVariable(equivalencia.getNombreVariable());
-                                    variableEncontrada.setNombreVariableEspoch(equivalencia.getNombreVariableEspoch());
-                                    variableEncontrada.setNombreTipoVariable(equivalencia.getNombreTipoVariable());
-                                    variableEncontrada.setNombreOrganizacion(equivalencia.getNombreOrganizacion());
-                                    variableEncontrada.setUnidadMedida(equivalencia.getUnidadMedida());
-                                    variableEncontrada.setNumeroColumna(colm+1);
-                                    variableEncontrada.setCantidadDatos(numFilas-2);
-                                    variablesEncontradas.add(variableEncontrada);
-                                    System.out.println("------------------------llega a ser iguales "+dato);
-                                    controladorEncontrado=true;
-                                    break;
-                                } 
-                                 
-                            }
                         }
                     }
                 } 
@@ -965,7 +972,7 @@ public class DatoRecolectadoController {
         
         ObjectMapper objectMapper=new ObjectMapper();
         ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
-        List<EquivalenciaVariable> listaEquivalencia=equivalenciaVariableService.buscarTodos();
+        
         List<VariablesEncontradas> variablesEncontradas = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
         
         List<Perfilado> perfilado=new ArrayList();
@@ -984,8 +991,10 @@ public class DatoRecolectadoController {
                 Perfilado perfil=new Perfilado();
                 
                 perfil.setIdVariable(variableEncontrada.getIdVariable());
+                perfil.setNombreOrganizacion(variableEncontrada.getNombreOrganizacion());
+                perfil.setUnidadMedida(variableEncontrada.getUnidadMedida());
                 perfil.setNombreVariable(variableEncontrada.getNombreVariable());
-                perfil.setNombreVariableEspoch(variableEncontrada.getNombreVariableEspoch());
+                perfil.setNombreVariableOrganizacion(variableEncontrada.getNombreVariableOrganizacion());
                 perfil.setNombreTipoVariable(variableEncontrada.getNombreTipoVariable());
                 
                 perfil.setNumeroColumna(variableEncontrada.getNumeroColumna());
@@ -1406,8 +1415,13 @@ public class DatoRecolectadoController {
                 if(datoAux.getIdDatoRecolectado()!=-1){
                 valoresDescarga valorDescarga=new valoresDescarga();
                 if(dato.getDataset().getProfundidadParcela().getIdProfundidad()==datoAux.getDataset().getProfundidadParcela().getIdProfundidad() && dato.getDataset().getProfundidadParcela().getIdParcela()==datoAux.getDataset().getProfundidadParcela().getIdParcela()){
+                    for(VariablesEncontradas variable:equivalenciasVariables){
+                        if(variable.getIdVariable()==datoAux.getVariableUnidadMedida().getVariable().getIdVariable()){
+                            valorDescarga.setNombreVariable(variable.getNombreVariable());
+                            break;
+                        }
+                    }
                     valorDescarga.setIdVariable(datoAux.getVariableUnidadMedida().getVariable().getIdVariable());
-                    valorDescarga.setNombreVariable(datoAux.getVariableUnidadMedida().getVariable().getNombreVariable());
                     valorDescarga.setValor(datoAux.getValor());
                     valorDescarga.setVariableUnidadMedida(datoAux.getVariableUnidadMedida().getUnidadMedida().getAbreviatura());
                     valoresDescarga.add(valorDescarga);

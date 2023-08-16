@@ -16,7 +16,7 @@ public class VariableFamilia {
     
     @Id
     @Column(name = "id_variable")
-    private String idVariable;
+    private Integer idVariable;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable", insertable = false, updatable = false)
@@ -28,7 +28,7 @@ public class VariableFamilia {
     
     private boolean vigencia=true;
 
-    public VariableFamilia(Integer idFamilia, String idVariable, Variable variable, Familia familia) {
+    public VariableFamilia(Integer idFamilia, Integer idVariable, Variable variable, Familia familia) {
         this.idFamilia = idFamilia;
         this.idVariable = idVariable;
         this.variable = variable;
@@ -38,7 +38,7 @@ public class VariableFamilia {
     public VariableFamilia() {
     }
     
-    public String getIdVariable() {
+    public Integer getIdVariable() {
         return idVariable;
     }
 
@@ -46,7 +46,7 @@ public class VariableFamilia {
         return variable;
     }
 
-    public void setIdVariable(String idVariable) {
+    public void setIdVariable(Integer idVariable) {
         this.idVariable = idVariable;
     }
 

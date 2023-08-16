@@ -33,7 +33,7 @@ public class ProyectoInvestigacionServiceImpl implements ProyectoInvestigacionSe
    @Override
    @Transactional(readOnly=true)
    public List<ProyectoInvestigacion> findInvestigacionesPublicas(){
-       return (List<ProyectoInvestigacion>) DAO.findByVigenciaAndEstadoProyectoInvestigacion_nombreEstadoProyecto(true, "Publico");
+       return (List<ProyectoInvestigacion>) DAO.findByVigenciaAndEstadoProyectoInvestigacion_nombreEstadoProyecto(true, "Público");
    }
    
     @Override

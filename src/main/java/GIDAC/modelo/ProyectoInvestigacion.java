@@ -47,15 +47,7 @@ public class ProyectoInvestigacion {
     @OneToMany(mappedBy = "proyectoInvestigacion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<AreaInvestigacionProyecto> areaInvestigacionProyecto = new HashSet<>();
-    
-    @OneToMany(mappedBy = "proyectoInvestigacion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<InstitucionEjecutora> institucionEjecutora = new HashSet<>();
-    
-    @OneToMany(mappedBy = "proyectoInvestigacion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<InstitucionParticipante> institucionParticipante = new HashSet<>();
-    
+   
     @OneToMany(mappedBy = "proyectoInvestigacion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<SectorImpactoProyecto> sectorImpactoProyecto = new HashSet<>();
@@ -221,13 +213,7 @@ public class ProyectoInvestigacion {
         return areaInvestigacionProyecto;
     }
 
-    public Set<InstitucionEjecutora> getInstitucionEjecutora() {
-        return institucionEjecutora;
-    }
 
-    public Set<InstitucionParticipante> getInstitucionParticipante() {
-        return institucionParticipante;
-    }
 
     public Set<SectorImpactoProyecto> getSectorImpactoProyecto() {
         return sectorImpactoProyecto;
@@ -239,14 +225,6 @@ public class ProyectoInvestigacion {
 
     public void setAreaInvestigacionProyecto(Set<AreaInvestigacionProyecto> areaInvestigacionProyecto) {
         this.areaInvestigacionProyecto = areaInvestigacionProyecto;
-    }
-
-    public void setInstitucionEjecutora(Set<InstitucionEjecutora> institucionEjecutora) {
-        this.institucionEjecutora = institucionEjecutora;
-    }
-
-    public void setInstitucionParticipante(Set<InstitucionParticipante> institucionParticipante) {
-        this.institucionParticipante = institucionParticipante;
     }
 
     public void setSectorImpactoProyecto(Set<SectorImpactoProyecto> sectorImpactoProyecto) {

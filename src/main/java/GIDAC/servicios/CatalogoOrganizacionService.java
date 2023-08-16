@@ -16,6 +16,9 @@ public interface CatalogoOrganizacionService<T>{
     public T guardar(T objeto);
     public T buscarPorId(String id);
     public List<T> buscarPorVigencia(Boolean vigencia);
+    public List<T> buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion);
     public List<T> buscarTodos();
     public void eliminar(String id);
+    
+    
 }

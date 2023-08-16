@@ -1,9 +1,7 @@
 package GIDAC.controladores;
 
 
-import GIDAC.modelo.CatalogoEspoch;
 import GIDAC.modelo.CatalogoOrganizacion;
-import GIDAC.modelo.EquivalenciaVariable;
 import GIDAC.modelo.VariableUnidadMedida;
 import GIDAC.modelo.ValorPermitido;
 import GIDAC.modelo.Variable;

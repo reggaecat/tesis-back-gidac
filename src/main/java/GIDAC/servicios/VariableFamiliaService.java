@@ -5,7 +5,6 @@
 package GIDAC.servicios;
 
 
-import GIDAC.modelo.EquivalenciaVariable;
 import java.util.List;
 
 /**
@@ -16,7 +15,7 @@ public interface VariableFamiliaService<T>{
     public T guardar(T objeto);
     public T buscarPorId(String idVariable, Integer idFamilia, Boolean vigencia);
     public List<T> buscarTodos(Boolean vigencia);
-    public void eliminar(String idVariable, Integer idFamilia);
+    public void eliminar(Integer idVariable, Integer idFamilia);
     public List<Object[]> listarFamiliasDifusion();
 }
 

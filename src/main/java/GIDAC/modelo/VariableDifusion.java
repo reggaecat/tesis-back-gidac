@@ -2,14 +2,11 @@ package GIDAC.modelo;
 
 
 public class VariableDifusion {
-    private String idVariable;
+    private Integer idVariable;
+    private String codigoVariable;
     private String nombreVariable;
     private String nombreSIglas;
     private String nombreOrganizacion;
-
-    public String getIdVariable() {
-        return idVariable;
-    }
 
     public String getNombreVariable() {
         return nombreVariable;
@@ -23,10 +20,6 @@ public class VariableDifusion {
         return nombreOrganizacion;
     }
 
-    public void setIdVariable(String idVariable) {
-        this.idVariable = idVariable;
-    }
-
     public void setNombreVariable(String nombreVariable) {
         this.nombreVariable = nombreVariable;
     }
@@ -37,6 +30,22 @@ public class VariableDifusion {
 
     public void setNombreOrganizacion(String nombreOrganizacion) {
         this.nombreOrganizacion = nombreOrganizacion;
+    }
+
+    public Integer getIdVariable() {
+        return idVariable;
+    }
+
+    public String getCodigoVariable() {
+        return codigoVariable;
+    }
+
+    public void setIdVariable(Integer idVariable) {
+        this.idVariable = idVariable;
+    }
+
+    public void setCodigoVariable(String codigoVariable) {
+        this.codigoVariable = codigoVariable;
     }
     
     

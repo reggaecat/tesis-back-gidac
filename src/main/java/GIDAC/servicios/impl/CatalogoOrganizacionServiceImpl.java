@@ -41,4 +41,11 @@ public class CatalogoOrganizacionServiceImpl implements CatalogoOrganizacionServ
     public List buscarPorVigencia(Boolean vigencia) {
         return repository.findByVigencia(vigencia);
     }
+    
+    @Override
+    public List buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion) {
+        return repository.findByVigenciaAndOrganizacionIdOrganizacion(vigencia, idOrganizacion);
+    }
+    
+    
 }

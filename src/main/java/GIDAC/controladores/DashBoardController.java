@@ -100,6 +100,9 @@ public class DashBoardController {
             dato1=(String) objeto[0];
             dato2=(String) objeto[1];
             dato4=(double) objeto[2];
+            if(dato2.equals("NA")){
+                dato2="";
+            }
             BigDecimal bd = new BigDecimal(dato4);
             bd = bd.setScale(3, RoundingMode.HALF_UP);
             dato4 = bd.doubleValue();

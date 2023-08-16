@@ -14,14 +14,20 @@ import java.util.List;
  */
 public interface VariableService<T>{
     public T guardar(T objeto);
-    public T buscarPorId(String id);
+    public T buscarPorId(Integer id);
     public List<T> buscarTodos();
     public List<Object[]> litsarVairbalesCompletas();
     public List<Object[]> litsarVairbalesCompletasInvestigador();
     public List<Object[]> litsarVairbalesConDatosSinFamilia();
     public List<Object[]> litsarVairbalesConDatosConFiltroFamilia(Integer idFamilia);
+    public List<Object[]> litsarVairbalesConDatosSinFamiliaOrganizacion(Integer idOrganizacion);
+    public List<Object[]> litsarVairbalesConDatosConFiltroFamiliaOrganizacion(Integer idFamilia, Integer idOrganizacion);
     public List<Object[]> litsarVairbalesConDatosSinFamiliaInvestigador(Integer idProyecto);
     public List<Object[]> litsarVairbalesConDatosConFiltroFamiliaInvestigador(Integer idFamilia, Integer idProyecto);
     public List<Object[]> litsarVairbalesIncompletas();
-    public void eliminar(String id);
+    public void eliminar(Integer id);
+    
+    public List<Object[]> listarCatalogoParaPerfilado();
+    public List<Object[]> listarCatalogoParaPerfiladoPorProyecto(Integer id);
+    public List<Object[]> listarCatalogoParaPerfiladoPorProyectoOganizacion(Integer id, Integer idOrganizacion);
 }

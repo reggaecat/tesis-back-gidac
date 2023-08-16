@@ -10,25 +10,25 @@ import java.util.Objects;
 public class VariableFamiliaId implements Serializable {
     
     
-    private String idVariable;
+    private Integer idVariable;
     private Integer idFamilia;
 
     public VariableFamiliaId() {
         
     }
 
-    public VariableFamiliaId(String idVariable, Integer idFamilia) {
+    public VariableFamiliaId(Integer idVariable, Integer idFamilia) {
         this.idVariable = idVariable;
         this.idFamilia = idFamilia;
     }
 
     
-    public String getIdVariable() {
+    public Integer getIdVariable() {
         return idVariable;
     }
 
 
-    public void setIdVariable(String idVariable) {
+    public void setIdVariable(Integer idVariable) {
         this.idVariable = idVariable;
     }
 

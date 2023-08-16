@@ -7,16 +7,28 @@ package GIDAC.modelo;
 public class VariablesEncontradas{
     
     private Integer idVariableUnidadMedida;
-    private String idVariable;
+    private Integer idVariable;
+    private String codigoVariable;
     private Integer numeroColumna;
     private Integer cantidadDatos;
     private String nombreVariable;
     private String nombreOrganizacion;
-    private String nombreVariableEspoch;
+    private String nombreVariableOrganizacion;
     private String nombreTipoVariable;
     private String unidadMedida;
 
-    public void setIdVariable(String idVariable) {
+    public String getCodigoVariable() {
+        return codigoVariable;
+    }
+
+    public void setCodigoVariable(String codigoVariable) {
+        this.codigoVariable = codigoVariable;
+    }
+
+    
+    
+    
+    public void setIdVariable(Integer idVariable) {
         this.idVariable = idVariable;
     }
 
@@ -24,7 +36,7 @@ public class VariablesEncontradas{
         this.numeroColumna = numeroColumna;
     }
 
-    public String getIdVariable() {
+    public Integer getIdVariable() {
         return idVariable;
     }
 
@@ -80,16 +92,15 @@ public class VariablesEncontradas{
         this.unidadMedida = unidadMedida;
     }
 
-    public String getNombreVariableEspoch() {
-        return nombreVariableEspoch;
+    public String getNombreVariableOrganizacion() {
+        return nombreVariableOrganizacion;
     }
 
-    public void setNombreVariableEspoch(String nombreVariableEspoch) {
-        this.nombreVariableEspoch = nombreVariableEspoch;
+    public void setNombreVariableOrganizacion(String nombreVariableOrganizacion) {
+        this.nombreVariableOrganizacion = nombreVariableOrganizacion;
     }
 
     
-   
     
     
     

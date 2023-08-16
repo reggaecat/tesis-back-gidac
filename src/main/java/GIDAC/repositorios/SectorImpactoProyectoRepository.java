@@ -1,6 +1,5 @@
 package GIDAC.repositorios;
 
-import GIDAC.modelo.Institucion;
 import GIDAC.modelo.SectorImpacto;
 import GIDAC.modelo.SectorImpactoProyecto;
 import GIDAC.modelo.SectorImpactoProyectoId;

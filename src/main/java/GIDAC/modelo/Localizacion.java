@@ -18,9 +18,7 @@ public class Localizacion {
     @JsonIgnore
     private Set<LocalizacionProyecto> localizacionProyecto = new HashSet<>();
     
-    @OneToMany(mappedBy = "localizacion",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
-    @JsonIgnore
-    private Set<Institucion> institucion = new HashSet<>();
+   
 
     private String codigoPais;
     private String nombrePais;
@@ -111,17 +109,10 @@ public class Localizacion {
         return localizacionProyecto;
     }
 
-    public Set<Institucion> getInstitucion() {
-        return institucion;
-    }
-
     public void setLocalizacionProyecto(Set<LocalizacionProyecto> localizacionProyecto) {
         this.localizacionProyecto = localizacionProyecto;
     }
 
-    public void setInstitucion(Set<Institucion> institucion) {
-        this.institucion = institucion;
-    }
 
     public boolean isVigencia() {
         return vigencia;

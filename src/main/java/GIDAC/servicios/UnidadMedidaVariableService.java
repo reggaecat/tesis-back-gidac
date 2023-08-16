@@ -5,7 +5,6 @@
 package GIDAC.servicios;
 
 
-import GIDAC.modelo.EquivalenciaVariable;
 import java.util.List;
 
 /**
@@ -15,7 +14,7 @@ import java.util.List;
 public interface UnidadMedidaVariableService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
-    public T buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, String idVariable, Boolean vigencia);
+    public T buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia);
     public List<T> buscarTodos(Boolean vigencia);
     public void eliminar(Integer id);
 }

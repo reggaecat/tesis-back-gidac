@@ -28,9 +28,6 @@ public class DatoRecolectado {
     @JoinColumn(name = "id_dataset")
     private Dataset dataset;
     
-    @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "id_variable")
-    private Variable variable;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable_unidad_medida")
@@ -42,14 +39,6 @@ public class DatoRecolectado {
 
     public Dataset getDataset() {
         return dataset;
-    }
-
-    public Variable getVariable() {
-        return variable;
-    }
-    
-     public void setVariable(Variable variable) {
-        this.variable = variable;
     }
 
     public String getValor() {

@@ -1,6 +1,5 @@
 package GIDAC.repositorios;
 
-import GIDAC.modelo.Institucion;
 import GIDAC.modelo.SectorImpacto;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;

@@ -5,6 +5,11 @@ import GIDAC.modelo.CatalogoOrganizacion;
 import GIDAC.modelo.Organizacion;
 import GIDAC.servicios.CatalogoOrganizacionService;
 import GIDAC.servicios.OrganizacionService;
+import GIDAC.servicios.TipoVariableService;
+import GIDAC.servicios.UnidadMedidaService;
+import GIDAC.servicios.UnidadMedidaVariableService;
+import GIDAC.servicios.ValorPermitidoService;
+import GIDAC.servicios.VariableFamiliaService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.InputStream;
 import java.util.List;
@@ -34,6 +39,9 @@ public class CatalogoOrganizacionController {
         return service.guardar(oC);    
     }
     
+ 
+    
+    
     @GetMapping("/obtener-catalogo-organizacion/{id}")
     public Object obtener(@PathVariable String id)
     {
@@ -44,6 +52,14 @@ public class CatalogoOrganizacionController {
     public List<CatalogoOrganizacion> listar()
     {
         List<CatalogoOrganizacion> oC= service.buscarTodos();
+        oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
+        return oC;
+    }
+    
+    @GetMapping("/listar-por-organizacion/{id}")
+    public List<CatalogoOrganizacion> listarCatalogoPorOrganizacion(@PathVariable Integer id)
+    {
+        List<CatalogoOrganizacion> oC= service.buscarPorVigenciaAndOrganizacion(true, id);
         oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
         return oC;
     }

@@ -20,17 +20,30 @@ public interface DatoRecolectadoService<T>{
     public void eliminar(Integer id);
     public List<T> buscarPorVigenciaDataset(Boolean vigencia, Integer id);
     public List<T> buscarPorVigenciaProyecto(Boolean vigencia, Integer id);
-    public List<T> buscarPorVigenciaVariable(Boolean vigencia, String id);
+//    public List<T> buscarPorVigenciaVariable(Boolean vigencia, Integer id);
     public List<T> buscarPorVigenciaVariableUnidadMedida(Boolean vigencia, Integer id);
     public List<T> buscarPorEditable();
+    
+    
     public List<Object[]> listarTodosLosDatosNumerico();
-    public List<Object[]> listarTodosLosDatosProyectoNumerico(Integer idProyecto);
-    public List<Object[]> listarTodosLosDatosVariableNumerico(String idVariable);
-    public List<Object[]> listarTodosLosDatosProyectoVariableNumerico(Integer idProyecto, String idVariable);
     public List<Object[]> listarTodosLosDatosNominal();
+    
+    public List<Object[]> listarTodosLosDatosProyectoNumerico(Integer idProyecto);
     public List<Object[]> listarTodosLosDatosProyectoNominal(Integer idProyecto);
-    public List<Object[]> listarTodosLosDatosVariableNominal(String idVariable);
-    public List<Object[]> listarTodosLosDatosProyectoVariableNominal(Integer idProyecto, String idVariable);
+    
+    public List<Object[]> listarTodosLosDatosNumericoVariable(Integer idVariable);
+    public List<Object[]> listarTodosLosDatosNominalVariable(Integer idVariable);
+    
+    public List<Object[]> listarTodosLosDatosProyectoNumericoVariable(Integer idProyecto, Integer idVariable);
+    public List<Object[]> listarTodosLosDatosProyectoNominalVariable(Integer idProyecto, Integer idVariable);
+    
+    
+    public List<Object[]> listarTodosLosDatosVariableNumerico(Integer idVariable);
+    public List<Object[]> listarTodosLosDatosProyectoVariableNumerico(Integer idProyecto, Integer idVariable);
+    
+    
+    public List<Object[]> listarTodosLosDatosVariableNominal(Integer idVariable);
+    public List<Object[]> listarTodosLosDatosProyectoVariableNominal(Integer idProyecto, Integer idVariable);
     public List<Object[]> obtenerAlturasMasUsuadas();
     public List<Object[]> obtenerUnidadesDeMedidaMasUsuadas();
     public List<Object[]> obteneProfundidadesMasUsuadas();

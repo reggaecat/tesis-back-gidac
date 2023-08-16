@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado,Integer> {
     List<DatoRecolectado> findByVigenciaAndDataset(Boolean vigencia,Dataset dataset);
-    List<DatoRecolectado> findByVigenciaAndVariable(Boolean vigencia, Variable variable);
+    //List<DatoRecolectado> findByVigenciaAndVariable(Boolean vigencia, Variable variable);
     List<DatoRecolectado> findByVigenciaAndVariableUnidadMedida(Boolean vigencia, VariableUnidadMedida variableUnidadMedida);
     List<DatoRecolectado> findByVigenciaAndDatasetProyectoInvestigacionIdProyecto(Boolean vigencia, Integer idProyecto);
     List<DatoRecolectado> findByEditable(Boolean editable);
@@ -33,7 +33,9 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
 //            nativeQuery=true)
 //    List<Object[]> obtenerPromedioValores();
     
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE)) AS promedioValor" +
+    
+    //    variables
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +
             "            FROM parcela p" +
             "             JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
             "             JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -41,17 +43,17 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "             JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
             "             JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
             "             JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-            "             JOIN variable_unidad_medida vum " +
-            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida" +
-            "             JOIN variable v ON v.id_variable=vum.id_variable" +
-            "             JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable_unidad_medida=vum.id_variable_unidad_medida)" +
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida"+
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
             "             WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND v.id_tipo_variable=1" +
-            "             GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima,pr.profundidad_minima, um.abreviatura, m.abreviatura, v.nombre_variable" +
+            "             GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima,pr.profundidad_minima, um.abreviatura, m.abreviatura, v.nombre_variable" +
             " ORDER BY 3 ASC",
             nativeQuery=true)
     List<Object[]> obtenerPromedioValoresNumerico();
     
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
                 " FROM parcela p" +
                 " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
                 " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -59,32 +61,18 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
                 " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
                 " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-                " JOIN variable_unidad_medida vum " +
-                " JOIN variable v ON v.id_variable=vum.id_variable" +
-                " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND  d.id_variable_unidad_medida = vum.id_variable_unidad_medida)" +
+            
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            
                 " WHERE v.id_tipo_variable=2 AND d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2" +
-                " GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
+                " GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
                 " ORDER BY 3 ASC",
             nativeQuery=true)
     List<Object[]> obtenerPromedioValoresNominal();
     
-//    @Query(value="SELECT p.coordenadaX, p.coordenadaY, pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, AVG(d.valor) AS promedioValor" +
-//            " FROM parcela p" +
-//            " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
-//            " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
-//            " JOIN unidad_medida m ON pr.id_unidad_medida = m.id_unidad_medida" +
-//            " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
-//            " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto"+
-//            " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto"+
-//            " JOIN variable v" +
-//            " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable=v.id_variable)" +
-//            " WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy" +
-//            " GROUP BY p.coordenadaX, p.coordenadaY, pr.profundidad_maxima,pr.profundidad_minima, m.abreviatura, v.nombre_variable"+
-//            " ORDER BY 3",
-//            nativeQuery=true)
-//    List<Object[]> obtenerPromedioValoresProyecto(@Param("idProy") Integer idProy);
-    
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE)) AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +
             "            FROM parcela p" +
             "             JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
             "             JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -92,18 +80,18 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "             JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
             "             JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
             "             JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-            "             JOIN variable_unidad_medida vum " +
-            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida" +
-            "             JOIN variable v ON v.id_variable=vum.id_variable" +
-            "             JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable_unidad_medida=vum.id_variable_unidad_medida)" +
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida"+
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
             "             WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy AND v.id_tipo_variable=1" +
-            "             GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
+            "             GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
             " ORDER BY 3 ASC",
             nativeQuery=true)
     List<Object[]> obtenerPromedioValoresProyectoNumerico(@Param("idProy") Integer idProy);
+                   
     
-    
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
                 " FROM parcela p" +
                 " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
                 " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -111,15 +99,93 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
                 " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
                 " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-                " JOIN variable_unidad_medida vum " +
-                " JOIN variable v ON v.id_variable=vum.id_variable" +
-                " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND  d.id_variable_unidad_medida = vum.id_variable_unidad_medida)" +
+                "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            
                 " WHERE v.id_tipo_variable=2 AND d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy" +
-                " GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
+                " GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
                 " ORDER BY 3 ASC",
             nativeQuery=true)
     List<Object[]> obtenerPromedioValoresProyectoNominal(@Param("idProy") Integer idProy);
     
+    
+    
+    
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +
+            "            FROM parcela p" +
+            "             JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
+            "             JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
+            "             JOIN unidad_medida m ON pr.id_unidad_medida = m.id_unidad_medida" +
+            "             JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
+            "             JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
+            "             JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida"+
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            "             WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND v.id_tipo_variable=1 AND v.id_variable=:idVariable" +
+            "             GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima,pr.profundidad_minima, um.abreviatura, m.abreviatura, v.nombre_variable" +
+            " ORDER BY 3 ASC",
+            nativeQuery=true)
+    List<Object[]> obtenerPromedioValoresNumericoVariable(@Param("idVariable") Integer idVariable);
+    
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
+                " FROM parcela p" +
+                " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
+                " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
+                " JOIN unidad_medida m ON pr.id_unidad_medida = m.id_unidad_medida" +
+                " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
+                " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
+                " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
+                "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            
+                " WHERE v.id_tipo_variable=2 AND d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND v.id_variable=:idVariable" +
+                " GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
+                " ORDER BY 3 ASC",
+            nativeQuery=true)
+    List<Object[]> obtenerPromedioValoresNominalVariable(@Param("idVariable") Integer idVariable);
+    
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +
+            "            FROM parcela p" +
+            "             JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
+            "             JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
+            "             JOIN unidad_medida m ON pr.id_unidad_medida = m.id_unidad_medida" +
+            "             JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
+            "             JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
+            "             JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida"+
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            "             WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy AND v.id_tipo_variable=1 AND v.id_variable=:idVariable" +
+            "             GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
+            " ORDER BY 3 ASC",
+            nativeQuery=true)
+    List<Object[]> obtenerPromedioValoresProyectoNumericoVariable(@Param("idProy") Integer idProy, @Param("idVariable") Integer idVariable);
+                   
+    
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
+                " FROM parcela p" +
+                " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
+                " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
+                " JOIN unidad_medida m ON pr.id_unidad_medida = m.id_unidad_medida" +
+                " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
+                " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
+                " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
+                "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            
+                " WHERE v.id_tipo_variable=2 AND d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy AND v.id_variable=:idVariable" +
+                " GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
+                " ORDER BY 3 ASC",
+            nativeQuery=true)
+    List<Object[]> obtenerPromedioValoresProyectoNominalVariable(@Param("idProy") Integer idProy, @Param("idVariable") Integer idVariable);
+    
+    //-------------------------------------------------------------------------------------
     
 //     @Query(value="SELECT p.coordenadaX, p.coordenadaY, pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, AVG(d.valor) AS promedioValor" +
 //            " FROM parcela p" +
@@ -137,7 +203,7 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
 //            nativeQuery=true)
 //    List<Object[]> obtenerPromedioValoresCatalogo(@Param("idVar") String idvariable);
     
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE)) AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +
             "            FROM parcela p" +
             "             JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
             "             JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -145,18 +211,18 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "             JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
             "             JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
             "             JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-            "             JOIN variable_unidad_medida vum " +
-            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida" +
-            "             JOIN variable v ON v.id_variable=vum.id_variable" +
-            "             JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable_unidad_medida=vum.id_variable_unidad_medida)" +
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida"+
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
             "             WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND v.id_variable = :idVar AND v.id_tipo_variable=1" +
-            "             GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
+            "             GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
             " ORDER BY 3 ASC",
             nativeQuery=true)
-    List<Object[]> obtenerPromedioValoresCatalogoNumerico(@Param("idVar") String idvariable);
+    List<Object[]> obtenerPromedioValoresCatalogoNumerico(@Param("idVar") Integer idvariable);
     
     
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
                 " FROM parcela p" +
                 " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
                 " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -164,14 +230,15 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
                 " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
                 " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-                " JOIN variable_unidad_medida vum " +
-                " JOIN variable v ON v.id_variable=vum.id_variable" +
-                " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND  d.id_variable_unidad_medida = vum.id_variable_unidad_medida)" +
+                "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            
                 " WHERE v.id_tipo_variable=2 AND d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND v.id_variable = :idVar" +
-                " GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
+                " GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
                 " ORDER BY 3 ASC",
             nativeQuery=true)
-    List<Object[]> obtenerPromedioValoresCatalogoNominal(@Param("idVar") String idvariable);
+    List<Object[]> obtenerPromedioValoresCatalogoNominal(@Param("idVar") Integer idvariable);
     
 //    @Query(value="SELECT p.coordenadaX, p.coordenadaY, pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, AVG(d.valor) AS promedioValor" +
 //            " FROM parcela p" +
@@ -189,7 +256,7 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
 //            nativeQuery=true)
 //    List<Object[]> obtenerPromedioValoresProyectoVariable(@Param("idProy") Integer idProy, @Param("idVar") String idVariable);
     
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE)) AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +
             "            FROM parcela p" +
             "             JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
             "             JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -197,17 +264,17 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "             JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
             "             JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
             "             JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-            "             JOIN variable_unidad_medida vum " +
-            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida" +
-            "             JOIN variable v ON v.id_variable=vum.id_variable" +
-            "             JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND d.id_variable_unidad_medida=vum.id_variable_unidad_medida)" +
+            "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN unidad_medida um ON um.id_unidad_medida=vum.id_unidad_medida"+
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
             "             WHERE d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy AND v.id_variable = :idVar AND v.id_tipo_variable=1" +
-            "             GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
+            "             GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima,pr.profundidad_minima,um.abreviatura, m.abreviatura, v.nombre_variable" +
             " ORDER BY 3 ASC",
             nativeQuery=true)
-    List<Object[]> obtenerPromedioValoresProyectoVariableNumerico(@Param("idProy") Integer idProy, @Param("idVar") String idVariable);
+    List<Object[]> obtenerPromedioValoresProyectoVariableNumerico(@Param("idProy") Integer idProy, @Param("idVar") Integer idVariable);
 
-    @Query(value="SELECT p.coordenadaX as coordenadaX, p.coordenadaY as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
+    @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable,  d.valor AS promedioValor" +
                 " FROM parcela p" +
                 " JOIN profundidad_parcela pp ON p.id_parcela = pp.id_parcela" +
                 " JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
@@ -215,14 +282,15 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 " JOIN dataset ds on (ds.id_parcela=pp.id_parcela AND ds.id_profundidad=pp.id_profundidad)" +
                 " JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
                 " JOIN estado_proyecto_investigacion ep ON ep.id_estado_proyecto=pi.id_estado_proyecto" +
-                " JOIN variable_unidad_medida vum " +
-                " JOIN variable v ON v.id_variable=vum.id_variable" +
-                " JOIN dato_recolectado d ON (d.id_dataset = ds.id_dataset AND  d.id_variable_unidad_medida = vum.id_variable_unidad_medida)" +
+                "             JOIN dato_recolectado d ON d.id_dataset = ds.id_dataset"+
+            "             JOIN variable_unidad_medida vum on d.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+            "             JOIN variable v ON v.id_variable=vum.id_variable"+
+            
                 " WHERE v.id_tipo_variable=2 AND d.vigencia=true AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND pi.id_proyecto= :idProy AND v.id_variable = :idVar" +
-                " GROUP BY p.coordenadaX, p.coordenadaY,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
+                " GROUP BY p.coordenadax, p.coordenaday,  pr.profundidad_maxima, pr.profundidad_minima, m.abreviatura, v.nombre_variable, d.valor" +
                 " ORDER BY 3 ASC",
             nativeQuery=true)
-    List<Object[]> obtenerPromedioValoresProyectoVariableNominal(@Param("idProy") Integer idProy, @Param("idVar") String idVariable);
+    List<Object[]> obtenerPromedioValoresProyectoVariableNominal(@Param("idProy") Integer idProy, @Param("idVar") Integer idVariable);
 
     //---------------------------------------------------------------------------------------------
     //DASH INVESTIGADOR
@@ -264,12 +332,12 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             nativeQuery=true)
     List<Object[]> obteneProfundidadesMasUsuadas();
     
-    @Query(value="SELECT v.nombre_variable,um.abreviatura, AVG(CAST(dr.valor AS DOUBLE))" +
+    @Query(value="SELECT v.nombre_variable,um.abreviatura, AVG(CAST(dr.valor AS DOUBLE PRECISION))" +
                 "   FROM dato_recolectado dr JOIN variable_unidad_medida vum on vum.id_variable_unidad_medida=dr.id_variable_unidad_medida" +
                 "    JOIN variable v on v.id_variable=vum.id_variable" +
                 "   JOIN unidad_medida um on um.id_unidad_medida=vum.id_unidad_medida"+
                 "   WHERE v.id_tipo_variable=1" +
-                "   GROUP BY  v.nombre_variable" +
+                "   GROUP BY  v.nombre_variable,  um.abreviatura" +
                 "   ORDER BY 2 DESC",
             nativeQuery=true)
     List<Object[]> obteneValorPromedioVariablesNumericas();
@@ -526,20 +594,20 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
     
     //grafica solictudes por mes
     
-    @Query(value="SELECT YEAR(sd.fecha_envio_solicitud) AS anio, "+ 
+    @Query(value="SELECT EXTRACT(YEAR FROM sd.fecha_envio_solicitud) AS anio, "+ 
             " COUNT(sd.id_solicitud_descarga) AS total_registros" +
             "   FROM solicitud_descarga sd JOIN proyecto_investigacion pi ON pi.id_proyecto=sd.id_proyecto" +
             "	JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
             "    JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY YEAR(sd.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sd.fecha_envio_solicitud)" +
             "   ORDER BY 1",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesPorAnio(@Param("idUsuario") Integer idUsuario);
     
-     @Query(value="SELECT YEAR(sd.fecha_envio_solicitud) AS anio, "+ 
-             "  MONTH(sd.fecha_envio_solicitud)," +
-             "  CASE MONTH(sd.fecha_envio_solicitud)" +
+     @Query(value="SELECT EXTRACT(YEAR FROM sd.fecha_envio_solicitud) AS anio, "+ 
+             "  EXTRACT(MONTH FROM sd.fecha_envio_solicitud)," +
+             "  CASE EXTRACT(MONTH FROM sd.fecha_envio_solicitud)" +
                 "        WHEN 1 THEN 'Enero'" +
                 "        WHEN 2 THEN 'Febrero'" +
                 "        WHEN 3 THEN 'Marzo'" +
@@ -558,14 +626,14 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "	JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
             "    JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY YEAR(sd.fecha_envio_solicitud), MONTH(sd.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sd.fecha_envio_solicitud), EXTRACT(MONTH FROM sd.fecha_envio_solicitud)" +
             "   ORDER BY 1,2",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesPorMes(@Param("idUsuario") Integer idUsuario);
     
-    @Query(value="SELECT YEAR(sd.fecha_envio_solicitud) AS anio, "+ 
-            "  MONTH(sd.fecha_envio_solicitud)," +
-             "  CASE MONTH(sd.fecha_envio_solicitud)" +
+    @Query(value="SELECT EXTRACT(YEAR FROM sd.fecha_envio_solicitud) AS anio, "+ 
+            "  EXTRACT(MONTH FROM sd.fecha_envio_solicitud)," +
+             "  CASE EXTRACT(MONTH FROM sd.fecha_envio_solicitud)" +
                 "        WHEN 1 THEN 'Enero'" +
                 "        WHEN 2 THEN 'Febrero'" +
                 "        WHEN 3 THEN 'Marzo'" +
@@ -579,13 +647,13 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 "        WHEN 11 THEN 'Noviembre'" +
                 "        WHEN 12 THEN 'Diciembre'" +
                 "    END AS mes, " + 
-            " DAY(sd.fecha_envio_solicitud) AS dia,"+
+            " EXTRACT(DAY FROM sd.fecha_envio_solicitud) AS dia,"+
             " COUNT(sd.id_solicitud_descarga) AS total_registros" +
             "   FROM solicitud_descarga sd JOIN proyecto_investigacion pi ON pi.id_proyecto=sd.id_proyecto" +
             "	JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
             "    JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY YEAR(sd.fecha_envio_solicitud), MONTH(sd.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sd.fecha_envio_solicitud), EXTRACT(MONTH FROM sd.fecha_envio_solicitud), EXTRACT(DAY FROM sd.fecha_envio_solicitud)"+
             "   ORDER BY 1,2, 4",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesPorDia(@Param("idUsuario") Integer idUsuario);
@@ -593,20 +661,20 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
     
     //solicitud actualizar
     
-    @Query(value="SELECT YEAR(sa.fecha_envio_solicitud) AS anio, " +
+    @Query(value="SELECT EXTRACT(YEAR FROM sa.fecha_envio_solicitud) AS anio, " +
             "   COUNT(sa.id_solicitud_actualizar) AS total_registros" +
             "   FROM solicitud_actualizar_dato sa JOIN grupo_investigacion gi on gi.id_proyecto=sa.id_proyecto" +
             "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
             "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY YEAR(sa.fecha_envio_solicitud), MONTH(sa.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sa.fecha_envio_solicitud)" +
             "   ORDER BY 1,2",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesActualizarPorAnio(@Param("idUsuario") Integer idUsuario);
     
-    @Query(value="SELECT YEAR(sa.fecha_envio_solicitud) AS anio, " +
-            "  MONTH(sa.fecha_envio_solicitud)," +
-            "  CASE MONTH(sa.fecha_envio_solicitud)" +
+    @Query(value="SELECT EXTRACT(YEAR FROM sa.fecha_envio_solicitud)  AS anio, " +
+            "  EXTRACT(MONTH FROM sa.fecha_envio_solicitud)," +
+            "  CASE EXTRACT(MONTH FROM sa.fecha_envio_solicitud)" +
                 "        WHEN 1 THEN 'Enero'" +
                 "        WHEN 2 THEN 'Febrero'" +
                 "        WHEN 3 THEN 'Marzo'" +
@@ -625,14 +693,14 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
             "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY YEAR(sa.fecha_envio_solicitud), MONTH(sa.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sa.fecha_envio_solicitud), EXTRACT(MONTH FROM sa.fecha_envio_solicitud)" +
             "   ORDER BY 1,2",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesActualizarPorMes(@Param("idUsuario") Integer idUsuario);
     
-    @Query(value="SELECT YEAR(sa.fecha_envio_solicitud) AS anio, " +
-            "  MONTH(sa.fecha_envio_solicitud)," +
-            "  CASE MONTH(sa.fecha_envio_solicitud)" +
+    @Query(value="SELECT EXTRACT(YEAR FROM sa.fecha_envio_solicitud) AS anio, " +
+            "  EXTRACT(MONTH FROM sa.fecha_envio_solicitud)," +
+            "  CASE EXTRACT(MONTH FROM sa.fecha_envio_solicitud)" +
                 "        WHEN 1 THEN 'Enero'" +
                 "        WHEN 2 THEN 'Febrero'" +
                 "        WHEN 3 THEN 'Marzo'" +
@@ -652,24 +720,24 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
             "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY YEAR(sa.fecha_envio_solicitud), MONTH(sa.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sa.fecha_envio_solicitud), EXTRACT(MONTH FROM sa.fecha_envio_solicitud)" +
             "   ORDER BY 1,2,4",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesActualizarPorDia(@Param("idUsuario") Integer idUsuario);
     
     
    
-     @Query(value="SELECT YEAR(a.fecha_acceso) AS anio, " +
+     @Query(value="SELECT EXTRACT(YEAR FROM a.fecha_acceso) AS anio, " +
             "   COUNT(a.id_acceso) AS total_registros" +
             "   FROM acceso a JOIN usuario u ON u.id_usuario=a.id_usuario" +
-            "   GROUP BY YEAR(a.fecha_acceso)" +
+            "   GROUP BY EXTRACT(YEAR FROM a.fecha_acceso)" +
             "   ORDER BY 1",
             nativeQuery=true)
     List<Object[]> obtenerGraficaAccesoPorAnio();
     
-    @Query(value="SELECT YEAR(a.fecha_acceso) AS anio, " +
-            "  MONTH(a.fecha_acceso)," +
-            "  CASE MONTH(a.fecha_acceso)" +
+    @Query(value="SELECT EXTRACT(YEAR FROM a.fecha_acceso) AS anio, " +
+            "  EXTRACT(MONTH FROM a.fecha_acceso)," +
+            "  CASE EXTRACT(MONTH FROM a.fecha_acceso)" +
                 "        WHEN 1 THEN 'Enero'" +
                 "        WHEN 2 THEN 'Febrero'" +
                 "        WHEN 3 THEN 'Marzo'" +
@@ -685,14 +753,14 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 "    END AS mes, " + 
             "   COUNT(a.id_acceso) AS total_registros" +
             "   FROM acceso a JOIN usuario u ON u.id_usuario=a.id_usuario" +
-            "   GROUP BY YEAR(a.fecha_acceso), MONTH(a.fecha_acceso)" +
+            "   GROUP BY EXTRACT(YEAR FROM a.fecha_acceso),EXTRACT(MONTH FROM a.fecha_acceso)" +
             "   ORDER BY 1,2",
             nativeQuery=true)
     List<Object[]> obtenerGraficaAccesoPorMes();
     
-    @Query(value="SELECT YEAR(a.fecha_acceso) AS anio, " +
-            "  MONTH(a.fecha_acceso)," +
-            "  CASE MONTH(a.fecha_acceso)" +
+    @Query(value="SELECT EXTRACT(YEAR FROM a.fecha_acceso) AS anio, " +
+            "  EXTRACT(MONTH FROM a.fecha_acceso)," +
+            "  CASE EXTRACT(MONTH FROM a.fecha_acceso)" +
                 "        WHEN 1 THEN 'Enero'" +
                 "        WHEN 2 THEN 'Febrero'" +
                 "        WHEN 3 THEN 'Marzo'" +
@@ -706,10 +774,10 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 "        WHEN 11 THEN 'Noviembre'" +
                 "        WHEN 12 THEN 'Diciembre'" +
                 "    END AS mes, " + 
-            "   DAY(a.fecha_acceso) AS dia,"+
+            "   EXTRACT(DAY FROM a.fecha_acceso) AS dia,"+
             "   COUNT(a.id_acceso) AS total_registros" +
             "   FROM acceso a JOIN usuario u ON u.id_usuario=a.id_usuario" +
-            "   GROUP BY YEAR(a.fecha_acceso), MONTH(a.fecha_acceso),  DAY(a.fecha_acceso)" +
+            "   GROUP BY EXTRACT(YEAR FROM a.fecha_acceso), EXTRACT(MONTH FROM a.fecha_acceso),  EXTRACT(DAY FROM a.fecha_acceso)" +
             "   ORDER BY 1,2,4",
             nativeQuery=true)
     List<Object[]> obtenerGraficaAccesoPorDia();

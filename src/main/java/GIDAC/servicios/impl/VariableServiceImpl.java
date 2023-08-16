@@ -1,3 +1,4 @@
+
 package GIDAC.servicios.impl;
 
 
@@ -23,7 +24,7 @@ public class VariableServiceImpl implements VariableService {
     }
 
     @Override
-    public Variable buscarPorId(String id) {
+    public Variable buscarPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
 
@@ -33,7 +34,7 @@ public class VariableServiceImpl implements VariableService {
     }
 
     @Override
-    public void eliminar(String id) {
+    public void eliminar(Integer id) {
         repository.deleteById(id);
     }
 
@@ -63,6 +64,16 @@ public class VariableServiceImpl implements VariableService {
     public List<Object[]>  litsarVairbalesConDatosConFiltroFamilia(Integer idFamilia) {
         return repository.obtenerVariablesConDatosFiltradoPorFamilia(idFamilia);
     }
+    
+    @Override
+    public List<Object[]>  litsarVairbalesConDatosSinFamiliaOrganizacion(Integer idOrganizacion) {
+        return repository.obtenerVariablesConDatosSinFamiliaOrganizacion(idOrganizacion);
+    }
+
+    @Override
+    public List<Object[]>  litsarVairbalesConDatosConFiltroFamiliaOrganizacion(Integer idFamilia, Integer idOrganizacion) {
+        return repository.obtenerVariablesConDatosFiltradoPorFamiliaOrganizacion(idFamilia, idOrganizacion);
+    }
 
     @Override
     public List<Object[]>  litsarVairbalesConDatosSinFamiliaInvestigador(Integer idProyecto) {
@@ -74,4 +85,19 @@ public class VariableServiceImpl implements VariableService {
         return repository.obtenerVariablesConDatosFiltradoPorFamiliaInvestigador(idFamilia,idProyecto);
     }
 
+    @Override
+    public List<Object[]> listarCatalogoParaPerfilado() {
+        return repository.obtenerVariablesParaCatalogo();
+    }
+    
+    @Override
+    public List<Object[]> listarCatalogoParaPerfiladoPorProyecto(Integer id) {
+        return repository.obtenerVariablesParaCatalogoProProyeyecto(id);
+    }
+    
+    @Override
+    public List<Object[]> listarCatalogoParaPerfiladoPorProyectoOganizacion(Integer id, Integer idOrganizacion) {
+        return repository.obtenerVariablesParaCatalogoProProyeyectoOrganizacion(id,idOrganizacion);
+    }
+    
 }

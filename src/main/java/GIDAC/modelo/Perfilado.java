@@ -7,10 +7,12 @@ package GIDAC.modelo;
 public class Perfilado{
     
     
-    private String idVariable;
+    private Integer idVariable;
     private Integer numeroColumna;
     private String nombreVariable;
-    private String nombreVariableEspoch;
+    private String unidadMedida;
+    private String nombreVariableOrganizacion;
+    private String nombreOrganizacion;
     private String nombreTipoVariable;
     private Integer cantidadNulos;
     private Integer cantidadFueraRanngo;
@@ -19,7 +21,7 @@ public class Perfilado{
     private Integer cantidadDatosCorrectos;
     
 
-    public void setIdVariable(String idVariable) {
+    public void setIdVariable(Integer idVariable) {
         this.idVariable = idVariable;
     }
 
@@ -27,7 +29,7 @@ public class Perfilado{
         this.numeroColumna = numeroColumna;
     }
 
-    public String getIdVariable() {
+    public Integer getIdVariable() {
         return idVariable;
     }
 
@@ -91,15 +93,32 @@ public class Perfilado{
         this.cantidadDatosCorrectos = cantidadDatosCorrectos;
     }
 
-    public String getNombreVariableEspoch() {
-        return nombreVariableEspoch;
+    public void setNombreVariableOrganizacion(String nombreVariableOrganizacion) {
+        this.nombreVariableOrganizacion = nombreVariableOrganizacion;
     }
 
-    public void setNombreVariableEspoch(String nombreVariableEspoch) {
-        this.nombreVariableEspoch = nombreVariableEspoch;
+    public void setNombreOrganizacion(String nombreOrganizacion) {
+        this.nombreOrganizacion = nombreOrganizacion;
     }
 
-   
+    public String getNombreVariableOrganizacion() {
+        return nombreVariableOrganizacion;
+    }
+
+    public String getNombreOrganizacion() {
+        return nombreOrganizacion;
+    }
+
+    public void setUnidadMedida(String unidadMedida) {
+        this.unidadMedida = unidadMedida;
+    }
+
+    public String getUnidadMedida() {
+        return unidadMedida;
+    }
+
+    
+
     
     
     
