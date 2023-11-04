@@ -15,4 +15,6 @@ public interface SectorImpactoProyectoService<T>{
     public T guardar(T objeto);
     public List<T> buscarTodos();
     public List<T> buscarPorProyecto(Integer id);
+    public T buscarPorVigenciaProyectoSectorImpacto(Integer idProyecto, Integer idSector);
+    public T buscarPorProyectoSectorImpacto(Integer idProyecto, Integer idSector);
 }

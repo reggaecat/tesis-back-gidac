@@ -19,6 +19,15 @@ public class LocalizacionProyectoController {
     @PostMapping("/guardar")
     public Object guardar(@RequestBody LocalizacionProyecto oC)
     {
+        cValidaciones v=new cValidaciones();
+        if(service.buscarPorEliminadoProyectoAndLocalizacion(oC.getProyectoInvestigacion().getIdProyecto(), oC.getLocalizacion().getIdLocalizacion())!=null){
+            oC.setFechaActualizacion(v.fechaActual());
+        }else{
+            oC.setFechaCreacion(v.fechaActual());
+        }
+        oC.setIdLocalizacion(oC.getLocalizacion().getIdLocalizacion());
+        oC.setIdProyecto(oC.getProyectoInvestigacion().getIdProyecto());
+        oC.setVigencia(true);
         return service.guardar(oC);    
     }
     
@@ -38,6 +47,12 @@ public class LocalizacionProyectoController {
     public List<LocalizacionProyecto> listarPorProyecto(@PathVariable Integer id)
     {
         return service.buscarPorProyecto(id);
+    }
+    
+    @DeleteMapping("/eliminar/{idPoryecto}/{idLocalizacion}")
+    public void eliminar(@PathVariable Integer idPoryecto, @PathVariable Integer idLocalizacion)
+    {
+        service.eliminar(idPoryecto, idLocalizacion);
     }
     
 }

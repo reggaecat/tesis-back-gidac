@@ -36,5 +36,15 @@ public class AreaInvestigacionProyectoServiceImpl implements AreaInvestigacionPr
     public List buscarPorProyecto(Integer id) {
         return repository.findByVigenciaAndProyectoInvestigacionIdProyecto(Boolean.TRUE, id);
     }
+
+    @Override
+    public Object buscarPorVigenciaProyectoAreaInvestigacion(Integer idProyecto, Integer idArea) {
+        return repository.findByVigenciaAndProyectoInvestigacionIdProyectoAndAreaInvestigacionIdAreaInvestigacion(Boolean.TRUE, idProyecto, idArea);
+    }
+
+    @Override
+    public Object buscarPorProyectoAreaInvestigacion(Integer idProyecto, Integer idarea) {
+        return repository.findByProyectoInvestigacionIdProyectoAndAreaInvestigacionIdAreaInvestigacion(idProyecto, idarea);
+    }
     
 }

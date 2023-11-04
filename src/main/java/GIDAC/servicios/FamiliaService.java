@@ -15,6 +15,8 @@ public interface FamiliaService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
     public List<T>  buscarPorVigencia(Boolean vigencia);
+    public List<T>  buscarFamiliaPorPadre(Integer idPadre);
+    public List<T> findByIdFamiliaAndVigencia(Integer idFamilia, Boolean vigencia);
     public List<T>  findAllFinalChildren();
     public List<T> buscarTodos();
     public List<T> buscarPadres();

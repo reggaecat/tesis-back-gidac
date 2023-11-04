@@ -15,6 +15,9 @@ public interface LocalizacionProyectoService<T>{
     public T guardar(T objeto);
     public List<T> buscarTodos();
     public List<T> buscarPorProyecto(Integer id);
+    public T buscarPorProyectoAndLocalizacion(Integer idProyecto, Integer idLocalizacion);
+    public T buscarPorEliminadoProyectoAndLocalizacion(Integer idProyecto, Integer idLocalizacion);
+    public void eliminar(Integer idProyecto, Integer idLocalizacion);
     
     
 }

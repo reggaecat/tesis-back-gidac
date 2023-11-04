@@ -19,5 +19,6 @@ public interface DataSetService<T>{
     public List<T> buscarTodos();
     public void eliminar(Integer id);
     public List<T> buscarPorParcela(Integer id);
+    List<Object[]> obtenerDataSetUsados(Integer id);
     
 }

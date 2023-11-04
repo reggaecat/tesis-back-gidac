@@ -12,7 +12,9 @@ import GIDAC.modelo.GrupoInvestigacionId;
 import GIDAC.modelo.GrupoInvestigacionPk;
 import GIDAC.modelo.Usuario;
 import java.util.List;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 
 /**
  *
@@ -25,7 +27,14 @@ public interface GrupoInvestigacionRepository extends CrudRepository<GrupoInvest
     
     GrupoInvestigacion findByUsuarioAndProyectoInvestigacion(Usuario usuario,ProyectoInvestigacion investigacion);
     
-    List<GrupoInvestigacion> findByVigenciaAndUsuario(Boolean vigencia, Usuario usuario);
-    List<GrupoInvestigacion> findByUsuarioAndProyectoInvestigacionVigencia(Usuario usuario, Boolean vigenciaProy);
+    List<GrupoInvestigacion> findByVigenciaAndUsuarioIdUsuarioAndProyectoInvestigacionVigencia(Boolean vigencia, Integer idUsuario, Boolean vigenciaProy);
+    List<GrupoInvestigacion> findByUsuarioAndProyectoInvestigacionVigenciaAndVigencia(Usuario usuario, Boolean vigenciaProy, Boolean vigencia);
     //List<GrupoInvestigacion> findByIdProyectoInvestigacion(Integer idProyectoInvestigacion);
+    
+    @Query(value="select u.id_usuario, pi.id_proyecto" +
+                " from grupo_investigacion gi join usuario u on u.id_usuario = gi.id_usuario" +
+                "	join proyecto_investigacion pi ON pi.id_proyecto = gi.id_proyecto" +
+                " where u.id_usuario=:idUsuario and gi.vigencia=true and pi.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerProyectosDeDirector(@Param("idUsuario") Integer idUsuario);
 }

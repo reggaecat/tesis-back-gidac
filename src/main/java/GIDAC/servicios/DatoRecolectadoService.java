@@ -18,6 +18,7 @@ public interface DatoRecolectadoService<T>{
     public T buscarPorId(Integer id);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
+    public List<T> buscarPorVigenciaAndVigenciaDatasetAndIdParcela(Boolean vigenciaAux ,Boolean vigencia, Integer id);
     public List<T> buscarPorVigenciaDataset(Boolean vigencia, Integer id);
     public List<T> buscarPorVigenciaProyecto(Boolean vigencia, Integer id);
 //    public List<T> buscarPorVigenciaVariable(Boolean vigencia, Integer id);

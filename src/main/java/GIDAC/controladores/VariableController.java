@@ -36,11 +36,7 @@ public class VariableController {
     @Autowired
     private VariableService service;
 
-    @PostMapping("/guardar-variable")
-    public Object guardar(@RequestBody Variable oC)
-    {
-        return service.guardar(oC);    
-    }
+    
     
        @Autowired
     private CatalogoOrganizacionService catalogoOrganizacionService;
@@ -60,6 +56,11 @@ public class VariableController {
     @Autowired
     private VariableFamiliaService variableFamiliaService;
     
+    @PostMapping("/guardar-variable")
+    public Object guardar(@RequestBody Variable oC)
+    {
+        return service.guardar(oC);    
+    }
     
     @PostMapping("/guardar-datos-variable")
     public Object guardarDatosVariable(@RequestParam("variable") String datosJson,@RequestParam("catalogoOrganizacion") String datosJsonCatalogo, @RequestParam("listaValoresPermitidos") String datosJsonVariables, @RequestParam("listaFamilia") String datosJsonFamilia) throws JsonProcessingException{
@@ -67,17 +68,11 @@ public class VariableController {
         ObjectMapper objectMapper=new ObjectMapper();
         Variable variableAux = new ObjectMapper().readValue(datosJson, Variable.class);
         
-        System.out.println("Seraliza variable");
-        System.out.println("--------------------------------------------------------------------------------");
         CatalogoOrganizacion variableAuxCatalogo = new ObjectMapper().readValue(datosJsonCatalogo, CatalogoOrganizacion.class);
-        System.out.println("Seraliza variable");
-        System.out.println("--------------------------------------------------------------------------------");
         List<ValorPermitidoUnidadMedida> valoresPermitidos = objectMapper.readValue(datosJsonVariables, new TypeReference<List<ValorPermitidoUnidadMedida>>() {});
-        System.out.println("Seraliza valores permitidos");
-        System.out.println("--------------------------------------------------------------------------------");
         List<Familia> familias = objectMapper.readValue(datosJsonFamilia, new TypeReference<List<Familia>>() {});
-        System.out.println("Seraliza familia");
-        System.out.println("--------------------------------------------------------------------------------");
+        cValidaciones oVx=new cValidaciones();
+        variableAux.setFechaCreacion(oVx.fechaActual());
         variableAux=(Variable) service.guardar(variableAux);
         variableAuxCatalogo.setVariable(variableAux);
         catalogoOrganizacionService.guardar(variableAuxCatalogo);
@@ -134,6 +129,26 @@ public class VariableController {
             }
         }
         return variableAux;
+    }
+    
+    @PutMapping("/actualizar-datos-generales-variable")
+    public void actualizarDatosGeneralesVariable(@RequestParam("variable") String datosJson,@RequestParam("catalogoOrganizacion") String datosJsonCatalogo) throws JsonProcessingException{
+        Variable variableAux = new ObjectMapper().readValue(datosJson, Variable.class);
+        CatalogoOrganizacion variableAuxCatalogo = new ObjectMapper().readValue(datosJsonCatalogo, CatalogoOrganizacion.class);
+        
+        Variable vD=(Variable) service.buscarPorId(variableAux.getIdVariable());
+        
+        CatalogoOrganizacion cD= (CatalogoOrganizacion) catalogoOrganizacionService.buscarPorId(variableAuxCatalogo.getIdVariableOrganizacion());
+        
+        cValidaciones oV=new cValidaciones();
+        variableAux.setFechaCreacion(vD.getFechaCreacion());
+        variableAux.setFechaActualizacion(oV.fechaActual());
+        
+        variableAuxCatalogo.setFechaCreacion(cD.getFechaCreacion());
+        variableAuxCatalogo.setFechaActualizacion(oV.fechaActual());
+        
+        service.guardar(variableAux);
+        catalogoOrganizacionService.guardar(variableAuxCatalogo);
     }
     
     @GetMapping("/listar-variable-descargar-proyecto/{id}/{idOrganizacion}")
@@ -295,11 +310,29 @@ public class VariableController {
         }
         return listaVariables;   
     }
+   
+    @GetMapping("/variables-vigentes")
+    public List variablesVIgentes()
+    {
+        return service.buscarPorVigencia(true);
+    }
+    
+    @GetMapping("/variables-no-vigentes")
+    public List variablesNoVIgentes()
+    {
+        return  service.buscarPorVigencia(false);
+    }
     
     @DeleteMapping("/eliminar-variable/{id}")
     public void eliminar(@PathVariable Integer id)
     {
         service.eliminar(id);
+    }
+    
+    @DeleteMapping("/activar-variable/{id}")
+    public void activar(@PathVariable Integer id)
+    {
+        service.activar(id);
     }
     
     

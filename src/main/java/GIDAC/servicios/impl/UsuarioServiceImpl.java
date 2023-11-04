@@ -100,6 +100,11 @@ public class UsuarioServiceImpl implements UsuarioService {
     }
     
     @Override
+    public List<Object[]> obtenerUsuariosPorRol(){
+        return usuarioRepository.obtenerUsuariosPorRol();
+    }
+    
+    @Override
     public List<Usuario> usuarioPorRolEliminado(Integer id){
         Rol rol=new Rol();
         rol.setIdRol(id);

@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -16,6 +17,8 @@ public class AreaInvestigacion {
     
     private boolean vigencia=true;
 
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     
     
     
@@ -54,6 +57,22 @@ public class AreaInvestigacion {
 
     public void setAreaInvestigacionProyecto(Set<AreaInvestigacionProyecto> areaInvestigacionProyecto) {
         this.areaInvestigacionProyecto = areaInvestigacionProyecto;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
     }
     
     

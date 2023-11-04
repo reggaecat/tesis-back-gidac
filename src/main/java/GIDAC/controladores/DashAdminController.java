@@ -24,11 +24,21 @@ public class DashAdminController {
  
     @GetMapping("/contador-dash")
     public List<contadorDashAdmin> obtenerTotal(){
+        List<Object[]> usuario = this.usuarioService.obtenerUsuariosPorRol();
+
+        Object[] adminArray = usuario.get(0);
+        Object[] direcArray = usuario.get(1);
+        Object[] invesArray = usuario.get(2);
+        
+        Integer admin = ((java.math.BigInteger) adminArray[1]).intValue();
+        Integer direc = ((java.math.BigInteger) direcArray[1]).intValue();
+        Integer inves = ((java.math.BigInteger) invesArray[1]).intValue();
+        
         contadorDashAdmin oC=new contadorDashAdmin();
         List<contadorDashAdmin> oCC=new ArrayList();
-        oC.setContAdmin(usuarioService.usuarioPorRol(1).size());
-        oC.setContDirec(usuarioService.usuarioPorRol(2).size());
-        oC.setContInves(usuarioService.usuarioPorRol(3).size());
+        oC.setContAdmin(admin);
+        oC.setContDirec(direc);
+        oC.setContInves(inves);
         oC.setContVisit(accesoService.findAll().size());
         oCC.add(oC);
         return oCC;

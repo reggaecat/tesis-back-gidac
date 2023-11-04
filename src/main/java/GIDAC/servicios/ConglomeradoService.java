@@ -20,5 +20,6 @@ public interface ConglomeradoService<T>{
     public List<T> buscarTodos();
     public void eliminar(Integer id);
     public List<T> buscarPorProyectoInvestigacion(Integer id);
+    List<Object[]> obtenerConglomeradosUsados(Integer id);
 }
 

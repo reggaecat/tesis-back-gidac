@@ -52,6 +52,11 @@ public class VariableFamiliaServiceImpl implements VariableFamiliaService {
     public List<Object[]>  listarFamiliasDifusion() {
         return repository.obtenerFamiliasDisponibles();
     }
+
+    @Override
+    public List<VariableFamilia>  buscarPorVariable(Integer idVariable, Boolean vigencia) {
+        return repository.findByVariableIdVariableAndVigencia(idVariable, vigencia);
+    }
     
 
 

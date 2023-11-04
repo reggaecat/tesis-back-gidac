@@ -43,4 +43,14 @@ public class AlturaServiceImpl implements AlturaService {
         return repository.findByAlturaMinimaAndAlturaMaximaAndUnidadMedida_Abreviatura(alturaMinima,alturaMaxima, abreviatura);
     }
 
+    @Override
+    public List<Object[]>  obtenerAlturasUsadas() {
+        return repository.obtenerAlturasUsadas();
+    }
+
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
+    }
+
 }

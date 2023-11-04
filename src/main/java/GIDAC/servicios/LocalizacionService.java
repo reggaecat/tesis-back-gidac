@@ -22,13 +22,20 @@ public interface LocalizacionService<T>{
     public T buscarPorCanton(String id);
     public T buscarPorParroquia(String id);
     
-    public List<T> buscarVIgencia(Boolean vigencia);
+    public List<Object[]> buscarPorPaisAdmin();
+    public List<Object[]> buscarPorProvinciaAdmin(String id);
+    public List<Object[]> buscarPorCantonAdmin(String idPais, String idProvincia);
+    public List<T> buscarPorParroquiaAdmin(String idPais, String idProvincia, String idCanton);
     
+    public List<T> buscarVigencia(Boolean vigencia);
     public List<T> buscarPaises();
-    
     public List<T> buscarPrvincias(String codPais);
-    
     public List<T> buscarCantones(String codPais, String codProvincia);
-    
     public List<T> buscarParroquias(String codPais, String codProvincia, String codCanton);
+    
+    public List<T> buscarPaisesAdmin(String codPais, Boolean vigencia);
+    public List<T> buscarProvinciasAdmin(String codPais, String codProvincia, Boolean vigencia);
+    public List<T> buscarCantonesAdmin(String codPais, String codProvincia, String codCanton, Boolean vigencia);
+    public List<T> buscarParroquiasAdmin(String codPais, String codProvincia, String codCanton, String codParroquia, Boolean vigencia);
+    
 }

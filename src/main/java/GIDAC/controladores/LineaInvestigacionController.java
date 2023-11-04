@@ -19,12 +19,18 @@ public class LineaInvestigacionController {
     @PostMapping("/guardar")
     public Object guardar(@RequestBody LineaInvestigacion oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public Object actualizar(@RequestBody LineaInvestigacion oC)
     {
+        LineaInvestigacion oD=(LineaInvestigacion) service.buscarPorId(oC.getIdLineaInvestigacion());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
@@ -51,6 +57,8 @@ public class LineaInvestigacionController {
     {
         LineaInvestigacion oC=(LineaInvestigacion) service.buscarPorId(id);
         oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC);  
     }
     
@@ -59,6 +67,8 @@ public class LineaInvestigacionController {
     {
         LineaInvestigacion oC=(LineaInvestigacion) service.buscarPorId(id);
         oC.setVigencia(true);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC);  
     }
     

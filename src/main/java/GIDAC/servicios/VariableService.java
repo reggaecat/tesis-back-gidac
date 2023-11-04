@@ -27,7 +27,12 @@ public interface VariableService<T>{
     public List<Object[]> litsarVairbalesIncompletas();
     public void eliminar(Integer id);
     
+    public void activar(Integer id);
+    
     public List<Object[]> listarCatalogoParaPerfilado();
     public List<Object[]> listarCatalogoParaPerfiladoPorProyecto(Integer id);
     public List<Object[]> listarCatalogoParaPerfiladoPorProyectoOganizacion(Integer id, Integer idOrganizacion);
+    
+    public List<T> buscarPorVigencia(Boolean vigencia);
+    public List<T> buscarPorVigenciaAndCodigoVariable(Boolean vigencia, String codigoVariable);
 }

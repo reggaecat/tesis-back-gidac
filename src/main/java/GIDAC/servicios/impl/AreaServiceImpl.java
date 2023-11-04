@@ -44,4 +44,14 @@ public class AreaServiceImpl implements AreaService {
         return repository.findByAreaAndUnidadMedida_Abreviatura(area, abreviatura);
     }
 
+    @Override
+    public List<Object[]>  obtenerAreasUsadas() {
+        return repository.obtenerAreasUsadas();
+    }
+
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
+    }
+    
 }

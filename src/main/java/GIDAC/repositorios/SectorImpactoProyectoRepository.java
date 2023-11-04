@@ -9,4 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface SectorImpactoProyectoRepository extends JpaRepository<SectorImpactoProyecto,SectorImpactoProyectoId> {
     
     List<SectorImpactoProyecto> findByVigenciaAndProyectoInvestigacionIdProyecto(Boolean estado,Integer idProyecto);
+    
+    SectorImpactoProyecto findByVigenciaAndProyectoInvestigacionIdProyectoAndSectorImpactoIdSectorImpacto(Boolean estado,Integer idProyecto, Integer idSectorImpacto);
+    SectorImpactoProyecto findByProyectoInvestigacionIdProyectoAndSectorImpactoIdSectorImpacto(Integer idProyecto, Integer idSectorImpacto);
+    
 }

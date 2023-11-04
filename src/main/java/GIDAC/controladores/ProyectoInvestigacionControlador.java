@@ -194,18 +194,148 @@ public class ProyectoInvestigacionControlador {
     }
     
     //modificar
-    @PutMapping("/investigacion/{id}")
-    public Object modificar(@RequestBody ProyectoInvestigacion oC, @PathVariable Integer id){
+    @PutMapping("/actualizar")
+    public Object modificar(@RequestBody ProyectoInvestigacion oC){
+        ProyectoInvestigacion oD= (ProyectoInvestigacion) crud.findById(oC.getIdProyecto());
         cValidaciones validaciones=new cValidaciones();
-        ProyectoInvestigacion oC1=(ProyectoInvestigacion) crud.findById(id);
-        oC1.setIdProyecto(oC.getIdProyecto());
-        oC1.setNombreProyecto(oC.getNombreProyecto());
-        oC1.setDescripcion(oC.getDescripcion());
-        oC1.setFechaInicio(oC.getFechaInicio());
-        oC1.setFechaFin(oC.getFechaFin());
-        oC1.setFechaActualizacion(validaciones.fechaActual());
-        return crud.save(oC1);
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(validaciones.fechaActual());
+        return crud.save(oC);
     }
+    
+    @PutMapping("/actializar-adicional")
+    public void actualizarInformacionAdicional(@RequestParam("proyectoInvestigacion") String proyInvestigacion, 
+                          @RequestParam("listaAreaInvestigacion") String datosJsonAreas, 
+                          @RequestParam("listaSectorImpacto") String datosJsonSector, 
+                          @RequestParam("listaLineaInvestigacion") String datosJsonLinea) throws JsonProcessingException{
+        
+        ObjectMapper objectMapper=new ObjectMapper();
+        ProyectoInvestigacion oC = new ObjectMapper().readValue(proyInvestigacion, ProyectoInvestigacion.class);
+        List<SectorImpacto> listaSectorImpacto = objectMapper.readValue(datosJsonSector, new TypeReference<List<SectorImpacto>>() {});
+        List<LineaInvestigacion> listaLineaInvestigacion = objectMapper.readValue(datosJsonLinea, new TypeReference<List<LineaInvestigacion>>() {});
+        
+        List<AreaInvestigacion> listaAreaInvestigacion = objectMapper.readValue(datosJsonAreas, new TypeReference<List<AreaInvestigacion>>() {});
+       
+        cValidaciones validaciones=new cValidaciones();
+        
+        
+        //-----------------------------------------------------------
+        //actualizar sector de impact no ocupadas
+        List<AreaInvestigacionProyecto> areaActuales=areaInvestigacionProyectoService.buscarPorProyecto(oC.getIdProyecto());
+        for(AreaInvestigacionProyecto oDato:areaActuales) {
+            boolean ban=false;
+            for(AreaInvestigacion oDatoAcualizado:listaAreaInvestigacion) {
+               if(oDatoAcualizado.getIdAreaInvestigacion()==oDato.getAreaInvestigacion().getIdAreaInvestigacion()){
+                   ban=true;
+               }
+            }
+            if(ban==false){
+                oDato.setVigencia(false);
+                oDato.setFechaActualizacion(validaciones.fechaActual());
+                areaInvestigacionProyectoService.guardar(oDato);
+            }
+        }
+        
+        //guardar sectores de impacto actuales
+        for(AreaInvestigacion oDato:listaAreaInvestigacion) {
+            AreaInvestigacionProyecto dato=new AreaInvestigacionProyecto();
+            if(areaInvestigacionProyectoService.buscarPorProyectoAreaInvestigacion(oC.getIdProyecto(), oDato.getIdAreaInvestigacion())==null){
+                dato.setFechaCreacion(validaciones.fechaActual());
+            }else{
+                dato=(AreaInvestigacionProyecto) areaInvestigacionProyectoService.buscarPorProyectoAreaInvestigacion(oC.getIdProyecto(), oDato.getIdAreaInvestigacion());
+                dato.setFechaActualizacion(validaciones.fechaActual());
+            }
+            
+            dato.setProyectoInvestigacion(oC);
+            dato.setIdProyecto(oC.getIdProyecto());
+            
+            dato.setIdAreaInvestigacion(oDato.getIdAreaInvestigacion());
+            dato.setAreaInvestigacion(oDato);
+            
+            dato.setVigencia(true);
+            areaInvestigacionProyectoService.guardar(dato);
+        }
+        //-----------------------------------------------------------
+        
+        
+        //-----------------------------------------------------------
+        //actualizar sector de impact no ocupadas
+        List<SectorImpactoProyecto> sectorActuales=sectorImpactoProyectoService.buscarPorProyecto(oC.getIdProyecto());
+        for(SectorImpactoProyecto oDato:sectorActuales) {
+            boolean ban=false;
+            for(SectorImpacto oDatoAcualizado:listaSectorImpacto) {
+               if(oDatoAcualizado.getIdSectorImpacto()==oDato.getSectorImpacto().getIdSectorImpacto()){
+                   ban=true;
+               }
+            }
+            if(ban==false){
+                oDato.setVigencia(false);
+                oDato.setFechaActualizacion(validaciones.fechaActual());
+                sectorImpactoProyectoService.guardar(oDato);
+            }
+        }
+        
+        //guardar sectores de impacto actuales
+        for(SectorImpacto oDato:listaSectorImpacto) {
+            SectorImpactoProyecto dato=new SectorImpactoProyecto();
+            if(sectorImpactoProyectoService.buscarPorProyectoSectorImpacto(oC.getIdProyecto(), oDato.getIdSectorImpacto())==null){
+                dato.setFechaCreacion(validaciones.fechaActual());
+            }else{
+                dato=(SectorImpactoProyecto) sectorImpactoProyectoService.buscarPorProyectoSectorImpacto(oC.getIdProyecto(), oDato.getIdSectorImpacto());
+                dato.setFechaActualizacion(validaciones.fechaActual());
+            }
+            
+            dato.setProyectoInvestigacion(oC);
+            dato.setIdProyecto(oC.getIdProyecto());
+            
+            dato.setIdSectorImpacto(oDato.getIdSectorImpacto());
+            dato.setSectorImpacto(oDato);
+            
+            dato.setVigencia(true);
+            sectorImpactoProyectoService.guardar(dato);
+        }
+        //-----------------------------------------------------------
+        
+        //-----------------------------------------------------------
+        //actualizar lineas de investigacion no ocupadas
+        List<LineaInvestigacionProyecto> lineasActuales=lineaInvestigacionProyectoService.buscarPorProyecto(oC.getIdProyecto());
+        for(LineaInvestigacionProyecto oDato:lineasActuales) {
+            boolean ban=false;
+            for(LineaInvestigacion oDatoAcualizado:listaLineaInvestigacion) {
+               if(oDatoAcualizado.getIdLineaInvestigacion()==oDato.getLineaInvestigacion().getIdLineaInvestigacion()){
+                   ban=true;
+               }
+            }
+            if(ban==false){
+                oDato.setVigencia(false);
+                oDato.setFechaActualizacion(validaciones.fechaActual());
+                lineaInvestigacionProyectoService.guardar(oDato);
+            }
+        }
+        
+        //guardar lineas de investigacion
+        for(LineaInvestigacion oDato:listaLineaInvestigacion) {
+            LineaInvestigacionProyecto dato=new LineaInvestigacionProyecto();
+            if(lineaInvestigacionProyectoService.buscarPorProyectoLineaInvestigacion(oC.getIdProyecto(), oDato.getIdLineaInvestigacion())==null){
+                dato.setFechaCreacion(validaciones.fechaActual());
+            }else{
+                dato=(LineaInvestigacionProyecto) lineaInvestigacionProyectoService.buscarPorProyectoLineaInvestigacion(oC.getIdProyecto(), oDato.getIdLineaInvestigacion());
+                dato.setFechaActualizacion(validaciones.fechaActual());
+            }
+            
+            dato.setProyectoInvestigacion(oC);
+            dato.setIdProyecto(oC.getIdProyecto());
+            
+            dato.setIdLineaInvestigacion(oDato.getIdLineaInvestigacion());
+            dato.setLineaInvestigacion(oDato);
+            
+            dato.setVigencia(true);
+            lineaInvestigacionProyectoService.guardar(dato);
+        }
+        //-----------------------------------------------------------
+        
+    }
+    
     
     //eliminar 
     @DeleteMapping("/eliminar-proyecto-investigacion/{id}")

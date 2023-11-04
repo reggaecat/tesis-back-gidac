@@ -9,6 +9,8 @@ import org.springframework.data.repository.query.Param;
 
 public interface LocalizacionProyectoRepository extends JpaRepository<LocalizacionProyecto,LocalizacionProyectoId> {
     List<LocalizacionProyecto> findByVigenciaAndProyectoInvestigacionIdProyecto(Boolean estado,Integer idProyecto);
+    LocalizacionProyecto findByVigenciaAndProyectoInvestigacionIdProyectoAndLocalizacionIdLocalizacion(Boolean estado,Integer idProyecto, Integer idLocalizacion);
+    LocalizacionProyecto findByProyectoInvestigacionIdProyectoAndLocalizacionIdLocalizacion(Integer idProyecto, Integer idLocalizacion);
     
     
 }

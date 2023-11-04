@@ -2,7 +2,9 @@
 package GIDAC.servicios.impl;
 
 
+import GIDAC.modelo.CatalogoOrganizacion;
 import GIDAC.modelo.Variable;
+import GIDAC.repositorios.CatalogoOrganizacionRepository;
 import GIDAC.repositorios.VariableRepository;
 import GIDAC.servicios.VariableService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +18,9 @@ public class VariableServiceImpl implements VariableService {
 
     @Autowired
     private VariableRepository repository;
+    
+    @Autowired
+    private CatalogoOrganizacionRepository catalogoOrganizacionRepository;
 
     @Override
     public Variable guardar(Object objeto) {
@@ -35,7 +40,26 @@ public class VariableServiceImpl implements VariableService {
 
     @Override
     public void eliminar(Integer id) {
-        repository.deleteById(id);
+        List<CatalogoOrganizacion> oC=catalogoOrganizacionRepository.findByVigenciaAndVariableIdVariable(true, id);
+        for(CatalogoOrganizacion dato:oC){
+            dato.setVigencia(false);
+            catalogoOrganizacionRepository.save(dato);
+        }
+        Variable variable=repository.findById(id).orElse(null);
+        variable.setVigencia(false);
+        repository.save(variable);
+    }
+    
+    @Override
+    public void activar(Integer id) {
+        List<CatalogoOrganizacion> oC=catalogoOrganizacionRepository.findByVigenciaAndVariableIdVariable(false, id);
+        for(CatalogoOrganizacion dato:oC){
+            dato.setVigencia(true);
+            catalogoOrganizacionRepository.save(dato);
+        }
+        Variable variable=repository.findById(id).orElse(null);
+        variable.setVigencia(true);
+        repository.save(variable);
     }
 
     @Override
@@ -98,6 +122,16 @@ public class VariableServiceImpl implements VariableService {
     @Override
     public List<Object[]> listarCatalogoParaPerfiladoPorProyectoOganizacion(Integer id, Integer idOrganizacion) {
         return repository.obtenerVariablesParaCatalogoProProyeyectoOrganizacion(id,idOrganizacion);
+    }
+
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
+    }
+
+    @Override
+    public List buscarPorVigenciaAndCodigoVariable(Boolean vigencia, String codigoVariable) {
+        return repository.findByVigenciaAndCodigoVariable(vigencia, codigoVariable);
     }
     
 }

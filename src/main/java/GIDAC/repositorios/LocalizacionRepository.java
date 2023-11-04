@@ -12,6 +12,12 @@ public interface LocalizacionRepository extends JpaRepository<Localizacion,Integ
     List<Localizacion> findByCodigoCanton(String codigoCanton);
     List<Localizacion> findByCodigoParroquia(String codigoParroquia);
     
+    List<Localizacion> findByCodigoPaisAndVigencia(String codigoPais, Boolean vigencia);
+    List<Localizacion> findByCodigoPaisAndCodigoProvinciaAndVigencia(String codigoPais, String codigoProvincia, Boolean vigencia);
+    List<Localizacion> findByCodigoPaisAndCodigoProvinciaAndCodigoCantonAndVigencia(String codigoPais, String codigoProvincia, String codigoCanton, Boolean vigencia);
+    List<Localizacion> findByCodigoPaisAndCodigoProvinciaAndCodigoCantonAndCodigoParroquiaAndVigencia(String codigoPais, String codigoProvincia, String codigoCanton, String codigoParroquia, Boolean vigencia);
+    
+    
     List<Localizacion> findByVigencia(Boolean vigencia);
     
     @Query(value="SELECT DISTINCT (l.codigo_pais), l.nombre_pais " +
@@ -32,6 +38,6 @@ public interface LocalizacionRepository extends JpaRepository<Localizacion,Integ
             nativeQuery=true)
     List<Object[]> obtenerCantones(@Param("idPais") String idPais, @Param("idProv") String idProv);
     
-    List<Localizacion> findByCodigoPaisAndCodigoProvinciaAndCodigoCantonAndVigencia(String codigoPais, String codigoProvincia, String codigoCanton, Boolean vigencia);
+    
     
 }

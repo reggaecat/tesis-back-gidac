@@ -72,5 +72,15 @@ public class FamiliaServiceImpl implements FamiliaService {
         return repository.obtenerPorId(id);
     }
 
+    @Override
+    public List<Familia> findByIdFamiliaAndVigencia(Integer idFamilia, Boolean vigencia) {
+        return repository.findByIdFamiliaAndVigencia(idFamilia, vigencia);
+    }
+
+    @Override
+    public List<Familia> buscarFamiliaPorPadre(Integer idPadre) {
+        return repository.findByFamilia_IdFamiliaAndVigencia(idPadre, true);
+    }
+
 
 }

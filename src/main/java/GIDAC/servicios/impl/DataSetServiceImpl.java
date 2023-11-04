@@ -39,12 +39,18 @@ public class DataSetServiceImpl implements DataSetService {
     
     @Override
     public List buscarPorParcela(Integer id) {
-        return repository.findByProfundidadParcela_idParcela(id);
+        return repository.findByVigenciaAndProfundidadParcela_idParcela(true, id);
     }
+  
 
     @Override
     public Object buscarPorParcelaProfundidad(Integer idParcela, Integer idProfundidad) {
         return repository.findByProfundidadParcelaParcelaIdParcelaAndProfundidadParcelaProfundidadIdProfundidad(idParcela, idProfundidad);
+    }
+
+    @Override
+    public List<Object[]> obtenerDataSetUsados(Integer id) {
+        return repository.obtenerDataSetUsados(id);
     }
 
 }

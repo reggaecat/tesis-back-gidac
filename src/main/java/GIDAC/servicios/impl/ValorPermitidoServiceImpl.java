@@ -42,5 +42,10 @@ public class ValorPermitidoServiceImpl implements ValorPermitidoService {
     public List obtenerPorVariableUnidadMedida(Integer id) {
         return repository.findByVigenciaAndVariableUnidadMedidaIdVariableUnidadMedidaAndVariableUnidadMedidaVigencia(true,id,true);
     }
+    
+    @Override
+    public List listarPorVariable(Integer id) {
+        return repository.findByVigenciaAndVariableUnidadMedidaVariableIdVariable(true,id);
+    }
 
 }

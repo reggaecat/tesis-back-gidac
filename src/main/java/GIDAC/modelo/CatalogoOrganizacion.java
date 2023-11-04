@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -19,7 +20,8 @@ public class CatalogoOrganizacion {
     
     private String descripcion;
     
-   
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     
     private boolean vigencia=true;
     
@@ -89,6 +91,22 @@ public class CatalogoOrganizacion {
 
     public void setVariable(Variable variable) {
         this.variable = variable;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
 
     

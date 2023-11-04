@@ -4,6 +4,7 @@
  */
 package GIDAC.modelo;
 
+import java.util.Date;
 import java.util.List;
 
 public class modeloDescarga{
@@ -28,6 +29,7 @@ public class modeloDescarga{
     private String unidadMedidaProfundidad;
     private Integer idProfundidad;
     private Integer idDataset;
+    private String fechaSalida;
 
     private List<valoresDescarga> valorDescarga;
 
@@ -203,6 +205,14 @@ public class modeloDescarga{
 
     public void setProfundidadMaxima(Double profundidadMaxima) {
         this.profundidadMaxima = profundidadMaxima;
+    }
+
+    public String getFechaSalida() {
+        return fechaSalida;
+    }
+
+    public void setFechaSalida(String fechaSalida) {
+        this.fechaSalida = fechaSalida;
     }
     
     

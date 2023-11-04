@@ -17,5 +17,7 @@ public interface AlturaService<T>{
     public T buscarPorAlturaMinimaAlturaMaximaAbreviatura(float alturaMinima, float alturaMaxima, String abreviatura);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
+    List<Object[]> obtenerAlturasUsadas();
+    public List<T> buscarPorVigencia(Boolean vigencia);
     
 }

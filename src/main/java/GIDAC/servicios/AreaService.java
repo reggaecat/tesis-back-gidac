@@ -17,5 +17,7 @@ public interface AreaService<T>{
     public T buscarPorAreaAbreviatura(float aarea, String abreviatura);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
+    List<Object[]> obtenerAreasUsadas();
+    public List<T> buscarPorVigencia(Boolean vigencia);
     
 }

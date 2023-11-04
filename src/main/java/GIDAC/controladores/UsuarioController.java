@@ -2,8 +2,10 @@ package GIDAC.controladores;
 
 import GIDAC.modelo.CorreoElectronico;
 import GIDAC.modelo.GrupoInvestigacion;
+import GIDAC.modelo.ProyectoInvestigacion;
 import GIDAC.modelo.Usuario;
 import GIDAC.servicios.GrupoInvestigacionService;
+import GIDAC.servicios.ProyectoInvestigacionService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.SecureRandom;
@@ -32,7 +34,8 @@ public class UsuarioController {
     @Autowired
     private GrupoInvestigacionService grupoInvestigacionService;
     
-    
+    @Autowired
+    private ProyectoInvestigacionService proyectoInvestigacionService;
     
     @Autowired
     private BCryptPasswordEncoder bCryptPasswordEncoder;
@@ -56,6 +59,20 @@ public class UsuarioController {
         return usuarioService.guardarUsuario(usuario);
         
     }
+    
+    @PutMapping("/actualizar-usuario")
+    public Usuario actualizarUsuario(@RequestBody Usuario usuario) throws Exception{
+        
+        Usuario usuarioActual =usuarioService.obtenerUsuarioId(usuario.getIdUsuario());
+        cValidaciones validaciones=new cValidaciones();
+        String email=usuario.getEmail();
+        usuario.setFechaCreacion(usuarioActual.getFechaCreacion());
+        usuario.setFechaActualizacion(validaciones.fechaActual());
+        usuario.setContrasenia(usuarioActual.getContrasenia());
+        return usuarioService.actualizarUsuario(usuario);
+        
+    }
+    
 //    public ResponseEntity<?> guardarUsuario(@RequestBody Usuario usuario) throws Exception{
 //        try{
 //            String email=usuario.getEmail();
@@ -77,7 +94,6 @@ public class UsuarioController {
             CorreoElectronico correoElectronico=new CorreoElectronico();
             cValidaciones validaciones =new cValidaciones();
             String mensaje=correoElectronico.registrarUsuarioMensaje(usuario.getNombreUsuario(), usuario.getApellidoUsuario(), "cedula", usuario.getEmail(), clave, validaciones.fechaActual());
-            
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(usuario.getEmail());
             message.setFrom("espoch.gidac@outlook.com");
@@ -134,7 +150,33 @@ public class UsuarioController {
         Usuario usuario=usuarioService.obtenerUsuarioId(idUsuario);
         usuario.setVigencia(false);
         usuario.setFechaActualizacion(validaciones.fechaActual());
-        if(usuario.getRol().getIdRol()!=3){
+        usuarioService.actualizarUsuario(usuario);
+    }
+    
+    @DeleteMapping("/detelete-director/{idUsuario}")
+    public void eliminarDirector(@PathVariable("idUsuario") Integer idUsuario) throws Exception{
+        cValidaciones validaciones=new cValidaciones();
+        Usuario usuario=usuarioService.obtenerUsuarioId(idUsuario);
+        usuario.setVigencia(false);
+        usuario.setFechaActualizacion(validaciones.fechaActual());
+        if(null!=grupoInvestigacionService.obtenerInvestigacionesDeInvestigadorVigentes(idUsuario)){
+            List<GrupoInvestigacion> listaGrupo=grupoInvestigacionService.obtenerInvestigacionesDeInvestigadorVigentes(idUsuario);
+            for (GrupoInvestigacion grupo : listaGrupo) {
+                ProyectoInvestigacion proyectoInves=grupo.getProyectoInvestigacion();
+                proyectoInves.setFechaActualizacion(validaciones.fechaActual());
+                proyectoInves.setVigencia(false);
+                proyectoInvestigacionService.save(proyectoInves);
+            }
+         }
+        usuarioService.actualizarUsuario(usuario);
+    }
+    
+    @DeleteMapping("/detelete-investigador/{idUsuario}")
+    public void eliminarInvestigador(@PathVariable("idUsuario") Integer idUsuario) throws Exception{
+        cValidaciones validaciones=new cValidaciones();
+        Usuario usuario=usuarioService.obtenerUsuarioId(idUsuario);
+        usuario.setVigencia(false);
+        usuario.setFechaActualizacion(validaciones.fechaActual());
           if(null!=grupoInvestigacionService.obtenerInvestigacionesDeInvestigadorVigentes(idUsuario)){
             List<GrupoInvestigacion> listaGrupo=grupoInvestigacionService.obtenerInvestigacionesDeInvestigadorVigentes(idUsuario);
             for (GrupoInvestigacion grupo : listaGrupo) {
@@ -143,7 +185,6 @@ public class UsuarioController {
                 grupoInvestigacionService.save(grupo);
             }
          } 
-        }
         usuarioService.actualizarUsuario(usuario);
     }
     
@@ -159,6 +200,7 @@ public class UsuarioController {
             directorAreaInvestigacion.setFechaActualizacion(validaciones.fechaActual());
             directorAreaInvestigacion.setVigencia(false);
             grupoInvestigacionService.save(directorAreaInvestigacion);
+            
          }
         }
         usuarioService.actualizarUsuario(usuario);
@@ -175,6 +217,13 @@ public class UsuarioController {
         return usuarioService.obtenerNormal();
     }    
     
+    
+    @GetMapping("/buscar-investigador-no-asignado/{id}")
+    public List<Usuario> buscarInvestigadoresNoAsignados(@PathVariable Integer id)
+    {
+        return usuarioService.buscarInvestigadoresNoAsignados(id);
+    }
+    
     @GetMapping("/{id}/imagen")
     public ResponseEntity<byte[]> obtenerImagen(@PathVariable Integer id) {
       Usuario usuario = usuarioService.obtenerUsuarioId(id);
@@ -183,12 +232,6 @@ public class UsuarioController {
       } else {
         return ResponseEntity.notFound().build();
       }
-    }
-    
-    @GetMapping("/buscar-investigador-no-asignado/{id}")
-    public List<Usuario> buscarInvestigadoresNoAsignados(@PathVariable Integer id)
-    {
-        return usuarioService.buscarInvestigadoresNoAsignados(id);
     }
     
     

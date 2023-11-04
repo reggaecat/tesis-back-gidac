@@ -19,13 +19,44 @@ public class AlturaController {
     @PostMapping("/guardar-altura")
     public Object guardar(@RequestBody Altura oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
-     @PostMapping("/actualizar")
+     @PutMapping("/actualizar")
     public Object actualizar(@RequestBody Altura oC)
     {
+        Altura oD=(Altura) service.buscarPorId(oC.getIdAltura());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
         return service.guardar(oC);    
+    }
+    
+    @GetMapping("/actualizar-editable")
+    public void actualizarEditable()
+    {
+        List<Altura> listaCompleta=service.buscarTodos();
+        List<Object[]> datos=service.obtenerAlturasUsadas();
+        for (Altura lista : listaCompleta) {
+            boolean aux=true;
+            for (Object[] dato : datos) {
+                
+                if(lista.getIdAltura()==(Integer)dato[0]){
+                    lista.setEditable(false);
+                    service.guardar(lista);    
+                    aux=false;  
+                    break;
+                }
+            }
+            if(aux==true){
+                if(lista.isEditable()==false){
+                    lista.setEditable(true);
+                    service.guardar(lista);   
+                }
+            }
+        }
     }
     
     @GetMapping("/obtener-altura/{id}")
@@ -37,13 +68,17 @@ public class AlturaController {
     @GetMapping("/listar-altura")
     public List<Altura> listar()
     {
-        return service.buscarTodos();
+        return service.buscarPorVigencia(true);
     }
     
     @DeleteMapping("/eliminar-altura/{id}")
     public void eliminar(@PathVariable Integer id)
     {
-        service.eliminar(id);
+        Altura oC= (Altura) service.buscarPorId(id);
+        oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC); 
     }
     
     

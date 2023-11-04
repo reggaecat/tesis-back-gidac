@@ -18,7 +18,45 @@ public class UnidadMedidaController {
     @PostMapping("/guardar-medida")
     public Object guardar(@RequestBody UnidadMedida oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
+    }
+    
+    @PutMapping("/actualizar-medida")
+    public Object actualizar(@RequestBody UnidadMedida oC)
+    {
+        UnidadMedida oD=(UnidadMedida) service.buscarPorId(oC.getIdUnidadMedida());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
+        return service.guardar(oC);    
+    }
+    
+    @GetMapping("/actualizar-editable")
+    public void actualizarEditable()
+    {
+        List<UnidadMedida> listaCompleta=service.buscarTodos();
+        List<Object[]> datos=service.obtenerUnidadesMedidaUsadas();
+        for (UnidadMedida lista : listaCompleta) {
+            boolean aux=true;
+            for (Object[] dato : datos) {
+                
+                if(lista.getIdUnidadMedida()==(Integer)dato[0]){
+                    lista.setEditable(false);
+                    service.guardar(lista);    
+                    
+                    aux=false;  
+                    break;
+                }
+            }
+            if(aux==true){
+                if(lista.isEditable()==false){
+                    lista.setEditable(true);
+                    service.guardar(lista);   
+                }
+            }
+        }
     }
     
     @GetMapping("/obtener-medida/{id}")
@@ -30,13 +68,17 @@ public class UnidadMedidaController {
     @GetMapping("/listar-medida")
     public List<UnidadMedida> listar()
     {
-        return service.buscarTodos();
+        return service.buscarPorVigencia(true);
     }
     
     @DeleteMapping("/eliminar-medida/{id}")
     public void eliminar(@PathVariable Integer id)
     {
-        service.eliminar(id);
+        UnidadMedida oC= (UnidadMedida) service.buscarPorId(id);
+        oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC);  
     }
     
     

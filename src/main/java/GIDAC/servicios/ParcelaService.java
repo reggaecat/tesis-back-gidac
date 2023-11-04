@@ -19,4 +19,5 @@ public interface ParcelaService<T>{
     public List<T> buscarTodos();
     public void eliminar(Integer id);
     public List<T> buscarPorConglomerado(Integer id);
+    List<Object[]> obtenerParcelasUsadas(Integer id);
 }

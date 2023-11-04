@@ -44,4 +44,14 @@ public class UnidadMedidaServiceImpl implements UnidadMedidaService {
         return repository.findByAbreviatura(abreviatura);
     }
 
+    @Override
+    public List<Object[]> obtenerUnidadesMedidaUsadas() {
+        return repository.obtenerUnidadesMedidaUsadas();
+    }
+    
+    @Override
+    public List buscarPorVigencia(Boolean vigencia) {
+        return repository.findByVigencia(vigencia);
+    }
+
 }

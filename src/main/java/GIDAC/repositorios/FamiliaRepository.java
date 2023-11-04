@@ -7,9 +7,12 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface FamiliaRepository extends JpaRepository<Familia,Integer> {
-    List<Familia> findByVigencia(Boolean vigenica);
+    List<Familia> findByIdFamiliaAndVigencia(Integer idFamilia, Boolean vigenica);
+    List<Familia> findByFamilia_IdFamiliaAndVigencia(Integer idPadre, Boolean vigencia);
     
-    @Query(value = "SELECT f FROM Familia f WHERE f.idFamilia NOT IN (SELECT DISTINCT f2.familia.idFamilia FROM Familia f2 WHERE f2.familia.idFamilia IS NOT NULL)")
+    List<Familia> findByVigencia(Boolean vigenica);
+    //@Query(value = "SELECT f FROM Familia f WHERE f.idFamilia NOT IN (SELECT DISTINCT f2.familia.idFamilia FROM Familia f2 WHERE f2.familia.idFamilia IS NOT NULL)")
+    @Query("SELECT f FROM Familia f WHERE f.vigencia = true AND NOT EXISTS (SELECT 1 FROM Familia f2 WHERE f2.familia = f AND f2.vigencia = true)")
     List<Familia> findAllFinalChildren();
     
     

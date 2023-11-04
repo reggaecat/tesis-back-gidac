@@ -22,14 +22,19 @@ public class FamiliaController {
     @PostMapping("/guardar")
     public Object guardar(@RequestBody Familia oC)
     {
-        System.out.println("dato llega---------------------------------------------------------------");
-        
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());   
         return service.guardar(oC);    
     }
     
     @PutMapping("/actualizar")
     public Object actualizar(@RequestBody Familia oC)
     {
+        
+        Familia oD=(Familia) service.buscarPorId(oC.getIdFamilia());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
@@ -88,10 +93,51 @@ public class FamiliaController {
     }
     
     @DeleteMapping("/eliminar/{id}")
-    public void eliminar(@PathVariable Integer id)
-    {
-        service.eliminar(id);
+    public void eliminarFamilia(@PathVariable Integer id) {
+        cValidaciones oV = new cValidaciones();
+        eliminarRecursivo(id, oV);
     }
+
+    private void eliminarRecursivo(Integer idPadre, cValidaciones oV) {
+        Familia familia = (Familia) service.buscarPorId(idPadre);
+        if (familia != null) {
+            familia.setFechaActualizacion(oV.fechaActual());
+            familia.setVigencia(false);
+            service.guardar(familia);
+
+            List<Familia> familiasHijas = service.buscarFamiliaPorPadre(idPadre);
+            for (Familia familiaHija : familiasHijas) {
+                eliminarRecursivo(familiaHija.getIdFamilia(), oV);
+            }
+        }
+    }
+    
+//    public void eliminar(@PathVariable Integer id)
+//    {
+//        cValidaciones oV=new cValidaciones();
+//        Familia familia=(Familia) service.buscarPorId(id);
+//        eliminarRecursivo(id);
+//        familia.setFechaActualizacion(oV.fechaActual());
+//        familia.setVigencia(false);
+//        service.guardar(familia);
+//    }
+//    
+//    public void eliminarRecursivo(@PathVariable Integer idPadre)
+//    {
+//        cValidaciones oV=new cValidaciones();
+//        List<Object[]> familias= service.obtenerPorIdAux(idPadre);
+//        if (familias != null && !familias.isEmpty()) {
+//            for (Object[] familia : familias) {
+//                Integer id=((Integer) familia[0]);
+//                eliminarRecursivo(id);
+//                Familia fam=(Familia) service.buscarPorId(id);
+//                fam.setFechaActualizacion(oV.fechaActual());
+//                fam.setVigencia(false);
+//                service.guardar(fam);
+//            }
+//        }
+//    }
+    
     
     
     @GetMapping("/hijos-finales")

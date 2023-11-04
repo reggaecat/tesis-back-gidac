@@ -23,8 +23,13 @@ public class CatalogoOrganizacionServiceImpl implements CatalogoOrganizacionServ
     }
 
     @Override
-    public CatalogoOrganizacion buscarPorId(String id) {
+    public CatalogoOrganizacion buscarPorId(Integer id) {
         return repository.findById(id).orElse(null);
+    }
+    
+     @Override
+    public CatalogoOrganizacion buscarPorCodigoOrganizacion(String codigo) {
+        return repository.findByCodigoVariableOrganizacion(codigo);
     }
 
     @Override
@@ -33,7 +38,7 @@ public class CatalogoOrganizacionServiceImpl implements CatalogoOrganizacionServ
     }
 
     @Override
-    public void eliminar(String id) {
+    public void eliminar(Integer id) {
         repository.deleteById(id);
     }
 
@@ -43,8 +48,8 @@ public class CatalogoOrganizacionServiceImpl implements CatalogoOrganizacionServ
     }
     
     @Override
-    public List buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion) {
-        return repository.findByVigenciaAndOrganizacionIdOrganizacion(vigencia, idOrganizacion);
+    public List buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion, Boolean vigenciaOrganizacion) {
+        return repository.findByVigenciaAndOrganizacionIdOrganizacionAndOrganizacionVigencia(vigencia, idOrganizacion, vigenciaOrganizacion);
     }
     
     

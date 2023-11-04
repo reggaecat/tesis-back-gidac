@@ -15,10 +15,7 @@ public class SolicitudActualizarDato {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idSolicitudActualizar;
 
-    private String nombre;
-    private String apellido;
     private String motivo;
-    private String investigacion;
     private Date fechaEnvioSolicitud;
 
     @ManyToOne(fetch = FetchType.EAGER)
@@ -49,38 +46,12 @@ public class SolicitudActualizarDato {
         this.idSolicitudActualizar = idSolicitudActualizar;
     }
 
-    public String getNombre() {
-        return nombre;
-    }
-
-    public String getApellido() {
-        return apellido;
-    }
-
     public String getMotivo() {
         return motivo;
     }
 
-    
-
-    public void setNombre(String nombre) {
-        this.nombre = nombre;
-    }
-
-    public void setApellido(String apellido) {
-        this.apellido = apellido;
-    }
-
     public void setMotivo(String motivo) {
         this.motivo = motivo;
-    }
-
-    public String getInvestigacion() {
-        return investigacion;
-    }
-
-    public void setInvestigacion(String investigacion) {
-        this.investigacion = investigacion;
     }
 
     public EstadoSolicitudActualizar getEstadoSolicitudActualizar() {

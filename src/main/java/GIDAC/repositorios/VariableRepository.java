@@ -9,6 +9,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface VariableRepository extends JpaRepository<Variable,Integer> {
+    
+    public List<Variable> findByVigencia(Boolean vigencia);
+    public List<Variable> findByVigenciaAndCodigoVariable(Boolean vigencia, String codigoVariable);
+    
     @Query(value="SELECT DISTINCT co.codigo_variable_organizacion as idVariable, co.nombre_variable_organizacion as nombreVariable, o.siglas as siglas" +
             "   FROM variable v LEFT OUTER JOIN variable_unidad_medida vum on vum.id_variable=v.id_variable" +
             "	LEFT OUTER JOIN valor_permitido vp ON vp.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
@@ -24,6 +28,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
             "   JOIN variable_familia vf ON vf.id_variable=v.id_variable" +
             "	JOIN catalogo_organizacion co ON co.id_variable=v.id_variable" +
             "   JOIN organizacion o ON o.id_organizacion=co.id_organizacion"+
+            "   WHERE o.vigencia=true AND v.vigencia=true AND co.vigencia=true"+
             "   order by 2",
             nativeQuery=true)
     List<Object[]> obtenerVariablesCompletasInvestigador();

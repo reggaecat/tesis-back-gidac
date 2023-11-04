@@ -34,6 +34,19 @@ public class AreaInvestigacionController {
     @PostMapping("/guardar-area-investigacion")
     public Object guardarAreaInvestigacion(@RequestBody AreaInvestigacion oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
+        oC.setVigencia(true);
+        return areaInvestigacionService.save(oC);    
+    }
+    
+    @PutMapping("/actualizar-area-investigacion")
+    public Object actualizarAreaInvestigacion(@RequestBody AreaInvestigacion oC)
+    {
+        AreaInvestigacion oD=(AreaInvestigacion) areaInvestigacionService.findById(oC.getIdAreaInvestigacion());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
         oC.setVigencia(true);
         return areaInvestigacionService.save(oC);    
     }
@@ -43,6 +56,8 @@ public class AreaInvestigacionController {
     {
         AreaInvestigacion areaInvestigacion=(AreaInvestigacion) areaInvestigacionService.findById(id);
         areaInvestigacion.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        areaInvestigacion.setFechaActualizacion(oV.fechaActual());
         areaInvestigacionService.save(areaInvestigacion);
     }
     
@@ -51,6 +66,8 @@ public class AreaInvestigacionController {
     {
         AreaInvestigacion areaInvestigacion=(AreaInvestigacion) areaInvestigacionService.findById(idAreaInvestigacion);
         areaInvestigacion.setVigencia(true);
+        cValidaciones oV=new cValidaciones();
+        areaInvestigacion.setFechaActualizacion(oV.fechaActual());
         areaInvestigacionService.save(areaInvestigacion);
     }
     

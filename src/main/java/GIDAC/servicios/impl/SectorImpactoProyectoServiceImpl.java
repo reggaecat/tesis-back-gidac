@@ -37,5 +37,15 @@ public class SectorImpactoProyectoServiceImpl implements SectorImpactoProyectoSe
     public List buscarPorProyecto(Integer id) {
         return repository.findByVigenciaAndProyectoInvestigacionIdProyecto(Boolean.TRUE, id);
     }
+
+    @Override
+    public Object buscarPorVigenciaProyectoSectorImpacto(Integer idProyecto, Integer idSector) {
+        return repository.findByVigenciaAndProyectoInvestigacionIdProyectoAndSectorImpactoIdSectorImpacto(Boolean.TRUE, idProyecto, idSector);
+    }
+
+    @Override
+    public Object buscarPorProyectoSectorImpacto(Integer idProyecto, Integer idSector) {
+        return repository.findByProyectoInvestigacionIdProyectoAndSectorImpactoIdSectorImpacto(idProyecto, idSector);
+    }
     
 }

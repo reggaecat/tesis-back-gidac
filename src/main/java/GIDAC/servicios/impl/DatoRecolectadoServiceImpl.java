@@ -367,6 +367,11 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
     public BigInteger obtenerCantidadSolicitudesActualizarRechazadoInvestigador(Integer idUsuario) {
         return repository.obtenerCantidadSolicitudesActualizarRechazadoInvestigador(idUsuario);
     }
+
+    @Override
+    public List<DatoRecolectado> buscarPorVigenciaAndVigenciaDatasetAndIdParcela(Boolean vigenciaAux, Boolean vigencia, Integer id) {
+        return repository.findByVigenciaAndDatasetVigenciaAndDatasetProfundidadParcelaIdParcela(vigenciaAux, vigencia, id);
+    }
     
 
 }

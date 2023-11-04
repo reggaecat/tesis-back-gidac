@@ -37,5 +37,7 @@ public interface UsuarioService {
     
     public List<Usuario> buscarInvestigadoresNoAsignados(Integer id);
     
+    public List<Object[]> obtenerUsuariosPorRol();
+    
     
 }

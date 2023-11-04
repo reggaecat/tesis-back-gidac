@@ -58,14 +58,14 @@ public class GrupoInvestigacionServiceImpl implements GrupoInvestigacionService{
     public List<GrupoInvestigacion> obtenerInvestigacionesInvestigador(Integer idUsuario) {
         Usuario oUsuario = new Usuario();
         oUsuario.setIdUsuario(idUsuario);
-        return DAO.findByVigenciaAndUsuario(true,oUsuario);
+        return DAO.findByVigenciaAndUsuarioIdUsuarioAndProyectoInvestigacionVigencia(true,idUsuario, true);
     }
     
     @Override
     public List<GrupoInvestigacion> obtenerInvestigacionesDeInvestigadorVigentes(Integer idUsuario) {
         Usuario oUsuario = new Usuario();
         oUsuario.setIdUsuario(idUsuario);
-        return DAO.findByVigenciaAndUsuario(true,oUsuario);
+        return DAO.findByVigenciaAndUsuarioIdUsuarioAndProyectoInvestigacionVigencia(true,idUsuario, true);
     }
     
     
@@ -116,18 +116,21 @@ public class GrupoInvestigacionServiceImpl implements GrupoInvestigacionService{
     public List obtenerInvestigacionesVigentesDirector(Integer id) {
         Usuario oUsuario = new Usuario();
         oUsuario.setIdUsuario(id);
-        return DAO.findByUsuarioAndProyectoInvestigacionVigencia(oUsuario, true);
+        return DAO.findByUsuarioAndProyectoInvestigacionVigenciaAndVigencia(oUsuario, true, true);
     }
 
     @Override
     public List obtenerInvestigacionesEliminadosDirector(Integer id) {
         Usuario oUsuario = new Usuario();
         oUsuario.setIdUsuario(id);
-        return DAO.findByUsuarioAndProyectoInvestigacionVigencia(oUsuario, false);
+        return DAO.findByUsuarioAndProyectoInvestigacionVigenciaAndVigencia(oUsuario, false, true);
     }
 
     
-
+    @Override
+    public List<Object[]> obtenerProyectosDeDirector( Integer idUsuario){
+        return DAO.obtenerProyectosDeDirector(idUsuario);
+    }
     
 
 

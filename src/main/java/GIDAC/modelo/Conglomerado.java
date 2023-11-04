@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -14,12 +15,15 @@ public class Conglomerado {
     
     private String codigoConglomerado;
     private String nombreConglomerado;
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     private String sector;
     private boolean vigencia=true;
     
     @OneToMany(mappedBy = "conglomerado",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
     private Set<Parcela> parcela = new HashSet<>();
+    
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_proyecto")
@@ -28,6 +32,16 @@ public class Conglomerado {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_altura")
     private Altura altura;
+    
+    private boolean editable=true;
+
+    public boolean isEditable() {
+        return editable;
+    }
+    
+     public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     public Integer getIdConglomerado() {
         return idConglomerado;
@@ -91,6 +105,22 @@ public class Conglomerado {
 
     public void setSector(String sector) {
         this.sector = sector;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
     
     

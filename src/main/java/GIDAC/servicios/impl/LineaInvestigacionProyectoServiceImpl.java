@@ -37,5 +37,15 @@ public class LineaInvestigacionProyectoServiceImpl implements LineaInvestigacion
     public List buscarPorProyecto(Integer id) {
         return repository.findByVigenciaAndProyectoInvestigacionIdProyecto(Boolean.TRUE, id);
     }
+
+    @Override
+    public LineaInvestigacionProyecto buscarPorVigenciaProyectoLineaInvestigacion(Integer idProyecto, Integer idLinea) {
+        return repository.findByVigenciaAndProyectoInvestigacionIdProyectoAndLineaInvestigacionIdLineaInvestigacion(Boolean.TRUE, idProyecto, idLinea);
+    }
+
+    @Override
+    public LineaInvestigacionProyecto buscarPorProyectoLineaInvestigacion(Integer idProyecto, Integer idLinea) {
+        return repository.findByProyectoInvestigacionIdProyectoAndLineaInvestigacionIdLineaInvestigacion( idProyecto, idLinea);
+    }
     
 }

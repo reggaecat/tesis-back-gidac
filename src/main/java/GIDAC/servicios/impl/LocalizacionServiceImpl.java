@@ -58,6 +58,26 @@ public class LocalizacionServiceImpl implements LocalizacionService {
     }
     
     @Override
+    public List<Object[]> buscarPorPaisAdmin() {
+        return  repository.obtenerPaises();
+    }
+    
+    @Override
+    public List<Object[]> buscarPorProvinciaAdmin(String id) {
+        return  repository.obtenerProvincias(id);
+    }
+    
+    @Override
+    public List<Object[]> buscarPorCantonAdmin(String idPais, String idProvincia) {
+        return repository.obtenerCantones(idPais, idProvincia);
+    }
+    
+    @Override
+    public List<Localizacion> buscarPorParroquiaAdmin(String idPais, String idProvincia, String idCanton) {
+        return repository.findByCodigoPaisAndCodigoProvinciaAndCodigoCantonAndVigencia(idPais, idProvincia, idCanton, true);
+    }
+    
+    @Override
     public List buscarPaises() {
         return repository.obtenerPaises();
     }
@@ -78,8 +98,28 @@ public class LocalizacionServiceImpl implements LocalizacionService {
     }
 
     @Override
-    public List buscarVIgencia(Boolean vigencia) {
+    public List buscarVigencia(Boolean vigencia) {
         return repository.findByVigencia(vigencia);
+    }
+
+    @Override
+    public List buscarPaisesAdmin(String codPais, Boolean vigencia) {
+        return repository.findByCodigoPaisAndVigencia(codPais, true);
+    }
+
+    @Override
+    public List buscarProvinciasAdmin(String codPais, String codProvincia, Boolean vigencia) {
+        return repository.findByCodigoPaisAndCodigoProvinciaAndVigencia(codPais, codProvincia, true);
+    }
+
+    @Override
+    public List buscarCantonesAdmin(String codPais, String codProvincia, String codCanton, Boolean vigencia) {
+        return repository.findByCodigoPaisAndCodigoProvinciaAndCodigoCantonAndVigencia(codPais, codProvincia, codCanton, true);
+    }
+
+    @Override
+    public List buscarParroquiasAdmin(String codPais, String codProvincia, String codCanton, String codParroquia, Boolean vigencia) {
+        return repository.findByCodigoPaisAndCodigoProvinciaAndCodigoCantonAndCodigoParroquiaAndVigencia(codPais, codProvincia, codCanton, codParroquia, true);
     }
 
 }

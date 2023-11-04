@@ -236,8 +236,4 @@ public class Usuario implements UserDetails {
         this.informacionEcoAndes = informacionEcoAndes;
     }
     
-    
-    
-
-    
 }

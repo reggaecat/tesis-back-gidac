@@ -2,6 +2,7 @@ package GIDAC.controladores;
 
 
 import GIDAC.modelo.CatalogoOrganizacion;
+import GIDAC.modelo.Familia;
 import GIDAC.modelo.VariableUnidadMedida;
 import GIDAC.modelo.ValorPermitido;
 import GIDAC.modelo.Variable;
@@ -32,6 +33,45 @@ public class VariablFamiliaController {
 //        oC.setIdVariable(oC.getVariable().getIdVariable());
 //        oC.setIdUnidadMedida(oC.getUnidadMedida().getIdUnidadMedida());
         return service.guardar(oC);    
+    }
+    
+    @PostMapping("/actualizar-familia")
+    public Object actualizarDatosFamilia(@RequestParam("variable") String datosJson, @RequestParam("listaFamilia") String datosJsonFamilia) throws JsonProcessingException{
+        
+        ObjectMapper objectMapper=new ObjectMapper();
+        Variable variableAux = new ObjectMapper().readValue(datosJson, Variable.class);
+        
+        List<Familia> familias = objectMapper.readValue(datosJsonFamilia, new TypeReference<List<Familia>>() {});
+        
+        List<VariableFamilia> variableFamilia= service.buscarPorVariable(variableAux.getIdVariable(), true);
+        
+        for(VariableFamilia dato1:variableFamilia) {
+            boolean op=false;
+            for(Familia dato2:familias) {
+                if(dato1.getFamilia().getIdFamilia()==dato2.getIdFamilia()){
+                    op=true;
+                    break;
+                }
+            }
+            if(op==false){
+                dato1.setVigencia(false);
+                service.guardar(dato1);    
+            }
+        }
+        
+        for(Familia familia:familias) {
+            VariableFamilia oVariableFamilia=new VariableFamilia();
+            Familia oFamilia=new Familia();
+            oFamilia.setIdFamilia(familia.getIdFamilia());
+                    
+            oVariableFamilia.setFamilia(oFamilia);
+            oVariableFamilia.setVariable(variableAux);
+            oVariableFamilia.setIdVariable(variableAux.getIdVariable());
+            oVariableFamilia.setIdFamilia(oFamilia.getIdFamilia());
+            service.guardar(oVariableFamilia);
+        }
+        
+        return variableAux;
     }
     
     @PutMapping("/actualizar")
@@ -66,6 +106,12 @@ public class VariablFamiliaController {
         VariableFamilia oC=(VariableFamilia) service.buscarPorId(idVariable, idFamilia, true);
         oC.setVigencia(false);
         service.guardar(oC);
+    }
+    
+    @GetMapping("/listar-familia-por-variable/{idVariable}")
+    public List<VariableFamilia> listarFamiliasSeleccionadas(@PathVariable Integer idVariable)
+    {   
+        return service.buscarPorVariable(idVariable, true);
     }
     
     

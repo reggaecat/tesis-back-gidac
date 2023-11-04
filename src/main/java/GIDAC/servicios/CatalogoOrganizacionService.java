@@ -14,11 +14,12 @@ import java.util.List;
  */
 public interface CatalogoOrganizacionService<T>{
     public T guardar(T objeto);
-    public T buscarPorId(String id);
+    public T buscarPorId(Integer id);
+    public T buscarPorCodigoOrganizacion(String codigoOrganizacion);
     public List<T> buscarPorVigencia(Boolean vigencia);
-    public List<T> buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion);
+    public List<T> buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion, Boolean vigenciaOrganizacion);
     public List<T> buscarTodos();
-    public void eliminar(String id);
+    public void eliminar(Integer id);
     
     
 }

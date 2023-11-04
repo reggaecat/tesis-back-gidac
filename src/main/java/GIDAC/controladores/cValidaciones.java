@@ -41,6 +41,23 @@ public class cValidaciones {
         return null; // Si no se encuentra un formato válido
     }
     
+     public Date formatearFecha(Date fechaOriginal) {
+        SimpleDateFormat formatoDestino = new SimpleDateFormat("yyyy-MM-dd");
+        String fechaFormateadaStr = formatoDestino.format(fechaOriginal);
+
+        try {
+            return formatoDestino.parse(fechaFormateadaStr);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+     
+    public String formatearFechaComoString(Date fechaOriginal) {
+        SimpleDateFormat formatoDestino = new SimpleDateFormat("yyyy-MM-dd");
+        return formatoDestino.format(fechaOriginal);
+    }
+    
     public boolean validarDosFechas(Date fecha1, Date fecha2) {
         if (fecha1.compareTo(fecha2) > 0) {
             return false;

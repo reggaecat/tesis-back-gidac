@@ -2,6 +2,7 @@ package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -18,6 +19,8 @@ public class Parcela {
     private String coordenadaX;
     private String coordenadaY;
     private String sistemaCoordenada;
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     private boolean vigencia=true;
     //private String Altitud;
 
@@ -34,6 +37,16 @@ public class Parcela {
     @JsonIgnore
     private Set<ProfundidadParcela> profunidadParcela = new HashSet<>();
     
+    
+    private boolean editable=true;
+    
+    public boolean isEditable() {
+        return editable;
+    }
+    
+     public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
     
 
     public void setIdParcela(Integer idParcela) {
@@ -117,12 +130,20 @@ public class Parcela {
         return area;
     }
 
-    
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
 
-    
-    
-    
-    
-    
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
 
 }

@@ -9,5 +9,7 @@ public interface ValorPermitidoRepository extends JpaRepository<ValorPermitido,I
     
     List<ValorPermitido> findByVigenciaAndVariableUnidadMedidaIdVariableUnidadMedidaAndVariableUnidadMedidaVigencia(Boolean vigencia1, Integer id, Boolean vigencia2);
     
+    List<ValorPermitido> findByVigenciaAndVariableUnidadMedidaVariableIdVariable(Boolean vigencia1, Integer id);
+    
     
 }

@@ -9,4 +9,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface LineaInvestigacionProyectoRepository extends JpaRepository<LineaInvestigacionProyecto,LineaInvestigacionProyectoId> {
     List<LineaInvestigacionProyecto> findByVigenciaAndProyectoInvestigacionIdProyecto(Boolean estado,Integer idProyecto);
+    LineaInvestigacionProyecto findByVigenciaAndProyectoInvestigacionIdProyectoAndLineaInvestigacionIdLineaInvestigacion(Boolean estado,Integer idProyecto, Integer idLineaInvestigacion);
+    LineaInvestigacionProyecto findByProyectoInvestigacionIdProyectoAndLineaInvestigacionIdLineaInvestigacion(Integer idProyecto, Integer idLineaInvestigacion);
+    
+    
 }

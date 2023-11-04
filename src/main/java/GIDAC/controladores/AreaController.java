@@ -19,13 +19,44 @@ public class AreaController {
     @PostMapping("/guardar")
     public Object guardar(@RequestBody Area oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public Object actualizar(@RequestBody Area oC)
     {
+        Area oD=(Area) service.buscarPorId(oC.getIdArea());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
         return service.guardar(oC);    
+    }
+    
+    @GetMapping("/actualizar-editable")
+    public void actualizarEditable()
+    {
+        List<Area> listaCompleta=service.buscarTodos();
+        List<Object[]> datos=service.obtenerAreasUsadas();
+        for (Area lista : listaCompleta) {
+            boolean aux=true;
+            for (Object[] dato : datos) {
+                
+                if(lista.getIdArea()==(Integer)dato[0]){
+                    lista.setEditable(false);
+                    service.guardar(lista);    
+                    aux=false;  
+                    break;
+                }
+            }
+            if(aux==true){
+                if(lista.isEditable()==false){
+                    lista.setEditable(true);
+                    service.guardar(lista);   
+                }
+            }
+        }
     }
     
     @GetMapping("/obtener/{id}")
@@ -37,13 +68,17 @@ public class AreaController {
     @GetMapping("/listar")
     public List<Area> listar()
     {
-        return service.buscarTodos();
+        return service.buscarPorVigencia(true);
     }
     
     @DeleteMapping("/eliminar/{id}")
     public void eliminar(@PathVariable Integer id)
     {
-        service.eliminar(id);
+        Area oC= (Area) service.buscarPorId(id);
+        oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC); 
     }
     
     

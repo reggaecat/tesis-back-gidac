@@ -21,6 +21,7 @@ public interface GrupoInvestigacionService <T>{
     public List<T> obtenerInvestigacionesVigentesDirector(Integer id);
     public List<T> obtenerDirectorEnProyectosInvestigacion(Integer id);
     public List<T> obtenerInvestigacionesEliminadosDirector(Integer id);
+    List<Object[]> obtenerProyectosDeDirector( Integer idUsuario);
     
     
 }

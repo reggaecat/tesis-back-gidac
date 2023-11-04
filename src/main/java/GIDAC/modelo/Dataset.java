@@ -16,9 +16,9 @@ public class Dataset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDataset;
-    private String descripcion;
-    private Date fechaInicio;
-    private Date fechaFin;
+    private Date fechaSalidaCampo;
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     private boolean vigencia=true;
     
     @OneToMany(mappedBy = "dataset",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
@@ -36,17 +36,19 @@ public class Dataset {
         @JoinColumn(name = "id_parcela", referencedColumnName = "id_parcela")
     })
     private ProfundidadParcela profundidadParcela;
+    
+    private boolean editable=true;
+
+    public boolean isEditable() {
+        return editable;
+    }
+    
+     public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
 
     public Integer getIdDataset() {
         return idDataset;
-    }
-
-    public Date getFechaInicio() {
-        return fechaInicio;
-    }
-
-    public Date getFechaFin() {
-        return fechaFin;
     }
 
     public boolean isVigencia() {
@@ -69,14 +71,6 @@ public class Dataset {
         this.idDataset = idDataset;
     }
 
-    public void setFechaInicio(Date fechaInicio) {
-        this.fechaInicio = fechaInicio;
-    }
-
-    public void setFechaFin(Date fechaFin) {
-        this.fechaFin = fechaFin;
-    }
-
     public void setVigencia(boolean vigencia) {
         this.vigencia = vigencia;
     }
@@ -93,13 +87,28 @@ public class Dataset {
         this.profundidadParcela = profundidadParcela;
     }
 
-
-    public String getDescripcion() {
-        return descripcion;
+    public void setFechaSalidaCampo(Date fechaSalidaCampo) {
+        this.fechaSalidaCampo = fechaSalidaCampo;
     }
 
-    public void setDescripcion(String descripcion) {
-        this.descripcion = descripcion;
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public Date getFechaSalidaCampo() {
+        return fechaSalidaCampo;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
     }
     
     

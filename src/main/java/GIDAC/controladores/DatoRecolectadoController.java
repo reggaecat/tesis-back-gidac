@@ -112,6 +112,16 @@ public class DatoRecolectadoController {
         oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
     }
+    
+    @PutMapping("/actualizar-dato-recolectado")
+    public Object actualizar(@RequestBody DatoRecolectado oC)
+    {
+        DatoRecolectado oD=(DatoRecolectado) service.buscarPorId(oC.getIdDatoRecolectado());    
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
+        return service.guardar(oC);    
+    }
    
     @GetMapping("/listar-todos-dato")
     public  List<Parcela>  listarTodosLosDatosN(){
@@ -223,9 +233,6 @@ public class DatoRecolectadoController {
     @GetMapping("/listar-todos-datos/{id}")
     public  Object  listarTodosLosDato(@PathVariable Integer id)
     {
-        //return service.listarTodosLosDatos
-        
-        System.out.println("-------------------------------------------------------llega a listar los datos");
         List<Object[]> datos;
         if(id==0){
             datos = service.listarTodosLosDatosNumerico();   
@@ -276,9 +283,6 @@ public class DatoRecolectadoController {
     @GetMapping("/listar-todos-datos-nominal/{id}")
     public  Object  listarTodosLosDatoNominal(@PathVariable Integer id)
     {
-        //return service.listarTodosLosDatos
-        
-        System.out.println("-------------------------------------------------------llega a listar los datos");
         List<Object[]> datos;
         if(id==0){
             datos = service.listarTodosLosDatosNominal();   
@@ -325,11 +329,8 @@ public class DatoRecolectadoController {
         
         if(id==0){
             if(idVariable==0){
-                System.out.println("-------------------------------------------------------------------------- llega 1");
                 datos = service.listarTodosLosDatosNumerico();
-                System.out.println("-------------------------------------------------------------------------- llega 2");
                 datosNominales = service.listarTodosLosDatosNominal();     
-                System.out.println("-------------------------------------------------------------------------- llega 3");
             }else{
                 datos = service.listarTodosLosDatosNumericoVariable(idVariable);
                 datosNominales = service.listarTodosLosDatosNominalVariable(idVariable); 
@@ -345,10 +346,6 @@ public class DatoRecolectadoController {
             }
             
         }
-        System.out.println("----------------------------------------------------------------------");
-        System.out.println("id: "+id);
-        System.out.println("tamaño a: "+datos.size());
-        System.out.println("tamaño a: "+datosNominales.size());
         // Mapa para almacenar los datos agrupados
         Map<String, Map<String, List<Dato>>> datosAgrupados = new HashMap<>();
         // Agrupar los datos por coordenadas, tipos de variables y profundidades
@@ -386,8 +383,6 @@ public class DatoRecolectadoController {
             // Agregar el dato a la lista correspondiente en el mapa
             List<Dato> listaDatos = variablesMapa.get(tipoVariable);
             listaDatos.add(new Dato(profundidades, valor));
-            System.out.println("--------------------------------------------------------------------- numerico");
-            System.out.println("--------------------------------------------------------------------- llega a los datos "+dato[7]);
         }
         
         for (Object[] dato : datosNominales) {
@@ -508,9 +503,6 @@ public class DatoRecolectadoController {
     @GetMapping("/listar-todos-datos-proyecto-variable/{idProyecto}/{idVariable}")
     public  Object  listarTodosLosDatoProyectoVariable(@PathVariable Integer idProyecto, @PathVariable Integer idVariable)
     {
-        //return service.listarTodosLosDatos
-        
-        System.out.println("-------------------------------------------------------llega a listar los datos");
         List<Object[]> datos;
         if(idVariable==0){
             datos = service.listarTodosLosDatosProyectoNumerico(idProyecto);   
@@ -561,9 +553,6 @@ public class DatoRecolectadoController {
     @GetMapping("/listar-todos-datos-proyecto-variable-nominal/{idProyecto}/{idVariable}")
     public  Object  listarTodosLosDatoProyectoVariableNominal(@PathVariable Integer idProyecto, @PathVariable Integer idVariable)
     {
-        //return service.listarTodosLosDatos
-        
-        System.out.println("-------------------------------------------------------llega a listar los datos");
         List<Object[]> datos;
         if(idVariable==0){
             datos = service.listarTodosLosDatosProyectoNominal(idProyecto);   
@@ -603,18 +592,12 @@ public class DatoRecolectadoController {
     @GetMapping("/listar-todos-datos-proyecto-variable-unidos/{idProyecto}/{idVariable}")
     public  Object  listarTodosLosDatoProyectoVariableUnido(@PathVariable Integer idProyecto, @PathVariable Integer idVariable)
     {
-        //return service.listarTodosLosDatos
-        
         List<Object[]> datos;
         List<Object[]> datosNominales;
         
         if(idVariable==0){
             datos = service.listarTodosLosDatosProyectoNumerico(idProyecto);
             datosNominales = service.listarTodosLosDatosProyectoNominal(idProyecto);
-            System.out.println("...................................................................................");
-        System.out.println("-                                                                                      -");
-        System.out.println("id: "+idProyecto);
-        System.out.println("id: "+idVariable);
         }else{
             datos = service.listarTodosLosDatosProyectoVariableNumerico(idProyecto, idVariable);   
             datosNominales = service.listarTodosLosDatosProyectoVariableNominal(idProyecto, idVariable);   
@@ -644,8 +627,7 @@ public class DatoRecolectadoController {
             String valor=valorAux.toString();
             String coordenadas = coordenadaX + "," + coordenadaY;
             String profundidades = profundidadMinima+" - "+profundidadMaxima+" "+unidadMedida;
-            //double profundidades = (Double.parseDouble(profundidadMinima)+ Double.parseDouble(profundidadMaxima))/2;
-            // Verificar si las coordenadas existen en el mapa
+            
             if (!datosAgrupados.containsKey(coordenadas)) {
                 datosAgrupados.put(coordenadas, new HashMap<>());
             }
@@ -709,7 +691,7 @@ public class DatoRecolectadoController {
     @DeleteMapping("/eliminar-dato-recolectado/{id}")
     public void eliminar(@PathVariable Integer id)
     {
-        DatoRecolectado oC=new DatoRecolectado();
+        DatoRecolectado oC=(DatoRecolectado) service.buscarPorId(id);
         cValidaciones oV=new cValidaciones();
         oC.setFechaActualizacion(oV.fechaActual());
         oC.setVigencia(false);
@@ -741,7 +723,6 @@ public class DatoRecolectadoController {
     public boolean comprobarXLS(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
         
         ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
-        
         
         int fila=1;
         int cont=1;
@@ -832,28 +813,18 @@ public class DatoRecolectadoController {
                         cont=16;
                         break;
                     case 16:
-                        if(compararCadenasCaracteres(dato,"Fecha inicial")){estado=true;}
-                        else{ estado=false; break;}
-                        cont=17;
-                        break;
-                    case 17:
-                        if(compararCadenasCaracteres(dato,"Fecha final")){estado=true;}
+                        if(compararCadenasCaracteres(dato,"Fecha salida campo")){estado=true;}
                         else{ estado=false; break;}
                         cont=1;
                         break;
                     
                 }
                 if(estado==false) {
-                    System.out.println("llega al false-----------------------------------------------");
                     break;
                 }
-                    
             }
-            
-            
             archivoExcel.close();
             inputStream.close();
-                        
             return estado;
         }catch(Exception e){
             System.out.println("Error "+e);
@@ -866,9 +837,7 @@ public class DatoRecolectadoController {
     public List buscarDatosParaPerfilarXLS(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
         
         ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
-        System.out.println("Llega el id proyecto "+oC1.getIdProyecto());
         
-        //List<EquivalenciaVariable> listaEquivalencia=equivalenciaVariableService.buscarTodos();
         List<VariablesEncontradas> variablesEncontradas=new ArrayList();
         
         List<Object[]> listaObject= variableService.listarCatalogoParaPerfilado();
@@ -903,7 +872,7 @@ public class DatoRecolectadoController {
                 
             }else{
                 String dato;
-                for(int colm=17;colm<numColumnas;colm++){
+                for(int colm=16;colm<numColumnas;colm++){
                     dato=hoja.getCell(colm,fila).getContents();
                     System.out.println("------------------------dato analizar "+dato);
                     for(VariablesEncontradas equivalencia:listaEquivalencia) {
@@ -1085,8 +1054,7 @@ public class DatoRecolectadoController {
     private String unidadMedidaProfundidad;
     
     //dataset
-    private Date fechaInicio;
-    private Date fechaFin;
+    private Date fechaSalida;
     
     private String valor;
     private boolean vigencia=true;
@@ -1112,6 +1080,7 @@ public class DatoRecolectadoController {
         System.out.println("....................................................");
         System.out.println("proy: "+oC1.getIdProyecto());
         List<Perfilado> perfilado=new ArrayList();
+        cValidaciones cVal=new cValidaciones();
         
         int numColumnas=0;
         int numFilas=0;
@@ -1175,6 +1144,8 @@ public class DatoRecolectadoController {
                                     altura.setAlturaMaxima(alturaMaxima);
                                     altura.setAlturaMinima(alturaMinima);
                                     altura.setUnidadMedida(medida);
+                                    altura.setEditable(false);
+                                    altura.setFechaCreacion(cVal.fechaActual());
                                     altura=(Altura) alturaService.guardar(altura);                                   
                                     System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++guarda");
                                 }else{
@@ -1205,6 +1176,8 @@ public class DatoRecolectadoController {
                                     conglomerado.setProyectoInvestigacion(oC1);
                                     conglomerado.setSector(sector);
                                     conglomerado.setAltura(altura);
+                                    conglomerado.setEditable(false);
+                                    conglomerado.setFechaCreacion(cVal.fechaActual());
                                     conglomerado=(Conglomerado) conglomeradoService.guardar(conglomerado);
                                     System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++guarda");
                                 }
@@ -1245,6 +1218,8 @@ public class DatoRecolectadoController {
                                     UnidadMedida medida=(UnidadMedida) medidaService.buscarPorAbreviatura(unidadMedidaArea);
                                     area.setArea(areaParcela);
                                     area.setUnidadMedida(medida);
+                                    area.setEditable(false);
+                                    area.setFechaCreacion(cVal.fechaActual());
                                     areaService.guardar(area);
                                     System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++guarda area");
                                 }
@@ -1258,6 +1233,8 @@ public class DatoRecolectadoController {
                                     parcela.setCoordenadaX(coordenadaX);
                                     parcela.setCoordenadaY(coordenadaY);
                                     parcela.setArea(area);
+                                    parcela.setEditable(false);
+                                    parcela.setFechaCreacion(cVal.fechaActual());
                                     parcela=(Parcela) parcelaService.guardar(parcela);
                                     System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++guarda parcela");
                                 }
@@ -1284,6 +1261,8 @@ public class DatoRecolectadoController {
                                    profundidad.setUnidadMedida(medida);
                                    profundidad.setProfundidadMaxima(profundidadMaxima);
                                    profundidad.setProfundidadMinima(profundidadMinima);
+                                   profundidad.setFechaCreacion(cVal.fechaActual());
+                                   profundidad.setEditable(false);
                                    profundidad=(Profundidad) profundidadService.guardar(profundidad);
                                    System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++guarda profundidad");
                                 }
@@ -1295,19 +1274,14 @@ public class DatoRecolectadoController {
                                     profundidadParcela.setIdProfundidad(profundidad.getIdProfundidad());
                                     profundidadParcela.setParcela(parcela);
                                     profundidadParcela.setProfundidad(profundidad);
+                                    
                                     profundidadParcela=(ProfundidadParcela) profundidadParcelaService.guardar(profundidadParcela);
                                 }
                                 controlColumnas=16;
                                 break;
                             case 16:
-                                if(dato.equals("")){fechaInicio=oF.fechaDumi();}
-                                else{ fechaInicio=oF.Fecha(dato);}
-                                controlColumnas=17;
-                                break;
-                            case 17:
-                                
-                                if(dato.equals("")){fechaFin=oF.fechaDumi();}
-                                else{ fechaFin=oF.Fecha(dato);}
+                                if(dato.equals("")){fechaSalida=oF.fechaDumi();}
+                                else{ fechaSalida=oF.Fecha(dato);}
                                 System.out.println("    .................................................................................................................................");
                                 System.out.println("parcela: "+parcela.getIdParcela());
                                 System.out.println("parcela: "+profundidad.getIdProfundidad());
@@ -1317,15 +1291,17 @@ public class DatoRecolectadoController {
                                 }else{
                                     System.out.println("entra al no encuentra");
                                     dataset.setProfundidadParcela(profundidadParcela);
-                                    dataset.setFechaFin(fechaFin);
-                                    dataset.setFechaInicio(fechaInicio);
+                                    dataset.setFechaSalidaCampo(fechaSalida);
+                                    dataset.setFechaCreacion(cVal.fechaActual());
                                     dataset.setProyectoInvestigacion(oC1);
+                                    dataset.setFechaCreacion(cVal.fechaActual());
+                                    dataset.setEditable(false);
                                     dataset=(Dataset) datasetService.guardar(dataset);
                                     System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++guarda dataset" );
                                 }
-                                controlColumnas=18;
+                                controlColumnas=17;
                                 break;
-                            case 18:
+                            case 17:
                                 for(VariablesEncontradas variableEncontrada:variablesEncontradas) {
                                     
                                     int auxCol=colm+1;
@@ -1368,6 +1344,7 @@ public class DatoRecolectadoController {
     @PostMapping("/unir-datos")
     public List unirDatos(@RequestParam("equivalenciasVariables") String datosJsonVariables) throws JsonProcessingException{
         
+        cValidaciones oV=new cValidaciones();
         ObjectMapper objectMapper=new ObjectMapper();
         List<VariablesEncontradas> equivalenciasVariables = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
         List<DatoRecolectado> listaCompleta = new ArrayList();
@@ -1407,8 +1384,10 @@ public class DatoRecolectadoController {
             modeloDescargaDato.setProfundidadMinima(dato.getDataset().getProfundidadParcela().getProfundidad().getProfundidadMinima());
             modeloDescargaDato.setProfundidadMaxima(dato.getDataset().getProfundidadParcela().getProfundidad().getProfundidadMaxima());
             modeloDescargaDato.setUnidadMedidaProfundidad(dato.getDataset().getProfundidadParcela().getProfundidad().getUnidadMedida().getAbreviatura());
-            
-            
+            modeloDescargaDato.setFechaSalida(oV.formatearFechaComoString( dato.getDataset().getFechaSalidaCampo()));
+                System.out.println("    -----------------------------------------------------");
+            System.out.println("-------"+modeloDescargaDato.getFechaSalida());
+            System.out.println("    -----------------------------------------------------");
             for(int j=0;j<listaCompletaAux.size();j++){
                 
                 DatoRecolectado datoAux=listaCompletaAux.get(j);
@@ -1460,6 +1439,8 @@ public class DatoRecolectadoController {
             lista.add(mod.getProfundidadMinima());
             lista.add(mod.getProfundidadMaxima());
             lista.add(mod.getUnidadMedidaProfundidad());
+            
+            lista.add(mod.getFechaSalida());
             
             for(valoresDescarga eq:mod.getValorDescarga()){
                 lista.add(eq.getNombreVariable());

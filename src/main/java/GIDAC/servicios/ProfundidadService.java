@@ -19,4 +19,6 @@ public interface ProfundidadService<T>{
     public List<T> buscarTodos();
     public void eliminar(Integer id);
     public List<T> buscarPorMedida(Integer id);
+    List<Object[]> obtenerProfundidadesUsadas();
+    public List<T> buscarPorVigencia(Boolean vigencia);
 }

@@ -36,22 +36,38 @@ public class CatalogoOrganizacionController {
     @PostMapping("/guardar-catalogo-organizacion")
     public Object guardar(@RequestBody CatalogoOrganizacion oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
- 
-    
+    @PutMapping("/actualizar-catalogo-organizacion")
+    public Object actualizar(@RequestBody CatalogoOrganizacion oC)
+    {
+        CatalogoOrganizacion oD=(CatalogoOrganizacion) service.buscarPorId(oC.getIdVariableOrganizacion());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
+        return service.guardar(oC);    
+    }
     
     @GetMapping("/obtener-catalogo-organizacion/{id}")
-    public Object obtener(@PathVariable String id)
+    public Object obtener(@PathVariable Integer id)
     {
+        
         return service.buscarPorId(id);
+    }
+    
+    @GetMapping("/obtener-catalogo-organizacion-codigo/{id}")
+    public Object buscarPorCodigoOrganizacion(@PathVariable String id)
+    {
+        return service.buscarPorCodigoOrganizacion(id);
     }
     
     @GetMapping("/listar-catalogo-organizacion")
     public List<CatalogoOrganizacion> listar()
     {
-        List<CatalogoOrganizacion> oC= service.buscarTodos();
+        List<CatalogoOrganizacion> oC= service.buscarPorVigencia(true);
         oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
         return oC;
     }
@@ -59,15 +75,31 @@ public class CatalogoOrganizacionController {
     @GetMapping("/listar-por-organizacion/{id}")
     public List<CatalogoOrganizacion> listarCatalogoPorOrganizacion(@PathVariable Integer id)
     {
-        List<CatalogoOrganizacion> oC= service.buscarPorVigenciaAndOrganizacion(true, id);
+        List<CatalogoOrganizacion> oC= service.buscarPorVigenciaAndOrganizacion(true, id, true);
+        oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
+        return oC;
+    }
+    
+    @GetMapping("/listar-por-organizacion-eliminado/{id}")
+    public List<CatalogoOrganizacion> listarCatalogoPorOrganizacionEliminado(@PathVariable Integer id)
+    {
+        List<CatalogoOrganizacion> oC= service.buscarPorVigenciaAndOrganizacion(false, id, true);
         oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
         return oC;
     }
     
     @DeleteMapping("/eliminar-catalogo-organizacion/{id}")
-    public void eliminar(@PathVariable String id)
+    public void eliminar(@PathVariable Integer id)
     {
-        service.eliminar(id);
+        System.out.println("---------------------------------------------");
+        System.out.println(""+id);
+        System.out.println("---------------------------------------------");
+        CatalogoOrganizacion oC=(CatalogoOrganizacion) service.buscarPorId(id);
+        System.out.println("---------------------------------------------");
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        oC.setVigencia(false);
+        service.guardar(oC);
     }
     
     @PostMapping("/comprobar-archivo")
@@ -127,7 +159,7 @@ public class CatalogoOrganizacionController {
         
         int cont=1;
         boolean estado=true;
-        
+        Integer id=0;
         String codigo="";
         String nombre="";
         String descripcion="";
@@ -181,7 +213,7 @@ public class CatalogoOrganizacionController {
                             }
                         }
                         
-                        if(service.buscarPorId(codigo)==null){
+                        if(service.buscarPorCodigoOrganizacion(codigo)==null){
                             System.out.println("Variable guardada");
                             oC.setCodigoVariableOrganizacion(codigo);
                             oC.setDescripcion(descripcion);

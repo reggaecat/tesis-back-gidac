@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado,Integer> {
+    List<DatoRecolectado> findByVigenciaAndDatasetVigenciaAndDatasetProfundidadParcelaIdParcela(Boolean vigenciaAux ,Boolean vigencia, Integer idParcela);
     List<DatoRecolectado> findByVigenciaAndDataset(Boolean vigencia,Dataset dataset);
     //List<DatoRecolectado> findByVigenciaAndVariable(Boolean vigencia, Variable variable);
     List<DatoRecolectado> findByVigenciaAndVariableUnidadMedida(Boolean vigencia, VariableUnidadMedida variableUnidadMedida);

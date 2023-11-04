@@ -30,7 +30,7 @@ public class ConglomeradoServiceImpl implements ConglomeradoService {
     public Conglomerado buscarPorId(Integer id) {
         return repository.findById(id).orElse(null);
     }
-
+   
     @Override
     public List buscarTodos() {
         return repository.findAll();
@@ -45,7 +45,7 @@ public class ConglomeradoServiceImpl implements ConglomeradoService {
     public List buscarPorProyectoInvestigacion(Integer id) {
         ProyectoInvestigacion proyectoInvestigacion=new ProyectoInvestigacion();
         proyectoInvestigacion.setIdProyecto(id);
-        return repository.findByProyectoInvestigacion(proyectoInvestigacion);
+        return repository.findByVigenciaAndProyectoInvestigacion(true, proyectoInvestigacion);
     }
 
     @Override
@@ -63,5 +63,10 @@ public class ConglomeradoServiceImpl implements ConglomeradoService {
        ProyectoInvestigacion proyecto=new ProyectoInvestigacion();
         proyecto.setIdProyecto(idProyecto);
         return repository.findByCodigoConglomeradoAndProyectoInvestigacion(codigoConglomerado, proyecto);
+    }
+
+    @Override
+    public List<Object[]> obtenerConglomeradosUsados(Integer id) {
+        return repository.obtenerConglomeradosUsados(id);
     }
 }

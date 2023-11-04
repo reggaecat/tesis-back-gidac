@@ -15,4 +15,6 @@ public interface LineaInvestigacionProyectoService<T>{
     public T guardar(T objeto);
     public List<T> buscarTodos();
     public List<T> buscarPorProyecto(Integer id);
+    public T buscarPorVigenciaProyectoLineaInvestigacion(Integer idProyecto, Integer idLinea);
+    public T buscarPorProyectoLineaInvestigacion(Integer idProyecto, Integer idLinea);
 }

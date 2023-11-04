@@ -42,7 +42,7 @@ public class ParcelaServiceImpl implements ParcelaService {
     public List buscarPorConglomerado(Integer id) {
         Conglomerado conglomerado=new Conglomerado();
         conglomerado.setIdConglomerado(id);
-        return repository.findByConglomerado(conglomerado);
+        return repository.findByVigenciaAndConglomerado(true, conglomerado);
     }
 
     @Override
@@ -50,5 +50,10 @@ public class ParcelaServiceImpl implements ParcelaService {
         Conglomerado conglomerado=new Conglomerado();
         conglomerado.setIdConglomerado(idConglomerado);
         return repository.findByCodigoParcelaAndConglomerado(codigoParcela, conglomerado);
+    }
+
+    @Override
+    public List<Object[]> obtenerParcelasUsadas(Integer id) {
+        return repository.obtenerParcelasUsadas(id);
     }
 }

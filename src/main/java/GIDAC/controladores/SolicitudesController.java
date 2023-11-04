@@ -58,6 +58,20 @@ public class SolicitudesController {
     
     @GetMapping("/contador-solicitudes/{id}")
     public contadorSolicitudes contadorSolicitudes(@PathVariable Integer id){
+//        contadorSolicitudes oC=new contadorSolicitudes();
+//        
+//        List<Object[]> listaInvestigaciones = grupoInvestigacionService.obtenerProyectosDeDirector(id);
+//        
+//        int contadorEliminar=0;
+//        int contadorDescarga=0;
+//        
+//        for (Object[] dato : listaInvestigaciones) {
+//            contadorDescarga=contadorDescarga+solicitudDescargaService.listarPorEstadoAndIdProyecto("Solicitado", (Integer) dato[1]).size();
+//            contadorEliminar=contadorEliminar +solicitudActualizarService.listarPorEstadoAndIdProyecto("Solicitado",(Integer) dato[1]).size();
+//        }
+//        oC.setContSolEliminar(contadorEliminar);
+//        oC.setContSolAcceso(contadorDescarga);
+
         contadorSolicitudes oC=new contadorSolicitudes();
         
         List<GrupoInvestigacion> listaInvestigaciones = grupoInvestigacionService.obtenerInvestigacionesDeInvestigadorVigentes(id);
@@ -71,6 +85,12 @@ public class SolicitudesController {
         }
         oC.setContSolEliminar(contadorEliminar);
         oC.setContSolAcceso(contadorDescarga);
+        
+        System.out.println("-----------------------------------------------------");
+        System.out.println(""+id);
+        System.out.println(""+oC.getContSolAcceso());
+        System.out.println(""+oC.getContSolEliminar());
+        System.out.println("-----------------------------------------------------");
         return oC;
     } 
     

@@ -17,4 +17,6 @@ public interface UnidadMedidaService<T>{
     public T buscarPorAbreviatura(String abreviatura);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
+    List<Object[]> obtenerUnidadesMedidaUsadas();
+    public List<T> buscarPorVigencia(Boolean vigencia);
 }

@@ -3,6 +3,7 @@ package GIDAC.modelo;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -34,6 +35,8 @@ public class Familia {
     
     
     private boolean vigencia=true;
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
 
     @OneToMany(mappedBy = "familia",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -104,6 +107,24 @@ public class Familia {
     public void setDescripcionCompleta(String descripcionCompleta) {
         this.descripcionCompleta = descripcionCompleta;
     }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+    
+    
 }
 
 

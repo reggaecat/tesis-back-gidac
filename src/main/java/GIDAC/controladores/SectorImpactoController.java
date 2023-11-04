@@ -19,12 +19,18 @@ public class SectorImpactoController {
     @PostMapping("/guardar")
     public Object guardar(@RequestBody SectorImpacto oC)
     {
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
-    @PostMapping("/actualizar")
+    @PutMapping("/actualizar")
     public Object actualizar(@RequestBody SectorImpacto oC)
     {
+        SectorImpacto oD=(SectorImpacto) service.buscarPorId(oC.getIdSectorImpacto());
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaCreacion(oD.getFechaCreacion());
+        oC.setFechaActualizacion(oV.fechaActual());
         return service.guardar(oC);    
     }
     
@@ -52,6 +58,8 @@ public class SectorImpactoController {
         
         SectorImpacto oC=(SectorImpacto) service.buscarPorId(id);
         oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC);  
     }
     
@@ -60,6 +68,8 @@ public class SectorImpactoController {
     {
         SectorImpacto oC=(SectorImpacto) service.buscarPorId(id);
         oC.setVigencia(true);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC);  
     }
     

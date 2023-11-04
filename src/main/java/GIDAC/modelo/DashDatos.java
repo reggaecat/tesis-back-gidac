@@ -10,6 +10,25 @@ public class DashDatos{
     private Double valor;
     private String unidadMedida;
     
+    private boolean editable=true;
+    private boolean vigencia=true;
+
+    public boolean isEditable() {
+        return editable;
+    }
+    
+     public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+
+    public boolean isVigencia() {
+        return vigencia;
+    }
+    
+    public void setVigencia(boolean vigencia) {
+        this.vigencia = vigencia;
+    }
+    
     public String getIndicador() {
         return indicador;
     }

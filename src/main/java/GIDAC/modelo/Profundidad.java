@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -25,7 +26,20 @@ public class Profundidad {
     private Double profundidadMaxima;
     
     private boolean vigencia=true;
+    
+    private boolean editable=true;
+    
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
 
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+    
     public Integer getIdProfundidad() {
         return idProfundidad;
     }
@@ -72,5 +86,23 @@ public class Profundidad {
 
     public void setUnidadMedida(UnidadMedida unidadMedida) {
         this.unidadMedida = unidadMedida;
-    }    
+    }   
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+    
+    
 }
