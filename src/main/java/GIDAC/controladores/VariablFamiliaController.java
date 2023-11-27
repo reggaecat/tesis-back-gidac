@@ -45,6 +45,8 @@ public class VariablFamiliaController {
         
         List<VariableFamilia> variableFamilia= service.buscarPorVariable(variableAux.getIdVariable(), true);
         
+        cValidaciones ov=new cValidaciones();
+        
         for(VariableFamilia dato1:variableFamilia) {
             boolean op=false;
             for(Familia dato2:familias) {
@@ -54,16 +56,26 @@ public class VariablFamiliaController {
                 }
             }
             if(op==false){
+                dato1=(VariableFamilia) service.buscarPorVariableFamilia(dato1.getVariable().getIdVariable(), dato1.getFamilia().getIdFamilia(), true);
                 dato1.setVigencia(false);
+                dato1.setFechaActualizacion(ov.fechaActual());
                 service.guardar(dato1);    
             }
         }
         
         for(Familia familia:familias) {
+            
             VariableFamilia oVariableFamilia=new VariableFamilia();
             Familia oFamilia=new Familia();
             oFamilia.setIdFamilia(familia.getIdFamilia());
-                    
+            if(service.buscarPorVariableFamilia(variableAux.getIdVariable(), oFamilia.getIdFamilia())==null){
+                oVariableFamilia.setFechaCreacion(ov.fechaActual());
+            }else{
+                VariableFamilia oFAux=(VariableFamilia) service.buscarPorVariableFamilia(variableAux.getIdVariable(), oFamilia.getIdFamilia());
+                oVariableFamilia.setFechaCreacion(oFAux.getFechaCreacion());
+                oVariableFamilia.setFechaActualizacion(ov.fechaActual());
+            }
+            oVariableFamilia.setVigencia(true);
             oVariableFamilia.setFamilia(oFamilia);
             oVariableFamilia.setVariable(variableAux);
             oVariableFamilia.setIdVariable(variableAux.getIdVariable());
@@ -105,6 +117,8 @@ public class VariablFamiliaController {
     {   
         VariableFamilia oC=(VariableFamilia) service.buscarPorId(idVariable, idFamilia, true);
         oC.setVigencia(false);
+        cValidaciones ov=new cValidaciones();
+        oC.setFechaActualizacion(ov.fechaActual());
         service.guardar(oC);
     }
     

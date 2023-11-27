@@ -54,7 +54,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                 .disable()
                 .authorizeRequests()
                 .antMatchers("/appWeb/mostrar-informacion-app-web",
-                        "/dato-recolectado/listar-todos-datos-unidos/{id}/{idVariable}",
+                        "/dato-recolectado/listar-todos-datos-unidos/{id}/{idVariable}/{codigoDataset}",
                         "/dato-recolectado/listar-todos-datos-catalogo-unidos/{id}",
                         "/dato-recolectado/listar-todos-datos-nominal/{id}",
                         "/dato-recolectado/listar-todos-datos-catalogo-nominal/{id}",
@@ -87,6 +87,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                         "/linea-investigacion-proyecto/listar-por-proyecto/{id}",
                         "/localizacion-proyecto/listar-por-proyecto/{id}",
                         "/sector-impacto-proyecto/listar-por-proyecto/{id}",
+                        "/dataset/obtener-dataset-por-proyecto/{id}",
                         "/editar-perfil").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()

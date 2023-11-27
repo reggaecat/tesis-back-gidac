@@ -1,7 +1,7 @@
 package GIDAC.controladores;
 
 import GIDAC.configuraciones.JwtUtils;
-import GIDAC.excepciones.UsuarioNotFoundException;
+import GIDAC.utils.UsuarioNotFoundException;
 import GIDAC.modelo.CorreoElectronico;
 import GIDAC.modelo.JwtRequest;
 import GIDAC.modelo.JwtResponse;

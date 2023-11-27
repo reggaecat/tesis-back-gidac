@@ -20,10 +20,14 @@ public class CatalogoOrganizacion {
     
     private String descripcion;
     
+    
+    
     private Date fechaCreacion;
     private Date fechaActualizacion;
     
     private boolean vigencia=true;
+    
+    private boolean variableSistema=false;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_organizacion")
@@ -107,6 +111,14 @@ public class CatalogoOrganizacion {
 
     public void setFechaActualizacion(Date fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public boolean isVariableSistema() {
+        return variableSistema;
+    }
+
+    public void setVariableSistema(boolean variableSistema) {
+        this.variableSistema = variableSistema;
     }
 
     

@@ -75,6 +75,8 @@ public class VariableController {
         variableAux.setFechaCreacion(oVx.fechaActual());
         variableAux=(Variable) service.guardar(variableAux);
         variableAuxCatalogo.setVariable(variableAux);
+        variableAuxCatalogo.setFechaCreacion(oVx.fechaActual());
+        variableAuxCatalogo.setVariableSistema(true);
         catalogoOrganizacionService.guardar(variableAuxCatalogo);
         
         for(Familia familia:familias) {
@@ -86,22 +88,35 @@ public class VariableController {
             oVariableFamilia.setVariable(variableAux);
             oVariableFamilia.setIdVariable(variableAux.getIdVariable());
             oVariableFamilia.setIdFamilia(oFamilia.getIdFamilia());
+            oVariableFamilia.setFechaCreacion(oVx.fechaActual());
             variableFamiliaService.guardar(oVariableFamilia);
         }
         
         if(variableAux.getTipoVariable().getIdTipoVariable()==1){
             for(ValorPermitidoUnidadMedida valorPermitido:valoresPermitidos) {
                 VariableUnidadMedida VUM=new VariableUnidadMedida();
-                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable(), true)==null){
+                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable())==null){
                     UnidadMedida unidadMedidaAux=new UnidadMedida();
                     unidadMedidaAux.setIdUnidadMedida(valorPermitido.getIdUnidadMedida());
                     VUM.setVariable(variableAux);
                     VUM.setUnidadMedida(unidadMedidaAux);
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                    VUM.setFechaCreacion(oVx.fechaActual());
                 }else{
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable(), true);
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable());
+                    VUM.setFechaActualizacion(oVx.fechaActual());
                 }
+                VUM.setVigencia(true);
+                VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                
                 ValorPermitido ValorPermitidoGuardar=new ValorPermitido();
+                
+                if(valorPermitidoService.obtenerPorMaxMinPerVariableUnidadMedida(valorPermitido.getValorMaximo(), valorPermitido.getValorMinimo(), valorPermitido.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida())==null){
+                    ValorPermitidoGuardar.setFechaCreacion(oVx.fechaActual());
+                }else{
+                    ValorPermitidoGuardar=(ValorPermitido) valorPermitidoService.obtenerPorMaxMinPerVariableUnidadMedida(valorPermitido.getValorMaximo(), valorPermitido.getValorMinimo(), valorPermitido.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida());
+                    ValorPermitidoGuardar.setFechaActualizacion(oVx.fechaActual());
+                }
+                ValorPermitidoGuardar.setVigencia(true);
                 ValorPermitidoGuardar.setVariableUnidadMedida(VUM);
                 ValorPermitidoGuardar.setValorMaximo(valorPermitido.getValorMaximo());
                 ValorPermitidoGuardar.setValorMinimo(valorPermitido.getValorMinimo());
@@ -111,16 +126,28 @@ public class VariableController {
         }else{
             for(ValorPermitidoUnidadMedida valorPermitido:valoresPermitidos) {
                 VariableUnidadMedida VUM=new VariableUnidadMedida();
-                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(0, variableAux.getIdVariable(), true)==null){
+                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable())==null){
                     UnidadMedida unidadMedidaAux=new UnidadMedida();
                     unidadMedidaAux.setIdUnidadMedida(0);
                     VUM.setVariable(variableAux);
                     VUM.setUnidadMedida(unidadMedidaAux);
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                    VUM.setFechaCreacion(oVx.fechaActual());
                 }else{
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(0, variableAux.getIdVariable(), true);
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable());
+                    VUM.setFechaActualizacion(oVx.fechaActual());
                 }
+                VUM.setVigencia(true);
+                VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                
                 ValorPermitido ValorPermitidoGuardar=new ValorPermitido();
+                
+                if(valorPermitidoService.obtenerPorPerVariableUnidadMedida(valorPermitido.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida())==null){
+                    ValorPermitidoGuardar.setFechaCreacion(oVx.fechaActual());
+                }else{
+                    ValorPermitidoGuardar=(ValorPermitido) valorPermitidoService.obtenerPorPerVariableUnidadMedida(valorPermitido.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida());
+                    ValorPermitidoGuardar.setFechaActualizacion(oVx.fechaActual());
+                }
+                ValorPermitidoGuardar.setVigencia(true);
                 ValorPermitidoGuardar.setVariableUnidadMedida(VUM);
                 ValorPermitidoGuardar.setValorMaximo(valorPermitido.getValorMaximo());
                 ValorPermitidoGuardar.setValorMinimo(valorPermitido.getValorMinimo());
@@ -151,14 +178,24 @@ public class VariableController {
         catalogoOrganizacionService.guardar(variableAuxCatalogo);
     }
     
-    @GetMapping("/listar-variable-descargar-proyecto/{id}/{idOrganizacion}")
-    public List<VariablesEncontradas> listarVariablesDescarga(@PathVariable Integer id, @PathVariable Integer idOrganizacion)
+    @GetMapping("/listar-variable-descargar-proyecto/{id}/{idOrganizacion}/{codigoDataset}")
+    public List<VariablesEncontradas> listarVariablesDescarga(@PathVariable Integer id, @PathVariable Integer idOrganizacion, @PathVariable Integer codigoDataset)
     {
         List<Object[]> listaObject;
         if(idOrganizacion==0){
-            listaObject= service.listarCatalogoParaPerfiladoPorProyecto(id);
+            if(codigoDataset==0){
+                listaObject= service.listarCatalogoParaPerfiladoPorProyecto(id);    
+            }else{
+                listaObject= service.listarCatalogoParaPerfiladoPorProyectoCodigoDataset(id, codigoDataset);    
+            }
+            
         }else{
-            listaObject= service.listarCatalogoParaPerfiladoPorProyectoOganizacion(id,idOrganizacion);
+            if(codigoDataset==0){
+                listaObject= service.listarCatalogoParaPerfiladoPorProyectoOganizacion(id,idOrganizacion);    
+            }else{
+                listaObject= service.listarCatalogoParaPerfiladoPorProyectoOganizacionCodigoDataset(id,idOrganizacion, codigoDataset);    
+            }
+            
         }
         List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
         for (Object[] objeto : listaObject) {
@@ -187,12 +224,6 @@ public class VariableController {
         return service.buscarTodos();
     }
     
-//    @GetMapping("/listar-variable-completas")
-//    public List<VariableView> listarCompletas()
-//    {
-//        return service.litsarVairbalesCompletas();
-//    }
-    
     @GetMapping("/listar-variable-completas")
     public List<VariablesEncontradas> listarCompletas()
     {
@@ -214,13 +245,6 @@ public class VariableController {
     @GetMapping("/listar-variable-completas-investigador")
     public List<VariablesEncontradas> listarCompletasInvestigador()
     {
-//        v.id_variable, 0
-//        v.nombre_variable, 1
-//        co.codigo_variable_organizacion, 2
-//        co.nombre_variable_organizacion, 3
-//        o.siglas, 4
-//        tv.nombre_tipo_variable, 5
-//        um.abreviatura 6
         List<Object[]> listaObject= service.litsarVairbalesCompletasInvestigador();
         List<VariablesEncontradas> listaEquivalencia = new ArrayList<>();
         for (Object[] objeto : listaObject) {
@@ -259,9 +283,7 @@ public class VariableController {
         List<Object[]> listaObject= new ArrayList<Object[]>();
         if(id==0){
             if(idOrganizacion==0){
-                System.out.println("cargo variable-------------------------------------------------------- asdasdas");
                 listaObject= service.litsarVairbalesConDatosSinFamilia();
-                System.out.println("cargo variable--------------------------------------------------------  asdasd");
             }else{
                 listaObject= service.litsarVairbalesConDatosSinFamiliaOrganizacion(idOrganizacion);
             }
@@ -305,8 +327,6 @@ public class VariableController {
             variable.setNombreOrganizacion((String) objeto[3]);
 
             listaVariables.add(variable);
-            System.out.println("lllllllllllllllllllllllllllllllllllllllllllllllllllllllllll");
-            System.out.println("llega la variable");
         }
         return listaVariables;   
     }

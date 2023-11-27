@@ -9,8 +9,11 @@ import org.springframework.data.repository.query.Param;
 public interface CatalogoOrganizacionRepository extends JpaRepository<CatalogoOrganizacion,Integer> {
     List<CatalogoOrganizacion> findByVigencia(Boolean vigencia);
     CatalogoOrganizacion findByCodigoVariableOrganizacion(String codigovariable);
+    CatalogoOrganizacion findByVariableSistemaAndVariableIdVariable(Boolean vigencia, Integer idvariable);
     List<CatalogoOrganizacion> findByVigenciaAndOrganizacionIdOrganizacionAndOrganizacionVigencia(Boolean vigencia, Integer idOrganizacion, Boolean vigenciaOrganizacion);
+    List<CatalogoOrganizacion> findByVigenciaAndOrganizacionIdOrganizacion(Boolean vigencia, Integer idOrganizacion);
     List<CatalogoOrganizacion> findByVigenciaAndVariableIdVariable(Boolean vigencia, Integer idVariable);
+    List<CatalogoOrganizacion> findByVigenciaAndVariableIdVariableAndOrganizacionVigencia(Boolean vigencia, Integer idVariable, Boolean vigenciaOrganizacion);
     
     
 }

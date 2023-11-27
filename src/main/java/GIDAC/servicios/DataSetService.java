@@ -15,10 +15,16 @@ import java.util.List;
 public interface DataSetService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
-    public T buscarPorParcelaProfundidad(Integer idParcela, Integer idProfundidad);
+    public List<T> buscarPorParcelaProfundidad(Integer idParcela, Integer idProfundidad);
+    public List<T> buscarPorCodigoDatasetParcelaProfundidad(Integer codigoDataset, Integer idParcela, Integer idProfundidad);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
+    public List<T> buscarPorProyecto(Integer id);
     public List<T> buscarPorParcela(Integer id);
     List<Object[]> obtenerDataSetUsados(Integer id);
+    List<Object[]> obtenerDatasets(Integer id);
+    List<Object[]> obtenerDatasetsAsc(Integer id);
+    List<T> findByCodigoDatasetAndProyectoInvestigacionIdProyecto(Integer codigoDataset,Integer idProyecto);
+    
     
 }

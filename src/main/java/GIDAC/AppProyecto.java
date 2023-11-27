@@ -3,7 +3,7 @@ package GIDAC;
 
 
 import GIDAC.controladores.cValidaciones;
-import GIDAC.excepciones.UsuarioFoundException;
+import GIDAC.utils.UsuarioFoundException;
 import GIDAC.modelo.GrupoInvestigacion;
 import GIDAC.modelo.ProyectoInvestigacion;
 import GIDAC.modelo.Rol;
@@ -47,7 +47,40 @@ public class AppProyecto implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-            
+            try{
+                            
+                            
+                            
+//				Usuario usuario = new Usuario();
+//				usuario.setNombreUsuario("Juan Carlos");
+//				usuario.setApellidoUsuario("Maigua Rizo");
+//				usuario.setContrasenia(bCryptPasswordEncoder.encode("12345"));
+//				usuario.setEmail("cjd@gmail.com");
+//
+//				Rol rol = new Rol();
+//				rol.setIdRol(1);
+//				rol.setNombreRol("ADMINISTRADOR");
+//                                Rol rolGuardado=(Rol) rolService.save(rol);
+//                                usuario.setRol(rol);
+//				Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
+//				System.out.println(usuarioGuardado.getUsername());
+//                                
+//                                
+//                                rol.setIdRol(2);
+//				rol.setNombreRol("DIRECTOR");
+//                                rolGuardado=(Rol) rolService.save(rol);
+//                                
+//                                rol.setIdRol(3);
+//				rol.setNombreRol("INVESTIGADOR");
+//                                rolGuardado=(Rol) rolService.save(rol);
+                                
+                                
+                                
+
+			}catch(Exception exception){
+                            System.out.println("error al guardar-------------------------------------");
+				                        System.out.println(exception);
+			}
         
 			try{
                             

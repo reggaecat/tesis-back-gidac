@@ -6,6 +6,7 @@ import GIDAC.servicios.AlturaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/altura")
@@ -68,7 +69,17 @@ public class AlturaController {
     @GetMapping("/listar-altura")
     public List<Altura> listar()
     {
-        return service.buscarPorVigencia(true);
+        List<Altura> oC= service.buscarPorVigencia(true);
+        oC.sort(Comparator.comparing(Altura::getAlturaMinima));
+        return oC;
+    }
+    
+    @GetMapping("/listar-altura-eliminadas")
+    public List<Altura> listarEliminados()
+    {
+        List<Altura> oC= service.buscarPorVigencia(false);
+        oC.sort(Comparator.comparing(Altura::getAlturaMinima));
+        return oC;
     }
     
     @DeleteMapping("/eliminar-altura/{id}")
@@ -76,6 +87,16 @@ public class AlturaController {
     {
         Altura oC= (Altura) service.buscarPorId(id);
         oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC); 
+    }
+    
+    @DeleteMapping("/restarurar-altura/{id}")
+    public void restaurar(@PathVariable Integer id)
+    {
+        Altura oC= (Altura) service.buscarPorId(id);
+        oC.setVigencia(true);
         cValidaciones oV=new cValidaciones();
         oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC); 

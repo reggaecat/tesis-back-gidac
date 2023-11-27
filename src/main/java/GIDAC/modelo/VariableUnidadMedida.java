@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -21,6 +22,9 @@ public class VariableUnidadMedida {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable")
     private Variable variable;
+    
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     
     private boolean vigencia=true;
     
@@ -82,6 +86,22 @@ public class VariableUnidadMedida {
 
     public void setValorPermitido(Set<ValorPermitido> valorPermitido) {
         this.valorPermitido = valorPermitido;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
     
     

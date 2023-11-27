@@ -1,3 +1,4 @@
+
 package GIDAC.servicios.impl;
 
 
@@ -49,6 +50,11 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
     }
     
     @Override
+    public List buscarPorVigenciaProfundidadParcela(Boolean vigencia,Integer idProfunididad, Integer idParcela) {
+        return repository.findByVigenciaAndDatasetProfundidadParcelaProfundidadIdProfundidadAndDatasetProfundidadParcelaParcelaIdParcela(vigencia,idProfunididad, idParcela);
+    }
+    
+    @Override
     public List buscarPorVigenciaProyecto(Boolean vigencia, Integer id) {
         return repository.findByVigenciaAndDatasetProyectoInvestigacionIdProyecto(vigencia, id);
     }
@@ -65,6 +71,19 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
         VariableUnidadMedida variable=new VariableUnidadMedida();
         variable.setIdVariableUnidadMedida(id);
         return repository.findByVigenciaAndVariableUnidadMedida(vigencia,variable);
+    }
+    
+    @Override
+    public List buscarPorVigenciaVariableUnidadMedidaAndProyecto(Boolean vigencia, Integer id, Integer idProyecto) {
+        VariableUnidadMedida variable=new VariableUnidadMedida();
+        variable.setIdVariableUnidadMedida(id);
+        return repository.findByVigenciaAndVariableUnidadMedidaAndDatasetProyectoInvestigacionIdProyecto(vigencia,variable, idProyecto);
+    }
+    
+    public List buscarPorVigenciaVariableUnidadMedidaAndCodigoDatasetAndProyecto(Boolean vigencia, Integer id, Integer codigoDataset, Integer idProyecto) {
+        VariableUnidadMedida variable=new VariableUnidadMedida();
+        variable.setIdVariableUnidadMedida(id);
+        return repository.findByVigenciaAndVariableUnidadMedidaAndDatasetCodigoDatasetAndDatasetProyectoInvestigacionIdProyecto(vigencia,variable, codigoDataset, idProyecto);
     }
 
     @Override
@@ -371,6 +390,26 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
     @Override
     public List<DatoRecolectado> buscarPorVigenciaAndVigenciaDatasetAndIdParcela(Boolean vigenciaAux, Boolean vigencia, Integer id) {
         return repository.findByVigenciaAndDatasetVigenciaAndDatasetProfundidadParcelaIdParcela(vigenciaAux, vigencia, id);
+    }
+
+    @Override
+    public List<Object[]>  listarTodosLosDatosProyectoNumericoDataset(Integer idProyecto, Integer codigoDataset) {
+        return repository.obtenerPromedioValoresProyectoNumericoDataset(idProyecto, codigoDataset);
+    }
+
+    @Override
+    public List<Object[]>  listarTodosLosDatosProyectoNominalDataset(Integer idProyecto, Integer codigoDataset) {
+        return repository.obtenerPromedioValoresProyectoNominalDataset(idProyecto, codigoDataset);
+    }
+
+    @Override
+    public List<Object[]>  listarTodosLosDatosProyectoNumericoVariableDataset(Integer idProyecto, Integer idVariable, Integer codigoDataset) {
+        return repository.obtenerPromedioValoresProyectoNumericoVariableDataset(idProyecto, idVariable, codigoDataset);
+    }
+
+    @Override
+    public List<Object[]>  listarTodosLosDatosProyectoNominalVariableDataset(Integer idProyecto, Integer idVariable, Integer codigoDataset) {
+        return repository.obtenerPromedioValoresProyectoNominalVariableDataset(idProyecto, idVariable, codigoDataset);
     }
     
 

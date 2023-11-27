@@ -6,6 +6,7 @@ import GIDAC.servicios.AreaService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/area")
@@ -68,7 +69,17 @@ public class AreaController {
     @GetMapping("/listar")
     public List<Area> listar()
     {
-        return service.buscarPorVigencia(true);
+        List<Area> oC= service.buscarPorVigencia(true);
+        oC.sort(Comparator.comparing(Area::getArea));
+        return oC;
+    }
+    
+    @GetMapping("/listar-eliminada")
+    public List<Area> listarEliminada()
+    {
+        List<Area> oC= service.buscarPorVigencia(false);
+        oC.sort(Comparator.comparing(Area::getArea));
+        return oC;
     }
     
     @DeleteMapping("/eliminar/{id}")
@@ -81,5 +92,13 @@ public class AreaController {
         service.guardar(oC); 
     }
     
-    
+    @DeleteMapping("/restaurar/{id}")
+    public void restaurar(@PathVariable Integer id)
+    {
+        Area oC= (Area) service.buscarPorId(id);
+        oC.setVigencia(true);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC); 
+    }
 }

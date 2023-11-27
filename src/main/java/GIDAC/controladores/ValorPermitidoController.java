@@ -39,19 +39,30 @@ public class ValorPermitidoController {
         Variable variableAux = new ObjectMapper().readValue(datosJson, Variable.class);
         ValorPermitidoUnidadMedida valorPermitidoUnidadMedida = new ObjectMapper().readValue(datosJsonVariables, ValorPermitidoUnidadMedida.class);
         
+        cValidaciones oVx=new cValidaciones();
         
         if(variableAux.getTipoVariable().getIdTipoVariable()==1){
                 VariableUnidadMedida VUM=new VariableUnidadMedida();
-                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(valorPermitidoUnidadMedida.getIdUnidadMedida(), variableAux.getIdVariable(), true)==null){
+                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitidoUnidadMedida.getIdUnidadMedida(), variableAux.getIdVariable())==null){
                     UnidadMedida unidadMedidaAux=new UnidadMedida();
                     unidadMedidaAux.setIdUnidadMedida(valorPermitidoUnidadMedida.getIdUnidadMedida());
                     VUM.setVariable(variableAux);
                     VUM.setUnidadMedida(unidadMedidaAux);
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                    VUM.setFechaCreacion(oVx.fechaActual());
                 }else{
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(valorPermitidoUnidadMedida.getIdUnidadMedida(), variableAux.getIdVariable(), true);
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitidoUnidadMedida.getIdUnidadMedida(), variableAux.getIdVariable());
+                    VUM.setFechaActualizacion(oVx.fechaActual());
                 }
+                VUM.setVigencia(true);
+                VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
                 ValorPermitido ValorPermitidoGuardar=new ValorPermitido();
+                if(service.obtenerPorMaxMinPerVariableUnidadMedida(valorPermitidoUnidadMedida.getValorMaximo(), valorPermitidoUnidadMedida.getValorMinimo(), valorPermitidoUnidadMedida.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida())==null){
+                    ValorPermitidoGuardar.setFechaCreacion(oVx.fechaActual());
+                }else{
+                    ValorPermitidoGuardar=(ValorPermitido) service.obtenerPorMaxMinPerVariableUnidadMedida(valorPermitidoUnidadMedida.getValorMaximo(), valorPermitidoUnidadMedida.getValorMinimo(), valorPermitidoUnidadMedida.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida());
+                    ValorPermitidoGuardar.setFechaActualizacion(oVx.fechaActual());
+                }
+                ValorPermitidoGuardar.setVigencia(true);
                 ValorPermitidoGuardar.setVariableUnidadMedida(VUM);
                 ValorPermitidoGuardar.setValorMaximo(valorPermitidoUnidadMedida.getValorMaximo());
                 ValorPermitidoGuardar.setValorMinimo(valorPermitidoUnidadMedida.getValorMinimo());
@@ -59,16 +70,28 @@ public class ValorPermitidoController {
                 service.guardar(ValorPermitidoGuardar);
         }else{
                 VariableUnidadMedida VUM=new VariableUnidadMedida();
-                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(0, variableAux.getIdVariable(), true)==null){
+                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(0, variableAux.getIdVariable())==null){
                     UnidadMedida unidadMedidaAux=new UnidadMedida();
                     unidadMedidaAux.setIdUnidadMedida(0);
                     VUM.setVariable(variableAux);
                     VUM.setUnidadMedida(unidadMedidaAux);
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                    VUM.setFechaCreacion(oVx.fechaActual());
                 }else{
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariableAndVigencia(0, variableAux.getIdVariable(), true);
+                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(0, variableAux.getIdVariable());
+                    VUM.setFechaActualizacion(oVx.fechaActual());
                 }
+                VUM.setVigencia(true);
+                VUM=(VariableUnidadMedida) unidadMedidaVariableService.guardar(VUM);
+                
                 ValorPermitido ValorPermitidoGuardar=new ValorPermitido();
+                
+                if(service.obtenerPorPerVariableUnidadMedida(valorPermitidoUnidadMedida.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida())==null){
+                    ValorPermitidoGuardar.setFechaCreacion(oVx.fechaActual());
+                }else{
+                    ValorPermitidoGuardar=(ValorPermitido) service.obtenerPorPerVariableUnidadMedida( valorPermitidoUnidadMedida.getValorPermitido(), VUM.getVariable().getIdVariable(), VUM.getUnidadMedida().getIdUnidadMedida());
+                    ValorPermitidoGuardar.setFechaActualizacion(oVx.fechaActual());
+                }
+                ValorPermitidoGuardar.setVigencia(true);
                 ValorPermitidoGuardar.setVariableUnidadMedida(VUM);
                 ValorPermitidoGuardar.setValorMaximo(valorPermitidoUnidadMedida.getValorMaximo());
                 ValorPermitidoGuardar.setValorMinimo(valorPermitidoUnidadMedida.getValorMinimo());
@@ -93,9 +116,19 @@ public class ValorPermitidoController {
     @DeleteMapping("/eliminar-valor-permitido/{id}")
     public void eliminar(@PathVariable Integer id)
     {
-        ValorPermitido valorPermitido=(ValorPermitido) service.buscarPorId(id);
-        valorPermitido.setVigencia(false);
-        service.guardar(valorPermitido);    
+        cValidaciones oC=new cValidaciones();
+        ValorPermitido vp=(ValorPermitido) service.buscarPorId(id);
+        vp.setVigencia(false);
+        vp.setFechaActualizacion(oC.fechaActual());
+        service.guardar(vp);    
+        List<ValorPermitido> vpAux= service.listarPorVigenciaVariableUnidadMedida(true, vp.getVariableUnidadMedida().getVariable().getIdVariable(), vp.getVariableUnidadMedida().getUnidadMedida().getIdUnidadMedida());
+        if (vpAux.isEmpty()) {
+            //VariableUnidadMedida VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(vp.getVariableUnidadMedida().getUnidadMedida().getIdUnidadMedida(), vp.getVariableUnidadMedida().getVariable().getIdVariable());
+            VariableUnidadMedida VUM=vp.getVariableUnidadMedida();
+            VUM.setFechaActualizacion(oC.fechaActual());
+            VUM.setVigencia(false);
+            unidadMedidaVariableService.guardar(VUM);
+        }
     }
     
     @GetMapping("/listar-valor-permitido/por-variable/{id}")

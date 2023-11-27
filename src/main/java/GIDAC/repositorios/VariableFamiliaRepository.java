@@ -13,6 +13,8 @@ public interface VariableFamiliaRepository extends JpaRepository<VariableFamilia
     List<VariableFamilia> findByIdVariableAndIdFamiliaAndVigencia(String idVariable, Integer idFamilia, Boolean vigencia);
     
     List<VariableFamilia> findByVariableIdVariableAndVigencia(Integer idVariable, Boolean vigencia);
+    VariableFamilia findByVariableIdVariableAndFamiliaIdFamiliaAndVigencia(Integer idVariable, Integer idfamilia, Boolean vigencia);
+    VariableFamilia findByVariableIdVariableAndFamiliaIdFamilia(Integer idVariable, Integer idfamilia);
     
     @Query(value="SELECT DISTINCT f.id_familia, f.descripcion" +
                 " FROM variable v JOIN variable_familia vf on v.id_variable=vf.id_variable" +

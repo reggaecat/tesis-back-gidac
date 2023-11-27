@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -26,6 +27,8 @@ public class VariableFamilia {
     @JoinColumn(name = "id_familia", insertable = false, updatable = false)
     private Familia familia;
     
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
     private boolean vigencia=true;
 
     public VariableFamilia(Integer idFamilia, Integer idVariable, Variable variable, Familia familia) {
@@ -76,6 +79,22 @@ public class VariableFamilia {
 
     public void setVigencia(boolean vigencia) {
         this.vigencia = vigencia;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
     
     

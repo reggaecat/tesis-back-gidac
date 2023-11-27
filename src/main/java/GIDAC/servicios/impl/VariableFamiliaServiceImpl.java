@@ -58,6 +58,14 @@ public class VariableFamiliaServiceImpl implements VariableFamiliaService {
         return repository.findByVariableIdVariableAndVigencia(idVariable, vigencia);
     }
     
-
+    @Override
+    public VariableFamilia buscarPorVariableFamilia(Integer idVariable, Integer idFamilia, Boolean vigencia) {
+        return repository.findByVariableIdVariableAndFamiliaIdFamiliaAndVigencia(idVariable, idFamilia, vigencia);
+    }
+    
+    @Override
+    public VariableFamilia buscarPorVariableFamilia(Integer idVariable, Integer idFamilia) {
+        return repository.findByVariableIdVariableAndFamiliaIdFamilia(idVariable, idFamilia);
+    }
 
 }

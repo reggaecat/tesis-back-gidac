@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -25,6 +26,12 @@ public class ProfundidadParcela {
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_parcela", insertable = false, updatable = false)
     private Parcela parcela;
+    
+    private Date fechaSalidaCampo;
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
+    private boolean vigencia=true;
+    private boolean editable=true;
 
     public Integer getIdProfundidad() {
         return idProfundidad;
@@ -58,8 +65,46 @@ public class ProfundidadParcela {
         return parcela;
     }
 
-    
-    
+    public Date getFechaSalidaCampo() {
+        return fechaSalidaCampo;
+    }
 
+    public void setFechaSalidaCampo(Date fechaSalidaCampo) {
+        this.fechaSalidaCampo = fechaSalidaCampo;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
+    }
+
+    public boolean isVigencia() {
+        return vigencia;
+    }
+
+    public void setVigencia(boolean vigencia) {
+        this.vigencia = vigencia;
+    }
+
+    public boolean isEditable() {
+        return editable;
+    }
+
+    public void setEditable(boolean editable) {
+        this.editable = editable;
+    }
+    
+    
     
 }

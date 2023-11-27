@@ -20,6 +20,7 @@ public interface CatalogoOrganizacionService<T>{
     public List<T> buscarPorVigenciaAndOrganizacion(Boolean vigencia, Integer idOrganizacion, Boolean vigenciaOrganizacion);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
-    
+    public List<T> findByVigenciaAndVariableIdVariableOrganizacionVigencia(Boolean vigencia, Integer idVariable,Boolean vigenciaOrganizacio);
+    public List<T> findByVigenciaAndOrganizacionIdOrganizacion(Boolean vigencia, Integer id);
     
 }

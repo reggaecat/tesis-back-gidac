@@ -1,4 +1,4 @@
-package GIDAC.excepciones;
+package GIDAC.utils;
 
 public class UsuarioFoundException extends Exception{
 

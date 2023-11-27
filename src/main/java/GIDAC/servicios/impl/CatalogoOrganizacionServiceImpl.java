@@ -52,5 +52,15 @@ public class CatalogoOrganizacionServiceImpl implements CatalogoOrganizacionServ
         return repository.findByVigenciaAndOrganizacionIdOrganizacionAndOrganizacionVigencia(vigencia, idOrganizacion, vigenciaOrganizacion);
     }
     
+    @Override
+    public List findByVigenciaAndVariableIdVariableOrganizacionVigencia(Boolean vigencia, Integer idVariable, Boolean vigenciaOrganizacion) {
+        return repository.findByVigenciaAndVariableIdVariableAndOrganizacionVigencia(vigencia, idVariable, vigenciaOrganizacion);
+    }
+
+    @Override
+    public List findByVigenciaAndOrganizacionIdOrganizacion(Boolean vigencia, Integer id) {
+        return repository.findByVigenciaAndOrganizacionIdOrganizacion(vigencia, id);
+    }
+    
     
 }

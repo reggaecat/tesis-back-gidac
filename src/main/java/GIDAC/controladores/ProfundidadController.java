@@ -6,6 +6,7 @@ import GIDAC.servicios.ProfundidadService;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/profundidad")
@@ -68,7 +69,17 @@ public class ProfundidadController {
     @GetMapping("/listar-profundidad")
     public List<Profundidad> listar()
     {
-        return service.buscarPorVigencia(true);
+        List<Profundidad> oC= service.buscarPorVigencia(true);
+        oC.sort(Comparator.comparing(Profundidad::getProfundidadMinima));
+        return oC;
+    }
+    
+    @GetMapping("/listar-profundidad-eliminada")
+    public List<Profundidad> listarEliminada()
+    {
+        List<Profundidad> oC= service.buscarPorVigencia(false);
+        oC.sort(Comparator.comparing(Profundidad::getProfundidadMinima));
+        return oC;
     }
     
     @DeleteMapping("/eliminar-profundidad/{id}")
@@ -76,6 +87,16 @@ public class ProfundidadController {
     {
         Profundidad oC= (Profundidad) service.buscarPorId(id);
         oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC);  
+    }
+    
+    @DeleteMapping("/restaurar-profundidad/{id}")
+    public void restaurar(@PathVariable Integer id)
+    {
+        Profundidad oC= (Profundidad) service.buscarPorId(id);
+        oC.setVigencia(true);
         cValidaciones oV=new cValidaciones();
         oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC);  

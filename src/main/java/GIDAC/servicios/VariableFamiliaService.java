@@ -15,6 +15,8 @@ public interface VariableFamiliaService<T>{
     public T guardar(T objeto);
     public T buscarPorId(String idVariable, Integer idFamilia, Boolean vigencia);
     public List<T> buscarPorVariable(Integer idVariable, Boolean vigencia);
+    public T buscarPorVariableFamilia(Integer idVariable, Integer idFamilia, Boolean vigencia);
+    public T buscarPorVariableFamilia(Integer idVariable, Integer idFamilia);
     public List<T> buscarTodos(Boolean vigencia);
     public void eliminar(Integer idVariable, Integer idFamilia);
     public List<Object[]> listarFamiliasDifusion();

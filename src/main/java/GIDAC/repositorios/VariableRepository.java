@@ -12,6 +12,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
     
     public List<Variable> findByVigencia(Boolean vigencia);
     public List<Variable> findByVigenciaAndCodigoVariable(Boolean vigencia, String codigoVariable);
+    public Variable findByVigenciaAndIdVariableAndCodigoVariable(Boolean vigencia, Integer idVariable, String codigoVariable);
     
     @Query(value="SELECT DISTINCT co.codigo_variable_organizacion as idVariable, co.nombre_variable_organizacion as nombreVariable, o.siglas as siglas" +
             "   FROM variable v LEFT OUTER JOIN variable_unidad_medida vum on vum.id_variable=v.id_variable" +
@@ -55,7 +56,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                     "    INNER JOIN familia f on f.id_familia=vf.id_familia" +
                     "    INNER JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                     "    INNER JOIN organizacion o on o.id_organizacion=co.id_organizacion" +
-                    " WHERE  v.codigo_variable=co.codigo_variable_organizacion AND pi.vigencia=true AND pi.id_estado_proyecto=2",
+                    " WHERE  v.vigencia=true AND v.codigo_variable=co.codigo_variable_organizacion AND pi.vigencia=true AND pi.id_estado_proyecto=2",
             nativeQuery=true)
     List<Object[]> obtenerVariablesConDatosSinFamilia();
     
@@ -69,7 +70,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                     "    JOIN familia f on f.id_familia=vf.id_familia" +
                     "    JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                     "    JOIN organizacion o on o.id_organizacion=co.id_organizacion" +
-                    " WHERE co.id_organizacion= :idOrganizacion AND pi.vigencia=true AND pi.id_estado_proyecto=2",
+                    " WHERE v.vigencia=true AND co.id_organizacion= :idOrganizacion AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND co.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerVariablesConDatosSinFamiliaOrganizacion(@Param("idOrganizacion") Integer idOrganizacion);
     
@@ -83,7 +84,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                     "    JOIN familia f on f.id_familia=vf.id_familia" +
                     "    JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                     "    JOIN organizacion o on o.id_organizacion=co.id_organizacion" +
-                " WHERE v.codigo_variable=co.codigo_variable_organizacion AND f.id_familia = :idFamilia AND pi.vigencia=true AND pi.id_estado_proyecto=2",
+                " WHERE v.vigencia=true AND  v.codigo_variable=co.codigo_variable_organizacion AND f.id_familia = :idFamilia AND pi.vigencia=true AND pi.id_estado_proyecto=2",
             nativeQuery=true)
     List<Object[]> obtenerVariablesConDatosFiltradoPorFamilia(@Param("idFamilia") Integer idFamilia);
     
@@ -97,7 +98,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                     "    JOIN familia f on f.id_familia=vf.id_familia" +
                     "    JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                     "    JOIN organizacion o on o.id_organizacion=co.id_organizacion" +
-                " WHERE co.id_organizacion= :idOrganizacion AND f.id_familia = :idFamilia AND pi.vigencia=true AND pi.id_estado_proyecto=2",
+                " WHERE v.vigencia=true AND co.id_organizacion= :idOrganizacion AND f.id_familia = :idFamilia AND pi.vigencia=true AND pi.id_estado_proyecto=2 AND co.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerVariablesConDatosFiltradoPorFamiliaOrganizacion(@Param("idFamilia") Integer idFamilia, @Param("idOrganizacion") Integer idOrganizacion);
     
@@ -113,7 +114,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                     "    JOIN familia f on f.id_familia=vf.id_familia" +
                     "    JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                     "    JOIN organizacion o on o.id_organizacion=co.id_organizacion" +
-                    " WHERE pi.vigencia=true AND pi.id_proyecto = :idProyecto",
+                    " WHERE v.vigencia=true AND  pi.vigencia=true AND pi.id_proyecto = :idProyecto AND co.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerVariablesConDatosSinFamiliaInvestigador(@Param("idProyecto") Integer idProyecto);
     
@@ -127,7 +128,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                     "    JOIN familia f on f.id_familia=vf.id_familia" +
                     "    JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                     "    JOIN organizacion o on o.id_organizacion=co.id_organizacion" +
-                " WHERE f.id_familia = :idFamilia AND pi.vigencia=true AND pi.id_proyecto = :idProyecto",
+                " WHERE v.vigencia=true AND f.id_familia = :idFamilia AND pi.vigencia=true AND pi.id_proyecto = :idProyecto AND co.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerVariablesConDatosFiltradoPorFamiliaInvestigador(@Param("idFamilia") Integer idFamilia, @Param("idProyecto") Integer idProyecto);
     
@@ -139,7 +140,7 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
 "                    JOIN tipo_variable tv ON tv.id_tipo_variable=v.id_tipo_variable" +
 "                    JOIN catalogo_organizacion co ON co.id_variable=v.id_variable" +
 "                    JOIN organizacion o ON o.id_organizacion=co.id_organizacion" +
-"                    WHERE vum.vigencia=true",
+"                    WHERE v.vigencia=true AND vum.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerVariablesParaCatalogo();
     
@@ -152,9 +153,22 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                 "   JOIN tipo_variable tv ON tv.id_tipo_variable=v.id_tipo_variable" +
                 "   JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                 "   JOIN organizacion o ON o.id_organizacion=co.id_organizacion" +
-                "   WHERE v.codigo_variable=co.codigo_variable_organizacion AND vum.vigencia=true AND pi.vigencia=true AND dr.vigencia=true AND pi.id_proyecto= :idProy",
+                "   WHERE v.vigencia=true AND v.codigo_variable=co.codigo_variable_organizacion AND vum.vigencia=true AND pi.vigencia=true AND dr.vigencia=true AND pi.id_proyecto= :idProy",
             nativeQuery=true)
     List<Object[]> obtenerVariablesParaCatalogoProProyeyecto(@Param("idProy") Integer idProy);
+    
+    @Query(value="SELECT DISTINCT vum.id_variable_unidad_medida, v.id_variable, v.nombre_variable, o.siglas, tv.nombre_tipo_variable, um.abreviatura"+
+                "   FROM proyecto_investigacion pi JOIN dataset dt ON dt.id_proyecto=pi.id_proyecto" +
+                "   JOIN dato_recolectado dr ON dt.id_dataset=dr.id_dataset" +
+                "   JOIN variable_unidad_medida vum ON dr.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+                "   JOIN unidad_medida um ON vum.id_unidad_medida=um.id_unidad_medida" +
+                "   JOIN variable v ON v.id_variable=vum.id_variable" +
+                "   JOIN tipo_variable tv ON tv.id_tipo_variable=v.id_tipo_variable" +
+                "   JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
+                "   JOIN organizacion o ON o.id_organizacion=co.id_organizacion" +
+                "   WHERE v.vigencia=true AND v.codigo_variable=co.codigo_variable_organizacion AND vum.vigencia=true AND pi.vigencia=true AND dr.vigencia=true AND pi.id_proyecto= :idProy AND dt.codigo_dataset=:codigoDataset",
+            nativeQuery=true)
+    List<Object[]> obtenerVariablesParaCatalogoProProyeyectoCodigoDataset(@Param("idProy") Integer idProy, @Param("codigoDataset") Integer codigoDataset);
     
     
     @Query(value="SELECT DISTINCT vum.id_variable_unidad_medida, v.id_variable, co.nombre_variable_organizacion, o.siglas, tv.nombre_tipo_variable, um.abreviatura"+
@@ -166,8 +180,26 @@ public interface VariableRepository extends JpaRepository<Variable,Integer> {
                 "   JOIN tipo_variable tv ON tv.id_tipo_variable=v.id_tipo_variable" +
                 "   JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
                 "   JOIN organizacion o ON o.id_organizacion=co.id_organizacion" +
-                "   WHERE co.id_organizacion= :idOrganizacion AND pi.id_proyecto= :idProy AND vum.vigencia=true AND pi.vigencia=true AND dr.vigencia=true",
+                "   WHERE v.vigencia=true AND co.id_organizacion= :idOrganizacion AND pi.id_proyecto= :idProy AND vum.vigencia=true AND pi.vigencia=true AND dr.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerVariablesParaCatalogoProProyeyectoOrganizacion(@Param("idProy") Integer idProy,@Param("idOrganizacion") Integer idOrganizacion);
+    
+    
+    @Query(value="SELECT DISTINCT vum.id_variable_unidad_medida, v.id_variable, co.nombre_variable_organizacion, o.siglas, tv.nombre_tipo_variable, um.abreviatura"+
+                "   FROM proyecto_investigacion pi JOIN dataset dt ON dt.id_proyecto=pi.id_proyecto" +
+                "   JOIN dato_recolectado dr ON dt.id_dataset=dr.id_dataset" +
+                "   JOIN variable_unidad_medida vum ON dr.id_variable_unidad_medida=vum.id_variable_unidad_medida" +
+                "   JOIN unidad_medida um ON vum.id_unidad_medida=um.id_unidad_medida" +
+                "   JOIN variable v ON v.id_variable=vum.id_variable" +
+                "   JOIN tipo_variable tv ON tv.id_tipo_variable=v.id_tipo_variable" +
+                "   JOIN catalogo_organizacion co on co.id_variable=v.id_variable" +
+                "   JOIN organizacion o ON o.id_organizacion=co.id_organizacion" +
+                "   WHERE v.vigencia=true AND co.id_organizacion= :idOrganizacion AND pi.id_proyecto= :idProy AND dt.codigo_dataset=:codigoDataset AND vum.vigencia=true AND pi.vigencia=true AND dr.vigencia=true",
+            nativeQuery=true)
+    List<Object[]> obtenerVariablesParaCatalogoProProyeyectoOrganizacionCodigoDataset(@Param("idProy") Integer idProy,@Param("idOrganizacion") Integer idOrganizacion, @Param("codigoDataset") Integer codigoDataset);
+    
+    
+    
+    
     
 }

@@ -93,7 +93,7 @@ public class UsuarioController {
         
             CorreoElectronico correoElectronico=new CorreoElectronico();
             cValidaciones validaciones =new cValidaciones();
-            String mensaje=correoElectronico.registrarUsuarioMensaje(usuario.getNombreUsuario(), usuario.getApellidoUsuario(), "cedula", usuario.getEmail(), clave, validaciones.fechaActual());
+            String mensaje=correoElectronico.registrarUsuarioMensaje(usuario.getNombreUsuario(), usuario.getApellidoUsuario(), usuario.getCedula(), usuario.getEmail(), clave, validaciones.fechaActual());
             SimpleMailMessage message = new SimpleMailMessage();
             message.setTo(usuario.getEmail());
             message.setFrom("espoch.gidac@outlook.com");
@@ -107,6 +107,26 @@ public class UsuarioController {
                 System.out.println("error "+e);
                 return false;
             }
+    }
+    
+    public boolean enviarCorreoElectronico(Usuario usuario, String clave) {
+        CorreoElectronico correoElectronico = new CorreoElectronico();
+        cValidaciones validaciones = new cValidaciones();
+        String mensaje = correoElectronico.registrarUsuarioMensaje(usuario.getNombreUsuario(), usuario.getApellidoUsuario(), usuario.getCedula(), usuario.getEmail(), clave, validaciones.fechaActual());
+
+        try {
+            SimpleMailMessage message = new SimpleMailMessage();
+            message.setTo(usuario.getEmail());
+            message.setFrom("espoch.gidac@outlook.com");
+            message.setSubject("Registro de administrador");
+            message.setText(mensaje);
+
+            mailSender.send(message);
+            return true;
+        } catch (MailException e) {
+            System.out.println("Error al enviar el correo: " + e.getMessage());
+            return false;
+        }
     }
     
     private static final String CARACTERES =

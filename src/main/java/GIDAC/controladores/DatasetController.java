@@ -2,11 +2,14 @@ package GIDAC.controladores;
 
 
 import GIDAC.modelo.Dataset;
+import GIDAC.modelo.DatasetDatos;
 import GIDAC.modelo.DatoRecolectado;
 import GIDAC.modelo.ProfundidadParcela;
 import GIDAC.servicios.DataSetService;
 import GIDAC.servicios.DatoRecolectadoService;
 import GIDAC.servicios.ProfundidadParcelaService;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -81,6 +84,41 @@ public class DatasetController {
         service.guardar(oC);    
     }
     
+    //investigador
+    @GetMapping("/obtener-dataset-por-proyecto/{id}")
+    public List<DatasetDatos> obtenerDatasetProyecto(@PathVariable Integer id){
+        List<Object[]> listaObject= service.obtenerDatasets(id);
+        List<DatasetDatos> listaDataset = new ArrayList<>();
+        
+        double dato4=0;
+        for (Object[] objeto : listaObject) {
+            DatasetDatos dato = new DatasetDatos();
+            Integer dato1=(Integer) objeto[0];
+            Date dato2=(Date) objeto[1];
+            dato.setCodigoDataset(dato1);
+            dato.setFechaDataset(dato2);
+            listaDataset.add(dato);
+        }
+        return listaDataset;   
+    }
+    
+    @GetMapping("/obtener-dataset-por-proyecto-asc/{id}")
+    public List<DatasetDatos> obtenerDatasetProyectoDesc(@PathVariable Integer id){
+        List<Object[]> listaObject= service.obtenerDatasetsAsc(id);
+        List<DatasetDatos> listaDataset = new ArrayList<>();
+        
+        double dato4=0;
+        for (Object[] objeto : listaObject) {
+            DatasetDatos dato = new DatasetDatos();
+            Integer dato1=(Integer) objeto[0];
+            Date dato2=(Date) objeto[1];
+            dato.setCodigoDataset(dato1);
+            dato.setFechaDataset(dato2);
+            listaDataset.add(dato);
+        }
+        return listaDataset;   
+    }
+    
     @GetMapping("/obtener-dataset/por-parcela/{id}")
     public List obtenerPorParcela(@PathVariable Integer id)
     {
@@ -92,16 +130,9 @@ public class DatasetController {
             for (Object[] dato : datos) {
                 int num=(Integer)dato[0];
                 if(lista.getIdDataset()==num){
-                    lista.setEditable(false);
                     service.guardar(lista);    
                     aux=false;  
                     break;
-                }
-            }
-            if(aux==true){
-                if(lista.isEditable()==false){
-                    lista.setEditable(true);
-                    service.guardar(lista);   
                 }
             }
         }

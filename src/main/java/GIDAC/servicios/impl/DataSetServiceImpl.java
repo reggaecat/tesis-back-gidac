@@ -44,13 +44,38 @@ public class DataSetServiceImpl implements DataSetService {
   
 
     @Override
-    public Object buscarPorParcelaProfundidad(Integer idParcela, Integer idProfundidad) {
+    public List<Dataset> buscarPorParcelaProfundidad(Integer idParcela, Integer idProfundidad) {
         return repository.findByProfundidadParcelaParcelaIdParcelaAndProfundidadParcelaProfundidadIdProfundidad(idParcela, idProfundidad);
     }
 
     @Override
     public List<Object[]> obtenerDataSetUsados(Integer id) {
         return repository.obtenerDataSetUsados(id);
+    }
+
+    @Override
+    public List<Dataset> buscarPorCodigoDatasetParcelaProfundidad(Integer codigoDataset, Integer idParcela, Integer idProfundidad) {
+        return repository.findByCodigoDatasetAndProfundidadParcelaParcelaIdParcelaAndProfundidadParcelaProfundidadIdProfundidad(codigoDataset, idParcela, idProfundidad);
+    }
+
+    @Override
+    public List buscarPorProyecto(Integer id) {
+        return repository.findByProyectoInvestigacionIdProyecto(id);
+    }
+
+    @Override
+    public List<Object[]>  obtenerDatasets(Integer id) {
+        return repository.obtenerDatasets(id);
+    }
+    
+    @Override
+    public List<Object[]>  obtenerDatasetsAsc(Integer id) {
+        return repository.obtenerDatasetsAsc(id);
+    }
+    
+    @Override
+    public List<Dataset> findByCodigoDatasetAndProyectoInvestigacionIdProyecto(Integer codigoDataset,Integer idProyecto){
+       return repository.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(codigoDataset, idProyecto);
     }
 
 }

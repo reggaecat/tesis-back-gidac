@@ -1,6 +1,7 @@
 package GIDAC.modelo;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 import javax.persistence.*;
@@ -14,9 +15,10 @@ public class ValorPermitido {
     
     private float valorMaximo;
     private float valorMinimo;
-    private String ValorPermitido;
+    private String valorPermitido;
     private boolean vigencia=true;
-    
+    private Date fechaCreacion;
+    private Date fechaActualizacion;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_variable_unidad_medida")
@@ -33,7 +35,7 @@ public class ValorPermitido {
     }
 
     public String getValorPermitido() {
-        return ValorPermitido;
+        return valorPermitido;
     }
 
 
@@ -55,8 +57,8 @@ public class ValorPermitido {
         this.valorMinimo = valorMinimo;
     }
 
-    public void setValorPermitido(String ValorPermitido) {
-        this.ValorPermitido = ValorPermitido;
+    public void setValorPermitido(String valorPermitido) {
+        this.valorPermitido = valorPermitido;
     }
 
 
@@ -74,6 +76,22 @@ public class ValorPermitido {
 
     public void setVigencia(boolean vigencia) {
         this.vigencia = vigencia;
+    }
+
+    public Date getFechaCreacion() {
+        return fechaCreacion;
+    }
+
+    public void setFechaCreacion(Date fechaCreacion) {
+        this.fechaCreacion = fechaCreacion;
+    }
+
+    public Date getFechaActualizacion() {
+        return fechaActualizacion;
+    }
+
+    public void setFechaActualizacion(Date fechaActualizacion) {
+        this.fechaActualizacion = fechaActualizacion;
     }
 
     

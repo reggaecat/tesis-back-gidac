@@ -16,6 +16,10 @@ public class Dataset {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idDataset;
+    private Integer codigoDataset;
+    @Temporal(TemporalType.DATE)
+    private Date fechaDataset;
+    @Temporal(TemporalType.DATE)
     private Date fechaSalidaCampo;
     private Date fechaCreacion;
     private Date fechaActualizacion;
@@ -37,15 +41,7 @@ public class Dataset {
     })
     private ProfundidadParcela profundidadParcela;
     
-    private boolean editable=true;
-
-    public boolean isEditable() {
-        return editable;
-    }
     
-     public void setEditable(boolean editable) {
-        this.editable = editable;
-    }
 
     public Integer getIdDataset() {
         return idDataset;
@@ -87,20 +83,12 @@ public class Dataset {
         this.profundidadParcela = profundidadParcela;
     }
 
-    public void setFechaSalidaCampo(Date fechaSalidaCampo) {
-        this.fechaSalidaCampo = fechaSalidaCampo;
-    }
-
     public void setFechaCreacion(Date fechaCreacion) {
         this.fechaCreacion = fechaCreacion;
     }
 
     public void setFechaActualizacion(Date fechaActualizacion) {
         this.fechaActualizacion = fechaActualizacion;
-    }
-
-    public Date getFechaSalidaCampo() {
-        return fechaSalidaCampo;
     }
 
     public Date getFechaCreacion() {
@@ -110,8 +98,29 @@ public class Dataset {
     public Date getFechaActualizacion() {
         return fechaActualizacion;
     }
-    
-    
-    
+
+    public Date getFechaDataset() {
+        return fechaDataset;
+    }
+
+    public void setFechaDataset(Date fechaDataset) {
+        this.fechaDataset = fechaDataset;
+    }
+
+    public Integer getCodigoDataset() {
+        return codigoDataset;
+    }
+
+    public void setCodigoDataset(Integer codigoDataset) {
+        this.codigoDataset = codigoDataset;
+    }
+
+    public Date getFechaSalidaCampo() {
+        return fechaSalidaCampo;
+    }
+
+    public void setFechaSalidaCampo(Date fechaSalidaCampo) {
+        this.fechaSalidaCampo = fechaSalidaCampo;
+    }
     
 }

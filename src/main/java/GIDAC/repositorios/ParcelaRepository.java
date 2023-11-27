@@ -12,8 +12,8 @@ public interface ParcelaRepository extends JpaRepository<Parcela ,Integer> {
     Parcela findByCodigoParcelaAndConglomerado(String codigoConglomerado,Conglomerado conglomerado);
     
     @Query(value="  SELECT distinct p.id_parcela" +
-                "   FROM parcela p JOIN dataset ds ON ds.id_parcela = p.id_parcela" +
-                "   WHERE p.id_conglomerado=:idConglomerado AND ds.vigencia=true",
+"                   FROM parcela p JOIN profundidad_parcela pp ON pp.id_parcela = p.id_parcela" +
+"                   WHERE p.id_conglomerado=:idConglomerado AND pp.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerParcelasUsadas(@Param("idConglomerado") Integer idConglomerado);
 }

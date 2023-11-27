@@ -42,4 +42,9 @@ public class OrganizacionServiceImpl implements OrganizacionService {
         return repository.findByVigencia(vigencia);
     }
 
+    @Override
+    public Object findByVigenciaAndIdOrganizacion(Boolean vigencia, Integer idOrganizacion) {
+        return repository.findByVigenciaAndIdOrganizacion(vigencia, idOrganizacion);
+    }
+
 }

@@ -20,9 +20,12 @@ public interface DatoRecolectadoService<T>{
     public void eliminar(Integer id);
     public List<T> buscarPorVigenciaAndVigenciaDatasetAndIdParcela(Boolean vigenciaAux ,Boolean vigencia, Integer id);
     public List<T> buscarPorVigenciaDataset(Boolean vigencia, Integer id);
+    public List<T> buscarPorVigenciaProfundidadParcela(Boolean vigencia, Integer idProfunididad, Integer idParcela);
     public List<T> buscarPorVigenciaProyecto(Boolean vigencia, Integer id);
 //    public List<T> buscarPorVigenciaVariable(Boolean vigencia, Integer id);
     public List<T> buscarPorVigenciaVariableUnidadMedida(Boolean vigencia, Integer id);
+    public List<T> buscarPorVigenciaVariableUnidadMedidaAndProyecto(Boolean vigencia, Integer id, Integer idProyecto);
+    public List<T> buscarPorVigenciaVariableUnidadMedidaAndCodigoDatasetAndProyecto(Boolean vigencia, Integer id, Integer codigoDataset, Integer idProyecto);
     public List<T> buscarPorEditable();
     
     
@@ -32,11 +35,17 @@ public interface DatoRecolectadoService<T>{
     public List<Object[]> listarTodosLosDatosProyectoNumerico(Integer idProyecto);
     public List<Object[]> listarTodosLosDatosProyectoNominal(Integer idProyecto);
     
+    public List<Object[]> listarTodosLosDatosProyectoNumericoDataset(Integer idProyecto, Integer codigoDataset);
+    public List<Object[]> listarTodosLosDatosProyectoNominalDataset(Integer idProyecto, Integer codigoDataset);
+    
     public List<Object[]> listarTodosLosDatosNumericoVariable(Integer idVariable);
     public List<Object[]> listarTodosLosDatosNominalVariable(Integer idVariable);
     
     public List<Object[]> listarTodosLosDatosProyectoNumericoVariable(Integer idProyecto, Integer idVariable);
     public List<Object[]> listarTodosLosDatosProyectoNominalVariable(Integer idProyecto, Integer idVariable);
+    
+    public List<Object[]> listarTodosLosDatosProyectoNumericoVariableDataset(Integer idProyecto, Integer idVariable, Integer codigoDataset);
+    public List<Object[]> listarTodosLosDatosProyectoNominalVariableDataset(Integer idProyecto, Integer idVariable, Integer codigoDataset);
     
     
     public List<Object[]> listarTodosLosDatosVariableNumerico(Integer idVariable);

@@ -48,4 +48,24 @@ public class ValorPermitidoServiceImpl implements ValorPermitidoService {
         return repository.findByVigenciaAndVariableUnidadMedidaVariableIdVariable(true,id);
     }
 
+    @Override
+    public Object obtenerPorVariableAndUnidadMedida(Integer idVariable, Integer idMedida) {
+        return repository.findByVariableUnidadMedidaVariableIdVariableAndVariableUnidadMedidaUnidadMedidaIdUnidadMedida(idVariable, idMedida);
+    }
+
+    @Override
+    public Object obtenerPorMaxMinPerVariableUnidadMedida(Float max, Float min, String per, Integer idVariable, Integer idMedida) {
+        return repository.findByValorMaximoAndValorMinimoAndValorPermitidoAndVariableUnidadMedidaVariableIdVariableAndVariableUnidadMedidaUnidadMedidaIdUnidadMedida(max, min, per, idVariable, idMedida);
+    }
+    
+    @Override
+    public Object obtenerPorPerVariableUnidadMedida(String per, Integer idVariable, Integer idMedida) {
+        return repository.findByValorPermitidoAndVariableUnidadMedidaVariableIdVariableAndVariableUnidadMedidaUnidadMedidaIdUnidadMedida( per, idVariable, idMedida);
+    }
+
+    @Override
+    public List listarPorVigenciaVariableUnidadMedida(Boolean vigencia, Integer idVariable, Integer idUnidadMedida) {
+        return repository.findByVigenciaAndVariableUnidadMedidaVariableIdVariableAndVariableUnidadMedidaUnidadMedidaIdUnidadMedida(vigencia, idVariable, idUnidadMedida);
+    }
+
 }

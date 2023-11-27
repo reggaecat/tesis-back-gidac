@@ -3,6 +3,7 @@ package GIDAC.controladores;
 
 import GIDAC.modelo.CatalogoOrganizacion;
 import GIDAC.modelo.Organizacion;
+import GIDAC.modelo.Variable;
 import GIDAC.servicios.CatalogoOrganizacionService;
 import GIDAC.servicios.OrganizacionService;
 import GIDAC.servicios.TipoVariableService;
@@ -10,6 +11,7 @@ import GIDAC.servicios.UnidadMedidaService;
 import GIDAC.servicios.UnidadMedidaVariableService;
 import GIDAC.servicios.ValorPermitidoService;
 import GIDAC.servicios.VariableFamiliaService;
+import GIDAC.servicios.VariableService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.InputStream;
 import java.util.List;
@@ -30,6 +32,9 @@ public class CatalogoOrganizacionController {
     private CatalogoOrganizacionService service;
     
     @Autowired
+    private VariableService variableService;
+    
+    @Autowired
     private OrganizacionService organizacionService;
     
 
@@ -44,10 +49,23 @@ public class CatalogoOrganizacionController {
     @PutMapping("/actualizar-catalogo-organizacion")
     public Object actualizar(@RequestBody CatalogoOrganizacion oC)
     {
+        cValidaciones oVal=new cValidaciones();
         CatalogoOrganizacion oD=(CatalogoOrganizacion) service.buscarPorId(oC.getIdVariableOrganizacion());
-        cValidaciones oV=new cValidaciones();
+        
+        if(oD.isVariableSistema()==true){
+            Variable oVar=oD.getVariable();
+            if(!oD.getCodigoVariableOrganizacion().equals(oC.getCodigoVariableOrganizacion()) || !oD.getNombreVariableOrganizacion().equals(oC.getNombreVariableOrganizacion())){
+               oVar.setCodigoVariable(oC.getCodigoVariableOrganizacion());
+               oVar.setNombreVariable(oC.getNombreVariableOrganizacion());
+               oVar.setFechaActualizacion(oVal.fechaActual());
+               variableService.guardar(oVar);
+            }
+        }
+        oC.setVariableSistema(oD.isVariableSistema());
+        oC.setVigencia(true);
+        
         oC.setFechaCreacion(oD.getFechaCreacion());
-        oC.setFechaActualizacion(oV.fechaActual());
+        oC.setFechaActualizacion(oVal.fechaActual());
         return service.guardar(oC);    
     }
     
@@ -88,18 +106,50 @@ public class CatalogoOrganizacionController {
         return oC;
     }
     
+    @GetMapping("/listar-por-variable-sistema-vigente/{id}")
+    public List<CatalogoOrganizacion> listarPorVariableSistemaVigente(@PathVariable Integer id)
+    {
+        List<CatalogoOrganizacion> oC= service.findByVigenciaAndVariableIdVariableOrganizacionVigencia(true, id, true);
+        oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
+        return oC;
+    }
+    
+    @GetMapping("/listar-por-variable-sistema-eliminado/{id}")
+    public List<CatalogoOrganizacion> listarPorVariableSistemaEliminado(@PathVariable Integer id)
+    {
+        List<CatalogoOrganizacion> oC= service.findByVigenciaAndVariableIdVariableOrganizacionVigencia(false, id, false);
+        oC.sort(Comparator.comparing(CatalogoOrganizacion::getNombreVariableOrganizacion));
+        return oC;
+    }
+    
     @DeleteMapping("/eliminar-catalogo-organizacion/{id}")
     public void eliminar(@PathVariable Integer id)
     {
-        System.out.println("---------------------------------------------");
-        System.out.println(""+id);
-        System.out.println("---------------------------------------------");
         CatalogoOrganizacion oC=(CatalogoOrganizacion) service.buscarPorId(id);
-        System.out.println("---------------------------------------------");
         cValidaciones oV=new cValidaciones();
-        oC.setFechaActualizacion(oV.fechaActual());
-        oC.setVigencia(false);
-        service.guardar(oC);
+        if(oC.isVariableSistema()==true){
+            Variable oVar=oC.getVariable();
+            variableService.eliminar(oC.getVariable().getIdVariable());
+        }else{
+            oC.setFechaActualizacion(oV.fechaActual());
+            oC.setVigencia(false);
+            service.guardar(oC); 
+        }
+    }
+    
+    @DeleteMapping("/reestablecer/{id}")
+    public void reestablecer(@PathVariable Integer id)
+    {
+        CatalogoOrganizacion oC=(CatalogoOrganizacion) service.buscarPorId(id);
+        cValidaciones oV=new cValidaciones();
+        if(oC.isVariableSistema()==true){
+            Variable oVar=oC.getVariable();
+            variableService.activar(oC.getVariable().getIdVariable());
+        }else{
+            oC.setFechaActualizacion(oV.fechaActual());
+            oC.setVigencia(true);
+            service.guardar(oC); 
+        }
     }
     
     @PostMapping("/comprobar-archivo")

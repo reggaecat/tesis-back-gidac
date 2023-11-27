@@ -1,6 +1,6 @@
 package GIDAC.servicios.impl;
 
-import GIDAC.excepciones.UsuarioFoundException;
+import GIDAC.utils.UsuarioFoundException;
 import GIDAC.modelo.GrupoInvestigacion;
 import GIDAC.modelo.ProyectoInvestigacion;
 import GIDAC.modelo.Rol;

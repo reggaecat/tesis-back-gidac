@@ -18,4 +18,5 @@ public interface OrganizacionService<T>{
     public List<T>  buscarPorVigencia(Boolean vigencia);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
+    public T findByVigenciaAndIdOrganizacion(Boolean vigencia, Integer idOrganizacion);
 }

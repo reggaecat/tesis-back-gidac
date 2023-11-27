@@ -5,7 +5,7 @@
 package GIDAC.modelo;
 
 import java.util.Date;
-
+import java.util.Date;
 /**
  *
  * @author My Notebook
@@ -16,17 +16,28 @@ public class CorreoElectronico {
     private String contenido;
     
     public String registrarUsuarioMensaje(String nombre, String apellido, String cedula, String correo, String contrasenia, Date fecha){
-        String mailBody = "";
-        mailBody += "<center><h2 style=background-color:#231C1D;color:#E8DDB5>" + "EcoAndes" + "</h2></center>";
-        mailBody += "<center><h4 style=background-color:#E8DDB5;color:#231C1D>" + "Datos Registrados" + "</h4>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Nombre: </b>" + nombre +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Apellido: </b>" + apellido +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Cédula: </b>" + cedula +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Correo: </b>" + correo +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Contrasenia: </b>" + contrasenia +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Fecha y hora del registro: </b>" + fecha.toString() +"</h5><br>";        
-        return mailBody;
+        StringBuilder mailBody = new StringBuilder();
+        mailBody.append("<!DOCTYPE html>");
+        mailBody.append("<html xmlns:th=\"http://www.thymeleaf.org\">");
+        mailBody.append("<head>");
+        mailBody.append("<title>Registro usuario</title>");
+        mailBody.append("<meta charset='utf-8'>");
+        mailBody.append("</head>");
+        mailBody.append("<body>");
+        mailBody.append("<center><h2 style='background-color:rgb(186, 206, 151);'>EcoAndes</h2></center>");
+        mailBody.append("<center><h5 style='color:#231C1D'>Datos Registrados</h4></center>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Nombre: </b>").append(nombre).append("</h6>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Apellido: </b>").append(apellido).append("</h6>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Cédula: </b>").append(cedula).append("</h6>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Correo: </b>").append(correo).append("</h6>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Contraseña: </b>").append(contrasenia).append("</h6>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Fecha y hora del registro: </b>").append(fecha.toString()).append("</h6>");
+        mailBody.append("</body>");
+        mailBody.append("</html>");
+        return mailBody.toString();
     }
+    
+  
     
     public String reseteoContraseniaUsuarioMensaje(String nombre, String apellido, String cedula, String correo, String contrasenia, Date fecha){
         String mailBody = "";

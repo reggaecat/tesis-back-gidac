@@ -5,6 +5,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import GIDAC.servicios.UnidadMedidaService;
+import java.util.Comparator;
 
 @RestController
 @RequestMapping("/medida")
@@ -68,7 +69,17 @@ public class UnidadMedidaController {
     @GetMapping("/listar-medida")
     public List<UnidadMedida> listar()
     {
-        return service.buscarPorVigencia(true);
+        List<UnidadMedida> oC= service.buscarPorVigencia(true);
+        oC.sort(Comparator.comparing(UnidadMedida::getUnidadMedida));
+        return oC;
+    }
+    
+    @GetMapping("/listar-medida-eliminado")
+    public List<UnidadMedida> listarEliminado()
+    {
+        List<UnidadMedida> oC= service.buscarPorVigencia(false);
+        oC.sort(Comparator.comparing(UnidadMedida::getUnidadMedida));
+        return oC;
     }
     
     @DeleteMapping("/eliminar-medida/{id}")
@@ -76,6 +87,16 @@ public class UnidadMedidaController {
     {
         UnidadMedida oC= (UnidadMedida) service.buscarPorId(id);
         oC.setVigencia(false);
+        cValidaciones oV=new cValidaciones();
+        oC.setFechaActualizacion(oV.fechaActual());
+        service.guardar(oC);  
+    }
+    
+    @DeleteMapping("/restaurar-medida/{id}")
+    public void restairar(@PathVariable Integer id)
+    {
+        UnidadMedida oC= (UnidadMedida) service.buscarPorId(id);
+        oC.setVigencia(true);
         cValidaciones oV=new cValidaciones();
         oC.setFechaActualizacion(oV.fechaActual());
         service.guardar(oC);  
