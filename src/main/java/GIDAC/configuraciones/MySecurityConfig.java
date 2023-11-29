@@ -87,7 +87,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                         "/linea-investigacion-proyecto/listar-por-proyecto/{id}",
                         "/localizacion-proyecto/listar-por-proyecto/{id}",
                         "/sector-impacto-proyecto/listar-por-proyecto/{id}",
-                        "/dataset/obtener-dataset-por-proyecto/{id}",
+                        "/dataset/obtener-dataset-por-proyecto-asc/{id}",
                         "/editar-perfil").permitAll()
                 .antMatchers(HttpMethod.OPTIONS).permitAll()
                 .anyRequest().authenticated()

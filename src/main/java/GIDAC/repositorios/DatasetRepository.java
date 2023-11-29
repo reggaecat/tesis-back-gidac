@@ -5,9 +5,11 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import java.util.Date;
 
 public interface DatasetRepository extends JpaRepository<Dataset,Integer> {
     List<Dataset> findByVigenciaAndProfundidadParcela_idParcela(Boolean vigencia, Integer idParcela);
+    List<Dataset> findByFechaSalidaCampo(Date fecha);
     //codigoDataset
     
     List<Dataset> findByProyectoInvestigacionIdProyecto(Integer idProyecto);

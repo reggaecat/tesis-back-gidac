@@ -17,6 +17,8 @@ public class Perfilado{
     private Integer cantidadNulos;
     private Integer cantidadFueraRanngo;
     private Integer cantidadRepetidos;
+    private Integer cantidadOutlier;
+    private Integer cantidadErroresSintacticos;
     private Integer cantidadDato;
     private Integer cantidadDatosCorrectos;
     
@@ -115,6 +117,22 @@ public class Perfilado{
 
     public String getUnidadMedida() {
         return unidadMedida;
+    }
+
+    public Integer getCantidadOutlier() {
+        return cantidadOutlier;
+    }
+
+    public void setCantidadOutlier(Integer cantidadOutlier) {
+        this.cantidadOutlier = cantidadOutlier;
+    }
+
+    public Integer getCantidadErroresSintacticos() {
+        return cantidadErroresSintacticos;
+    }
+
+    public void setCantidadErroresSintacticos(Integer cantidadErroresSintacticos) {
+        this.cantidadErroresSintacticos = cantidadErroresSintacticos;
     }
 
     

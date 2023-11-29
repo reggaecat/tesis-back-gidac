@@ -5,6 +5,7 @@ import GIDAC.modelo.DatoRecolectado;
 import GIDAC.modelo.Variable;
 import GIDAC.modelo.VariableUnidadMedida;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,6 +16,31 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
     List<DatoRecolectado> findByVigenciaAndDataset(Boolean vigencia,Dataset dataset);
     List<DatoRecolectado> findByVigenciaAndDatasetProfundidadParcelaProfundidadIdProfundidadAndDatasetProfundidadParcelaParcelaIdParcela(Boolean vigencia,Integer idProfundidad, Integer idParcela);
     //List<DatoRecolectado> findByVigenciaAndVariable(Boolean vigencia, Variable variable);
+    
+    List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+            float alturaMinima, 
+            float alturaMaxima,
+            Boolean vigenciaAltura,
+            String abreAltrua,
+            String codigoConglomerado,
+            Boolean vigenciaConglo,
+            Integer idProyConglomerado,
+            String CodigoParcela,
+            Boolean vigenciaPar,
+            Double profundidadMinima, 
+            Double profundidadMaxima,
+            Boolean vigenciaProf,
+            String abreProfundidad,
+            Date fechaSalidaCampo,
+            Integer idVUM,
+            String valor,
+            Boolean vigencia);
+    
+    List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(float alturaMinima, float alturaMaxima,String abreAltrua,String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
+    
+    List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaIdAlturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(Integer idAltura, String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
+            
+    
     List<DatoRecolectado> findByVigenciaAndVariableUnidadMedida(Boolean vigencia, VariableUnidadMedida variableUnidadMedida);
     List<DatoRecolectado> findByVigenciaAndVariableUnidadMedidaAndDatasetProyectoInvestigacionIdProyecto(Boolean vigencia, VariableUnidadMedida variableUnidadMedida, Integer idProyecto);
     List<DatoRecolectado> findByVigenciaAndVariableUnidadMedidaAndDatasetCodigoDatasetAndDatasetProyectoInvestigacionIdProyecto(Boolean vigencia, VariableUnidadMedida variableUnidadMedida, Integer codigoDataset, Integer idProyecto);
@@ -37,6 +63,62 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
 //            nativeQuery=true)
 //    List<Object[]> obtenerPromedioValores();
     
+    @Query(value="SELECT dr.id_dato_recolectado, dr.vigencia" +
+            "    FROM unidad_medida uma JOIN altura a ON a.id_unidad_medida = uma.id_unidad_medida" +
+            "	 JOIN conglomerado c ON c.id_altura = a.id_altura" +
+            "	 JOIN parcela p ON p.id_conglomerado = c.id_conglomerado" +
+            "	 JOIN profundidad_parcela pp ON pp.id_parcela = p.id_parcela" +
+            "	 JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad" +
+            "	 JOIN unidad_medida ump ON ump.id_unidad_medida = pr.id_unidad_medida" +
+            "	 JOIN dataset ds ON (ds.id_parcela = pp.id_parcela and ds.id_profundidad=pp.id_profundidad)" +
+            "    JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
+            "	 JOIN dato_recolectado dr ON dr.id_dataset = ds.id_dataset" +
+            "	 join variable_unidad_medida vum ON vum.id_variable_unidad_medida = dr.id_variable_unidad_medida"+
+            "    WHERE a.altura_minima=:alturaMinima AND a.altura_maxima=:alturaMaxima AND uma.abreviatura=':abreAltrua' AND c.codigo_conglomerado=':codigoConglomerado' AND pi.id_proyecto=:idProyConglomerado AND p.codigo_parcela=':codigoParcela' AND pr.profundidad_minima=:profundidadMinima AND pr.profundidad_maxima=:profundidadMaxima AND ump.abreviatura=':abreProfundidad' AND ds.fecha_salida_campo=:fechaSalidaCampo AND vum.id_variable_unidad_medida=:idVUM AND dr.valor=':valor'",
+            nativeQuery=true)
+    List<Object[]> obtenerDatoRepetido(@Param("alturaMinima") float alturaMinima, 
+            @Param("alturaMaxima") float alturaMaxima,
+            @Param("abreAltrua") String abreAltrua,
+            @Param("codigoConglomerado") String codigoConglomerado,
+            @Param("idProyConglomerado") Integer idProyConglomerado,
+            @Param("codigoParcela") String codigoParcela,
+            @Param("profundidadMinima") Double profundidadMinima, 
+            @Param("profundidadMaxima") Double profundidadMaxima,
+            @Param("abreProfundidad") String abreProfundidad,
+            @Param("fechaSalidaCampo") Date fechaSalidaCampo,
+            @Param("idVUM") Integer idVUM,
+            @Param("valor") String valor);
+    
+//    @Query(value="SELECT dr.id_dato_recolectado, dr.vigencia " +
+//            "FROM unidad_medida uma JOIN altura a ON a.id_unidad_medida = uma.id_unidad_medida " +
+//            "JOIN conglomerado c ON c.id_altura = a.id_altura " +
+//            "JOIN parcela p ON p.id_conglomerado = c.id_conglomerado " +
+//            "JOIN profundidad_parcela pp ON pp.id_parcela = p.id_parcela " +
+//            "JOIN profundidad pr ON pp.id_profundidad = pr.id_profundidad " +
+//            "JOIN unidad_medida ump ON ump.id_unidad_medida = pr.id_unidad_medida " +
+//            "JOIN dataset ds ON (ds.id_parcela = pp.id_parcela and ds.id_profundidad = pp.id_profundidad) " +
+//            "JOIN proyecto_investigacion pi ON pi.id_proyecto = ds.id_proyecto " +
+//            "JOIN dato_recolectado dr ON dr.id_dataset = ds.id_dataset " +
+//            "JOIN variable_unidad_medida vum ON vum.id_variable_unidad_medida = dr.id_variable_unidad_medida " +
+//            "WHERE a.altura_minima = :alturaMinima AND a.altura_maxima = :alturaMaxima " +
+//            "AND uma.abreviatura = :abreAltrua AND c.codigo_conglomerado = :codigoConglomerado " +
+//            "AND pi.id_proyecto = :idProyConglomerado AND p.codigo_parcela = :codigoParcela " +
+//            "AND pr.profundidad_minima = :profundidadMinima AND pr.profundidad_maxima = :profundidadMaxima " +
+//            "AND ump.abreviatura = :abreProfundidad AND ds.fecha_salida_campo = :fechaSalidaCampo " +
+//            "AND vum.id_variable_unidad_medida = :idVUM AND dr.valor = :valor",
+//            nativeQuery=true)
+//    List<Object[]> obtenerDatoRepetido(@Param("alturaMinima") float alturaMinima, 
+//            @Param("alturaMaxima") float alturaMaxima,
+//            @Param("abreAltrua") String abreAltrua,
+//            @Param("codigoConglomerado") String codigoConglomerado,
+//            @Param("idProyConglomerado") Integer idProyConglomerado,
+//            @Param("codigoParcela") String codigoParcela,
+//            @Param("profundidadMinima") Double profundidadMinima, 
+//            @Param("profundidadMaxima") Double profundidadMaxima,
+//            @Param("abreProfundidad") String abreProfundidad,
+//            @Param("fechaSalidaCampo") Date fechaSalidaCampo,
+//            @Param("idVUM") Integer idVUM,
+//            @Param("valor") String valor);
     
     //    variables 
      @Query(value="SELECT p.coordenadax as coordenadaX, p.coordenaday as coordenadaY, pr.profundidad_maxima as profundidad_maxima, pr.profundidad_minima as profundidad_minima, um.abreviatura as abreviaturaVariable, m.abreviatura as abreviatura, v.nombre_variable as nombre_variable, AVG(CAST(d.valor AS DOUBLE PRECISION)) AS promedioValor" +

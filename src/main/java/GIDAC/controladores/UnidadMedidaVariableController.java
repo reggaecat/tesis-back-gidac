@@ -26,6 +26,7 @@ public class UnidadMedidaVariableController {
     public Object guardar(@RequestBody VariableUnidadMedida oC) throws JsonProcessingException{
 //        oC.setIdVariable(oC.getVariable().getIdVariable());
 //        oC.setIdUnidadMedida(oC.getUnidadMedida().getIdUnidadMedida());
+        
         return service.guardar(oC);    
     }
     
@@ -55,6 +56,24 @@ public class UnidadMedidaVariableController {
     public List<VariableUnidadMedida> listarVigentes1()
     {    
         return service.buscarTodos(true);
+    }
+    
+    @GetMapping("/listar-por-variable/{id}")
+    public List<VariableUnidadMedida> findByVariableIdVariable(@PathVariable Integer id)
+    {    
+        return service.findByVariableIdVariable( id);
+    }
+    
+    @GetMapping("/listar-por-variable-vigente/{id}")
+    public List<VariableUnidadMedida> findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(@PathVariable Integer id)
+    {    
+        return service.findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(true, id, true, true);
+    }
+    
+    @GetMapping("/listar-por-variable-no-vigente/{id}")
+    public List<VariableUnidadMedida> findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigenciaEliminada(@PathVariable Integer id)
+    {    
+        return service.findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(false, id, true, true);
     }
     
     @GetMapping("/listar-equivalencia-variable-vigentes")
@@ -95,6 +114,16 @@ public class UnidadMedidaVariableController {
         cValidaciones oVx=new cValidaciones();
         VariableUnidadMedida oC=(VariableUnidadMedida) service.buscarPorId(id);
         oC.setVigencia(false);
+        oC.setFechaActualizacion(oVx.fechaActual());
+        service.guardar(oC);
+    }
+    
+    @DeleteMapping("/restaurar/{id}")
+    public void restaurar(@PathVariable Integer id)
+    {   
+        cValidaciones oVx=new cValidaciones();
+        VariableUnidadMedida oC=(VariableUnidadMedida) service.buscarPorId(id);
+        oC.setVigencia(true);
         oC.setFechaActualizacion(oVx.fechaActual());
         service.guardar(oC);
     }

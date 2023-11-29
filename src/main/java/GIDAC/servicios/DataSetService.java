@@ -6,6 +6,7 @@ package GIDAC.servicios;
 
 
 import GIDAC.modelo.Dataset;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,6 +26,7 @@ public interface DataSetService<T>{
     List<Object[]> obtenerDatasets(Integer id);
     List<Object[]> obtenerDatasetsAsc(Integer id);
     List<T> findByCodigoDatasetAndProyectoInvestigacionIdProyecto(Integer codigoDataset,Integer idProyecto);
+    List<T> findByFechaSalidaCampo(Date fecha);
     
     
 }

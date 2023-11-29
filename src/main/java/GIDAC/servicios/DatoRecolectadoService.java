@@ -7,6 +7,7 @@ package GIDAC.servicios;
 
 import GIDAC.modelo.DatoRecolectado;
 import java.math.BigInteger;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -108,6 +109,38 @@ public interface DatoRecolectadoService<T>{
     public BigInteger obtenerCantidadSolicitudesActualizarAcesptadoInvestigador(Integer idUsuario);
     public BigInteger obtenerCantidadSolicitudesActualizarRechazadoInvestigador(Integer idUsuario);
     
-   
+    public List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+            float alturaMinima, 
+            float alturaMaxima,
+            Boolean vigenciaAltura,
+            String abreAltrua,
+            String codigoConglomerado,
+            Boolean vigenciaConglo,
+            Integer idProyConglomerado,
+            String CodigoParcela,
+            Boolean vigenciaParcela,
+            Double profundidadMinima, 
+            Double profundidadMaxima,
+            Boolean vigenciaProf,
+            String abreProfundidad,
+            Date fechaSalidaCampo,
+            Integer idVUM,
+            String valor,
+            Boolean vigencia);
+    
+    public List<Object[]> obtenerDatoRepetido( float alturaMinima, 
+             float alturaMaxima,
+             String abreAltrua,
+             String codigoConglomerado,
+             Integer idProyConglomerado,
+             String codigoParcela,
+             Double profundidadMinima, 
+             Double profundidadMaxima,
+             String abreProfundidad,
+             Date fechaSalidaCampo,
+             Integer idVUM,
+             String valor);
+    List<T> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(float alturaMinima, float alturaMaxima,String abreAltrua,String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
+    List<T> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaIdAlturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(Integer idAltura, String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
 }
 

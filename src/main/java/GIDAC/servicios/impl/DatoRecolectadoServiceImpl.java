@@ -9,6 +9,7 @@ import GIDAC.modelo.VariableUnidadMedida;
 import GIDAC.repositorios.DatoRecolectadoRepository;
 import GIDAC.servicios.DatoRecolectadoService;
 import java.math.BigInteger;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -411,6 +412,58 @@ public class DatoRecolectadoServiceImpl implements DatoRecolectadoService {
     public List<Object[]>  listarTodosLosDatosProyectoNominalVariableDataset(Integer idProyecto, Integer idVariable, Integer codigoDataset) {
         return repository.obtenerPromedioValoresProyectoNominalVariableDataset(idProyecto, idVariable, codigoDataset);
     }
+
+  
+
+    
+    @Override
+    public List<Object[]> obtenerDatoRepetido(float alturaMinima, float alturaMaxima, String abreAltrua, String codigoConglomerado, Integer idProyConglomerado, String codigoParcela, Double profundidadMinima, Double profundidadMaxima, String abreProfundidad, Date fechaSalidaCampo, Integer idVUM, String valor) {
+        return repository.obtenerDatoRepetido( alturaMinima, 
+             alturaMaxima,
+             abreAltrua,
+             codigoConglomerado,
+             idProyConglomerado,
+             codigoParcela,
+             profundidadMinima, 
+             profundidadMaxima,
+             abreProfundidad,
+             fechaSalidaCampo,
+             idVUM,
+             valor);
+    }
+
+    @Override
+    public List findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(float alturaMinima, float alturaMaxima, String abreAltrua, String codigoConglomerado, Integer idProyConglomerado, String codigoParcela, Double profundidadMinima, Double profundidadMaxima, String abreProfundidad, Date fechaSalidaCampo, Integer idVUM, String valor, Boolean vigencia) {
+        return repository.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia( alturaMinima, alturaMaxima, abreAltrua, codigoConglomerado, idProyConglomerado, codigoParcela, profundidadMinima, profundidadMaxima, abreProfundidad, fechaSalidaCampo, idVUM, valor, vigencia);
+    }
+
+    @Override
+    public List findByDatasetProfundidadParcelaParcelaConglomeradoAlturaIdAlturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(Integer idAltura, String codigoConglomerado, Integer idProyConglomerado, String codigoParcela, Double profundidadMinima, Double profundidadMaxima, String abreProfundidad, Date fechaSalidaCampo, Integer idVUM, String valor, Boolean vigencia) {
+        return repository.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaIdAlturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia( idAltura, codigoConglomerado, idProyConglomerado, codigoParcela, profundidadMinima,  profundidadMaxima, abreProfundidad, fechaSalidaCampo, idVUM, valor, vigencia);
+    }
+
+    @Override
+    public List findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(float alturaMinima, float alturaMaxima, Boolean vigenciaAltura, String abreAltrua, String codigoConglomerado, Boolean vigenciaConglo, Integer idProyConglomerado, String CodigoParcela, Boolean vigenciaParcela, Double profundidadMinima, Double profundidadMaxima, Boolean vigenciaProf, String abreProfundidad, Date fechaSalidaCampo, Integer idVUM, String valor, Boolean vigencia) {
+        return repository.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(alturaMinima, 
+             alturaMaxima,
+             vigenciaAltura,
+             abreAltrua,
+             codigoConglomerado,
+             vigenciaConglo,
+             idProyConglomerado,
+             CodigoParcela,
+             vigenciaParcela,
+             profundidadMinima, 
+             profundidadMaxima,
+             vigenciaProf,
+             abreProfundidad,
+             fechaSalidaCampo,
+             idVUM,
+             valor,
+             vigencia);
+    }
+
+   
     
 
 }

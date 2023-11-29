@@ -14,6 +14,7 @@ import GIDAC.modelo.MapaProfundidadValor;
 import GIDAC.modelo.MapaVariable;
 import GIDAC.modelo.UnidadMedida;
 import GIDAC.modelo.ModeloDatosAgrupados;
+import java.util.Collections;
 import GIDAC.modelo.Parcela;
 import GIDAC.modelo.Perfilado;
 import GIDAC.modelo.Profundidad;
@@ -1045,37 +1046,215 @@ public class DatoRecolectadoController {
 
     //perfilar datos
     @PostMapping("/perfilar-datos")
-    public List PerfilarXLS(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
+    public List Perfilar(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
         
         ObjectMapper objectMapper=new ObjectMapper();
         ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
         
         List<VariablesEncontradas> variablesEncontradas = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
         
-        List<Perfilado> perfilado=new ArrayList();
-        
+        List<Perfilado> listaPerfilado=new ArrayList();
+        cValidaciones oF=new cValidaciones();
         int numColumnas=0;
         int numFilas=0;
-       
+        Date fechaDataset=null;
+        
         try{
             InputStream inputStream = file.getInputStream();
             Workbook archivoExcel= Workbook.getWorkbook(inputStream);
             Sheet hoja=archivoExcel.getSheet(0);
             numColumnas=hoja.getColumns();
             numFilas=hoja.getRows();
+            
+            String datoFecha=hoja.getCell(15,numFilas-1).getContents();
+            fechaDataset=oF.Fecha(datoFecha);
             String dato;
             for(VariablesEncontradas variableEncontrada:variablesEncontradas) {
-                Perfilado perfil=new Perfilado();
+                Perfilado perfilado=new Perfilado();
                 
-                perfil.setIdVariable(variableEncontrada.getIdVariable());
-                perfil.setNombreOrganizacion(variableEncontrada.getNombreOrganizacion());
-                perfil.setUnidadMedida(variableEncontrada.getUnidadMedida());
-                perfil.setNombreVariable(variableEncontrada.getNombreVariable());
-                perfil.setNombreVariableOrganizacion(variableEncontrada.getNombreVariableOrganizacion());
-                perfil.setNombreTipoVariable(variableEncontrada.getNombreTipoVariable());
+                perfilado.setIdVariable(variableEncontrada.getIdVariable());
+                perfilado.setNombreOrganizacion(variableEncontrada.getNombreOrganizacion());
+                perfilado.setUnidadMedida(variableEncontrada.getUnidadMedida());
+                perfilado.setNombreVariable(variableEncontrada.getNombreVariable());
+                perfilado.setNombreVariableOrganizacion(variableEncontrada.getNombreVariableOrganizacion());
+                perfilado.setNombreTipoVariable(variableEncontrada.getNombreTipoVariable());
                 
-                perfil.setNumeroColumna(variableEncontrada.getNumeroColumna());
-                perfil.setCantidadDato(numFilas-2);
+                perfilado.setNumeroColumna(variableEncontrada.getNumeroColumna());
+                perfilado.setCantidadDato(numFilas-2);
+                //aqui guardar datos
+                
+                int contadorRestantes=0;
+                List<ValorPermitido> valoresPermitidos=valorPermitidoService.obtenerPorVariableUnidadMedida(variableEncontrada.getIdVariableUnidadMedida());
+                
+                int contadorFaltantes=0;
+                int contadorFueraRango=0;
+                int contadorRepetidos=0;
+                
+                ArrayList<Double> datosParaOutlier = new ArrayList<>();
+                
+                for(int fila=2;fila<numFilas;fila++){
+                    
+                    //altura
+                    float alturaMinimaPef=Float.parseFloat(hoja.getCell(0,fila).getContents());
+                    float alturaMaximaPef=Float.parseFloat(hoja.getCell(1,fila).getContents());
+                    String unidadMedidaAlturaPef=hoja.getCell(2,fila).getContents();
+                    //conglomerado
+                    String codigoConglomeradoPef=hoja.getCell(3,fila).getContents();
+                    //parcela
+                    String codigoParcelaPef=hoja.getCell(6,fila).getContents();
+                    //purfundidad
+                    Double profundidadMinimaPef=Double.parseDouble(hoja.getCell(12,fila).getContents());
+                    Double profundidadMaximaPef=Double.parseDouble(hoja.getCell(13,fila).getContents());
+                    String unidadMedidaProfundidadPef=hoja.getCell(14,fila).getContents();
+                    Date fechaSalidaCampoPerf=oF.Fecha(hoja.getCell(15,fila).getContents());
+                    dato=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+                    String valorPef=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+                    
+                    List<DatoRecolectado> listaDatoRecolectadoRepetidos=service.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+                        alturaMinimaPef, 
+                        alturaMaximaPef,
+                        true,
+                        unidadMedidaAlturaPef,
+                        codigoConglomeradoPef,
+                        true,
+                        oC1.getIdProyecto(),
+                        codigoParcelaPef,
+                        true,
+                        profundidadMinimaPef, 
+                        profundidadMaximaPef,
+                        true,
+                        unidadMedidaProfundidadPef,
+                        fechaSalidaCampoPerf,
+                        variableEncontrada.getIdVariableUnidadMedida(),
+                        valorPef,
+                        true);
+                    
+                    if(!listaDatoRecolectadoRepetidos.isEmpty()){
+                        contadorRepetidos++;
+                    }
+
+                
+                    if(dato.equals("")){
+                        contadorFaltantes++;
+                    }else{
+                        boolean aux=false;
+                        if(compararCadenasCaracteres(variableEncontrada.getNombreTipoVariable(),"Nominal")){
+                            for(ValorPermitido valor:valoresPermitidos){
+                                if(compararCadenasCaracteres(valor.getValorPermitido(),dato)){
+                                    aux=true;
+                                    contadorRestantes++;
+                                    break;
+                                }
+                            }
+                            if(aux==false){
+                                contadorFueraRango++;
+                                //aqui guardar la columna con problema
+                            }
+                        }else{
+                            dato=dato.replaceAll("\\,",".");
+                            float numeroFloat = Float.parseFloat(dato);
+                            Double numeroDouble = Double.parseDouble(dato);
+                            datosParaOutlier.add(numeroDouble);
+                            for(ValorPermitido valor:valoresPermitidos){
+                                if(numeroFloat>=valor.getValorMinimo() && numeroFloat<=valor.getValorMaximo()){
+                                    aux=true;
+                                    contadorRestantes++;
+                                    break;
+                                }
+                            }
+                            if(aux==false){
+                                contadorFueraRango++;
+                            }
+                        }
+                    }
+                    
+                }
+                perfilado.setCantidadDatosCorrectos(contadorRestantes);
+                perfilado.setCantidadFueraRanngo(contadorFueraRango);
+                perfilado.setCantidadNulos(contadorFaltantes); 
+                perfilado.setCantidadRepetidos(contadorRepetidos); 
+                if(datosParaOutlier.isEmpty()){
+                    perfilado.setCantidadOutlier(0); 
+                }else{
+                    double[] iqrLimits = calcularIQR(datosParaOutlier);
+                    int cantidadOutliers = encontrarOutliers(datosParaOutlier, iqrLimits);
+                    perfilado.setCantidadOutlier(cantidadOutliers); 
+                }
+                listaPerfilado.add(perfilado);
+                
+            }
+        }catch(Exception e){
+            System.out.println("Error "+e);
+            return null;
+        }
+        return listaPerfilado;
+    }
+    
+    public double[] calcularIQR(ArrayList<Double> data) {
+        Collections.sort(data);
+        int size = data.size();
+        int cuartil1 = size / 4;
+        int cuartil3 = cuartil1 * 3;
+        double q1 = cuartil1 % 2 == 0 ? (data.get(cuartil1 - 1) + data.get(cuartil1)) / 2 : data.get(cuartil1);
+        double q3 = cuartil3 % 2 == 0 ? (data.get(cuartil3 - 1) + data.get(cuartil3)) / 2 : data.get(cuartil3);
+        double iqr = q3 - q1;
+
+        double lowerLimit = q1 - 1.5 * iqr;
+        double upperLimit = q3 + 1.5 * iqr;
+
+        return new double[]{lowerLimit, upperLimit};
+    }
+
+    // Función para encontrar valores atípicos
+    public int encontrarOutliers(ArrayList<Double> data, double[] limits) {
+        int count = 0;
+        for (Double value : data) {
+            if (value < limits[0] || value > limits[1]) {
+                count++;
+            }
+        }
+        return count;
+    }
+    
+    
+     //perfilar datos
+    @PostMapping("/perfilar-archivo")
+    public List PerfilarArchivo(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
+        
+        ObjectMapper objectMapper=new ObjectMapper();
+        ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
+        
+        List<VariablesEncontradas> variablesEncontradas = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
+        
+        List<Perfilado> listaPerfilado=new ArrayList();
+        cValidaciones oF=new cValidaciones();
+        int numColumnas=0;
+        int numFilas=0;
+        Date fechaDataset=null;
+        
+        
+        try{
+            InputStream inputStream = file.getInputStream();
+            Workbook archivoExcel= Workbook.getWorkbook(inputStream);
+            Sheet hoja=archivoExcel.getSheet(0);
+            numColumnas=hoja.getColumns();
+            numFilas=hoja.getRows();
+            
+            String datoFecha=hoja.getCell(15,numFilas-1).getContents();
+            fechaDataset=oF.Fecha(datoFecha);
+            String dato;
+            for(VariablesEncontradas variableEncontrada:variablesEncontradas) {
+                Perfilado perfilado=new Perfilado();
+                
+                perfilado.setIdVariable(variableEncontrada.getIdVariable());
+                perfilado.setNombreOrganizacion(variableEncontrada.getNombreOrganizacion());
+                perfilado.setUnidadMedida(variableEncontrada.getUnidadMedida());
+                perfilado.setNombreVariable(variableEncontrada.getNombreVariable());
+                perfilado.setNombreVariableOrganizacion(variableEncontrada.getNombreVariableOrganizacion());
+                perfilado.setNombreTipoVariable(variableEncontrada.getNombreTipoVariable());
+                
+                perfilado.setNumeroColumna(variableEncontrada.getNumeroColumna());
+                perfilado.setCantidadDato(numFilas-2);
                 //aqui guardar datos
                 
                 int contadorRestantes=0;
@@ -1086,7 +1265,68 @@ public class DatoRecolectadoController {
                 int contadorRepetidos=0;
                 for(int fila=2;fila<numFilas;fila++){
                     
+                    //altura
+                    float alturaMinimaPef=Float.parseFloat(hoja.getCell(0,fila).getContents());
+                    float alturaMaximaPef=Float.parseFloat(hoja.getCell(1,fila).getContents());
+                    String unidadMedidaAlturaPef=hoja.getCell(2,fila).getContents();
+
+                    //conglomerado
+                    String codigoConglomeradoPef=hoja.getCell(3,fila).getContents();
+
+                    //parcela
+                    String codigoParcelaPef=hoja.getCell(6,fila).getContents();
+
+                    //purfundidad
+                    Double profundidadMinimaPef=Double.parseDouble(hoja.getCell(12,fila).getContents());
+                    Double profundidadMaximaPef=Double.parseDouble(hoja.getCell(13,fila).getContents());
+                    String unidadMedidaProfundidadPef=hoja.getCell(14,fila).getContents();
+                    
+                    Date fechaSalidaCampoPerf=oF.Fecha(hoja.getCell(15,fila).getContents());
+                    List<Dataset> listaDatoDatasetPrueba=datasetService.findByFechaSalidaCampo(fechaSalidaCampoPerf);
+                    
+                    System.out.println("fecha salida campos---------------------"+listaDatoDatasetPrueba.size());
+                    //String fechaSalidaCampoPerf=hoja.getCell(15,fila).getContents();
                     dato=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+                    //valor
+                    String valorPef=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+                    System.out.println("........................................................");
+                    System.out.println(""+alturaMinimaPef);
+                    System.out.println(""+alturaMaximaPef);
+                    System.out.println(""+unidadMedidaAlturaPef);
+                    System.out.println(""+codigoConglomeradoPef);
+                    System.out.println(""+oC1.getIdProyecto());
+                    System.out.println(""+codigoParcelaPef);
+                    System.out.println(""+profundidadMinimaPef);
+                    System.out.println(""+profundidadMaximaPef);
+                    System.out.println(""+unidadMedidaProfundidadPef);
+                    System.out.println(""+hoja.getCell(15,fila).getContents());
+                    System.out.println(""+variableEncontrada.getIdVariableUnidadMedida());
+                    System.out.println(""+valorPef);
+                    
+                    List<DatoRecolectado> listaDatoRecolectadoRepetidos=service.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+                        alturaMinimaPef, 
+                        alturaMaximaPef,
+                        true,
+                        unidadMedidaAlturaPef,
+                        codigoConglomeradoPef,
+                        true,
+                        oC1.getIdProyecto(),
+                        codigoParcelaPef,
+                        true,
+                        profundidadMinimaPef, 
+                        profundidadMaximaPef,
+                        true,
+                        unidadMedidaProfundidadPef,
+                        fechaSalidaCampoPerf,
+                        variableEncontrada.getIdVariableUnidadMedida(),
+                        valorPef,
+                        true);
+                    
+                    if(!listaDatoRecolectadoRepetidos.isEmpty()){
+                        contadorRepetidos++;
+                    }
+
+                
                     if(dato.equals("")){
                         contadorFaltantes++;
                     }else{
@@ -1115,22 +1355,22 @@ public class DatoRecolectadoController {
                             }
                             if(aux==false){
                                 contadorFueraRango++;
-                                //aqui guardar la columna con problema
                             }
                         }
                     }
                     
                 }
-                perfil.setCantidadDatosCorrectos(contadorRestantes);
-                perfil.setCantidadFueraRanngo(contadorFueraRango);
-                perfil.setCantidadNulos(contadorFaltantes); 
-                perfilado.add(perfil);
+                perfilado.setCantidadDatosCorrectos(contadorRestantes);
+                perfilado.setCantidadFueraRanngo(contadorFueraRango);
+                perfilado.setCantidadNulos(contadorFaltantes); 
+                perfilado.setCantidadRepetidos(contadorRepetidos); 
+                listaPerfilado.add(perfilado);
             }
         }catch(Exception e){
             System.out.println("Error "+e);
             return null;
         }
-        return perfilado;
+        return listaPerfilado;
     }
     
     public boolean compararTextos(String texto1, String texto2) {
@@ -1168,11 +1408,7 @@ public class DatoRecolectadoController {
     private String valor;
     private boolean vigencia=true;
     
-    
-    
-    
-    
-    
+     
     //registrar datos
     @PostMapping("/registrar-datos-xls")
     public void registrarXLS(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
@@ -1226,7 +1462,7 @@ public class DatoRecolectadoController {
                     ProfundidadParcela profundidadParcela=new ProfundidadParcela();
                     
                     Variable variable=new Variable();
-                    VariableUnidadMedida variableUnidadMedida=new VariableUnidadMedida();
+                    
                     
                 
                     for(int colm=0;colm<numColumnas;colm++){
@@ -1411,6 +1647,7 @@ public class DatoRecolectadoController {
                                         dataset.setCodigoDataset(codigoDataset);
                                         dataset=(Dataset) datasetService.guardar(dataset);
                                         
+                                        VariableUnidadMedida variableUnidadMedida=new VariableUnidadMedida();
                                         variableUnidadMedida.setIdVariableUnidadMedida(variableEncontrada.getIdVariableUnidadMedida());
                                         //variable.setIdVariable(variableEncontrada.getIdVariable());
                                         datoRecolectado.setDataset(dataset);

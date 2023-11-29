@@ -4,6 +4,7 @@ package GIDAC.servicios.impl;
 import GIDAC.modelo.Dataset;
 import GIDAC.repositorios.DatasetRepository;
 import GIDAC.servicios.DataSetService;
+import java.util.Date;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -76,6 +77,11 @@ public class DataSetServiceImpl implements DataSetService {
     @Override
     public List<Dataset> findByCodigoDatasetAndProyectoInvestigacionIdProyecto(Integer codigoDataset,Integer idProyecto){
        return repository.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(codigoDataset, idProyecto);
+    }
+
+    @Override
+    public List findByFechaSalidaCampo(Date fecha) {
+        return repository.findByFechaSalidaCampo(fecha);
     }
 
 }

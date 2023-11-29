@@ -18,6 +18,8 @@ public interface UnidadMedidaVariableService<T>{
     public T buscarPorUnidadMedidaAndVariable(Integer idUnidadMedida, Integer idVariable);
     public List<T> buscarTodos(Boolean vigencia);
     public List<T> buscarVigenciaVariableVigencia(Boolean vigencia, Boolean vigenciaVariable);
+    public List<T> findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(Boolean vigencia, Integer idVariable, Boolean vigVariable, Boolean vigUnidadMedida);
+    public List<T> findByVariableIdVariable(Integer idVariable);
     public void eliminar(Integer id);
 }
 

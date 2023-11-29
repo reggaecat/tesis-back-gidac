@@ -57,5 +57,15 @@ public class UnidadMedidaVariableServiceImpl implements UnidadMedidaVariableServ
         return repository.findByVigenciaAndVariableVigencia(vigencia, vigenciaVariable);
     }
 
+    @Override
+    public List findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(Boolean vigencia, Integer idVariable, Boolean vigVariable, Boolean vigUnidadMedida) {
+        return findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(vigencia, idVariable, vigVariable, vigUnidadMedida);
+    }
+
+    @Override
+    public List findByVariableIdVariable(Integer idVariable) {
+        return findByVariableIdVariable(idVariable);
+    }
+
 
 }
