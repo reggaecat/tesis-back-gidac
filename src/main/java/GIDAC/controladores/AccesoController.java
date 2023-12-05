@@ -25,7 +25,6 @@ public class AccesoController {
     @GetMapping("/listar-accesos-administrador")
     public List<Acceso> mostrarAccesoAdministrador()
     {
-        System.out.println("llega----------------------------------------------------------");
         return service.findAllByRol("ADMINISTRADOR");
     }
     
@@ -50,8 +49,6 @@ public class AccesoController {
     @PostMapping("/guardar-acceso")
     public Object guardarAcceso(@RequestBody Acceso oC)
     {
-        System.out.println("----------------------------------------------------------------------------");
-        System.out.println("llega-----------------------------------------------------------------------");
         cValidaciones validaciones=new cValidaciones();
         oC.setFechaAcceso(validaciones.fechaActual());
         return service.save(oC);    

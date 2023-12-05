@@ -39,17 +39,22 @@ public class CorreoElectronico {
     
   
     
-    public String reseteoContraseniaUsuarioMensaje(String nombre, String apellido, String cedula, String correo, String contrasenia, Date fecha){
-        String mailBody = "";
-        mailBody += "<center><h2 style=background-color:#231C1D;color:#E8DDB5>" + "EcoAndes" + "</h2></center>";
-        mailBody += "<center><h4 style=background-color:#E8DDB5;color:#231C1D>" + "Actuaización de datos" + "</h4>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Nombre: </b>" + nombre +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Apellido: </b>" + apellido +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Cédula: </b>" + cedula +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Correo: </b>" + correo +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Contrasenia nueva: </b>" + contrasenia +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Fecha y hora del actualización: </b>" + fecha.toString() +"</h5><br>";        
-        return mailBody;
+    public String reseteoContraseniaUsuarioMensaje(String correo, String contrasenia){
+        StringBuilder mailBody = new StringBuilder();
+        mailBody.append("<!DOCTYPE html>");
+        mailBody.append("<html xmlns:th=\"http://www.thymeleaf.org\">");
+        mailBody.append("<head>");
+        mailBody.append("<title>Registro usuario</title>");
+        mailBody.append("<meta charset='utf-8'>");
+        mailBody.append("</head>");
+        mailBody.append("<body>");
+        mailBody.append("<center><h2 style='background-color:rgb(186, 206, 151);'>EcoAndes</h2></center>");
+        mailBody.append("<center><h5 style='color:#231C1D'>Datos Registrados</h4></center>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Email: </b>").append(correo).append("</h6>");
+        mailBody.append("<center><h6 style='color:#231C1D;'><b>Nueva contraseña: </b>").append(contrasenia).append("</h6>");
+        mailBody.append("</body>");
+        mailBody.append("</html>");
+        return mailBody.toString();
     }
     
     public String editarUsuarioMensajeConNuevoCorreo(String nombre, String apellido, String cedula, String correoAntiguo, String correoNuevo, String contrasenia, Date fecha){

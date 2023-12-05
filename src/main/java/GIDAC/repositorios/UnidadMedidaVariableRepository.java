@@ -10,7 +10,7 @@ public interface UnidadMedidaVariableRepository extends JpaRepository<VariableUn
     List<VariableUnidadMedida> findByVariableIdVariable(Integer idVariable);
     List<VariableUnidadMedida> findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(Boolean vigencia, Integer idVariable, Boolean vigVariable, Boolean vigUnidadMedida);
     List<VariableUnidadMedida> findByVigenciaAndVariableVigencia(Boolean vigencia, Boolean vigenciaVariable);
-    VariableUnidadMedida findByIdVariableUnidadMedidaAndVigencia(Integer id, Boolean vigencia);
-    VariableUnidadMedida findByUnidadMedidaIdUnidadMedidaAndVariableIdVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia);
-    VariableUnidadMedida findByUnidadMedidaIdUnidadMedidaAndVariableIdVariable(Integer idUnidadMedida, Integer idVariable);
+    List<VariableUnidadMedida> findByIdVariableUnidadMedidaAndVigencia(Integer id, Boolean vigencia);
+    List<VariableUnidadMedida> findByUnidadMedidaIdUnidadMedidaAndVariableIdVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia);
+    List<VariableUnidadMedida> findByUnidadMedidaIdUnidadMedidaAndVariableIdVariable(Integer idUnidadMedida, Integer idVariable);
 }

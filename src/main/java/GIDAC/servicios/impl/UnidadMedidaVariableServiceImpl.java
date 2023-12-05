@@ -43,12 +43,12 @@ public class UnidadMedidaVariableServiceImpl implements UnidadMedidaVariableServ
     }
 
     @Override
-    public Object buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia) {
+    public List buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia) {
         return repository.findByUnidadMedidaIdUnidadMedidaAndVariableIdVariableAndVigencia(idUnidadMedida, idVariable, vigencia);
     }
     
     @Override
-    public Object buscarPorUnidadMedidaAndVariable(Integer idUnidadMedida, Integer idVariable) {
+    public List buscarPorUnidadMedidaAndVariable(Integer idUnidadMedida, Integer idVariable) {
         return repository.findByUnidadMedidaIdUnidadMedidaAndVariableIdVariable(idUnidadMedida, idVariable);
     }
 
@@ -59,12 +59,12 @@ public class UnidadMedidaVariableServiceImpl implements UnidadMedidaVariableServ
 
     @Override
     public List findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(Boolean vigencia, Integer idVariable, Boolean vigVariable, Boolean vigUnidadMedida) {
-        return findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(vigencia, idVariable, vigVariable, vigUnidadMedida);
+        return repository.findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(vigencia, idVariable, vigVariable, vigUnidadMedida);
     }
 
     @Override
     public List findByVariableIdVariable(Integer idVariable) {
-        return findByVariableIdVariable(idVariable);
+        return repository.findByVariableIdVariable(idVariable);
     }
 
 

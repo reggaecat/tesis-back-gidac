@@ -14,8 +14,8 @@ import java.util.List;
 public interface UnidadMedidaVariableService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
-    public T buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia);
-    public T buscarPorUnidadMedidaAndVariable(Integer idUnidadMedida, Integer idVariable);
+    public List<T> buscarPorUnidadMedidaAndVariableAndVigencia(Integer idUnidadMedida, Integer idVariable, Boolean vigencia);
+    public List<T> buscarPorUnidadMedidaAndVariable(Integer idUnidadMedida, Integer idVariable);
     public List<T> buscarTodos(Boolean vigencia);
     public List<T> buscarVigenciaVariableVigencia(Boolean vigencia, Boolean vigenciaVariable);
     public List<T> findByVigenciaAndVariableIdVariableAndVariableVigenciaAndUnidadMedidaVigencia(Boolean vigencia, Integer idVariable, Boolean vigVariable, Boolean vigUnidadMedida);

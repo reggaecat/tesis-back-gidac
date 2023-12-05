@@ -152,15 +152,14 @@ public class AuthenticationController {
 
     
     
-    @PostMapping("/enviar-email")
+    @PostMapping("/enviar-email-recuperar-contrasenia")
     public ResponseEntity<?> enviarCorreoElectronico1(@RequestBody CorreoElectronico correoElectronico) {
         Usuario usuarioLocal = usuarioService.obtenerPorEmail(correoElectronico.getDestinatario());
         cValidaciones validaciones =new cValidaciones();
         if(usuarioLocal != null){
             String clave=generarClave();
-            String mensaje=correoElectronico.reseteoContraseniaUsuarioMensaje(usuarioLocal.getNombreUsuario(), usuarioLocal.getApellidoUsuario(), "cedula", usuarioLocal.getEmail(), clave, validaciones.fechaActual());
-            //String mensaje="Correo: "+usuarioLocal.getEmail();
-            //mensaje=mensaje +"<br> Contraseña: "+clave;
+            String mensaje=correoElectronico.reseteoContraseniaUsuarioMensaje(usuarioLocal.getEmail(), clave);
+            
             usuarioLocal.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
             
             SimpleMailMessage message = new SimpleMailMessage();
@@ -168,12 +167,10 @@ public class AuthenticationController {
             message.setFrom("espoch.gidac@outlook.com");
             message.setSubject("Reseteo de contraseña");
             message.setText(mensaje);
-            System.out.println("llega--------------------------------------------------------------");
             
             try {
                 mailSender.send(message);
                 usuarioService.actualizarUsuario(usuarioLocal);
-                
                 return ResponseEntity.ok("Correo electrónico enviado correctamente.");
             } catch (MailException e) {
                 System.out.println("error "+e);

@@ -24,22 +24,17 @@ public class UnidadMedidaVariableController {
 
     @PostMapping("/guardar-equivalencia-variable")
     public Object guardar(@RequestBody VariableUnidadMedida oC) throws JsonProcessingException{
-//        oC.setIdVariable(oC.getVariable().getIdVariable());
-//        oC.setIdUnidadMedida(oC.getUnidadMedida().getIdUnidadMedida());
-        
         return service.guardar(oC);    
     }
     
     @PutMapping("/actualizar")
     public Object actualizar(@RequestBody VariableUnidadMedida oC) throws JsonProcessingException{
-//        oC.setIdVariable(oC.getVariable().getIdVariable());
-//        oC.setIdUnidadMedida(oC.getUnidadMedida().getIdUnidadMedida());
-
         cValidaciones oVx=new cValidaciones();
         if(service.buscarPorUnidadMedidaAndVariable(oC.getUnidadMedida().getIdUnidadMedida(), oC.getVariable().getIdVariable())==null){
             oC.setFechaCreacion(oVx.fechaActual());
         }else{
-            oC=(VariableUnidadMedida) service.buscarPorUnidadMedidaAndVariable(oC.getUnidadMedida().getIdUnidadMedida(), oC.getVariable().getIdVariable());
+            List<VariableUnidadMedida> oCAux=service.buscarPorUnidadMedidaAndVariable(oC.getUnidadMedida().getIdUnidadMedida(), oC.getVariable().getIdVariable());
+            oC=oCAux.get(0);
             oC.setFechaActualizacion(oVx.fechaActual());
         }
         oC.setVigencia(true);
@@ -97,7 +92,6 @@ public class UnidadMedidaVariableController {
                 .collect(Collectors.toList());
 
         return listaOrdenada;
-        //return service.buscarVigenciaVariableVigencia(true, true);
     }
     
     @GetMapping("/listar-equivalencia-variable-no-vigente-variable-no-vigente")

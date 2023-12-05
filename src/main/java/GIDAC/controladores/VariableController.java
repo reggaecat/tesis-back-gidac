@@ -36,9 +36,7 @@ public class VariableController {
     @Autowired
     private VariableService service;
 
-    
-    
-       @Autowired
+    @Autowired
     private CatalogoOrganizacionService catalogoOrganizacionService;
     
     @Autowired
@@ -95,14 +93,15 @@ public class VariableController {
         if(variableAux.getTipoVariable().getIdTipoVariable()==1){
             for(ValorPermitidoUnidadMedida valorPermitido:valoresPermitidos) {
                 VariableUnidadMedida VUM=new VariableUnidadMedida();
-                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable())==null){
+                List<VariableUnidadMedida> oCAux= unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable());
+                if(oCAux.isEmpty()){
                     UnidadMedida unidadMedidaAux=new UnidadMedida();
                     unidadMedidaAux.setIdUnidadMedida(valorPermitido.getIdUnidadMedida());
                     VUM.setVariable(variableAux);
                     VUM.setUnidadMedida(unidadMedidaAux);
                     VUM.setFechaCreacion(oVx.fechaActual());
                 }else{
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable());
+                    VUM=oCAux.get(0);
                     VUM.setFechaActualizacion(oVx.fechaActual());
                 }
                 VUM.setVigencia(true);
@@ -126,14 +125,15 @@ public class VariableController {
         }else{
             for(ValorPermitidoUnidadMedida valorPermitido:valoresPermitidos) {
                 VariableUnidadMedida VUM=new VariableUnidadMedida();
-                if(unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable())==null){
+                List<VariableUnidadMedida> oCAux= unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(0, variableAux.getIdVariable());
+                if(oCAux.isEmpty()){
                     UnidadMedida unidadMedidaAux=new UnidadMedida();
                     unidadMedidaAux.setIdUnidadMedida(0);
                     VUM.setVariable(variableAux);
                     VUM.setUnidadMedida(unidadMedidaAux);
                     VUM.setFechaCreacion(oVx.fechaActual());
                 }else{
-                    VUM=(VariableUnidadMedida) unidadMedidaVariableService.buscarPorUnidadMedidaAndVariable(valorPermitido.getIdUnidadMedida(), variableAux.getIdVariable());
+                    VUM=oCAux.get(0);
                     VUM.setFechaActualizacion(oVx.fechaActual());
                 }
                 VUM.setVigencia(true);

@@ -75,7 +75,7 @@ public class MySecurityConfig extends WebSecurityConfigurerAdapter {
                         "/solicitud/guardar-solicitud",
                         "/guardar-visitante",
                         "/api/carbono",
-                        "/enviar-email",
+                        "/enviar-email-recuperar-contrasenia",
                         "/generate-token",
                         "/usuarios/",
                         "/solicitud/guardar-solicitud-descarga",
