@@ -8,6 +8,7 @@ import GIDAC.modelo.GrupoInvestigacion;
 import GIDAC.modelo.ProyectoInvestigacion;
 import GIDAC.modelo.Rol;
 import GIDAC.modelo.Usuario;
+import GIDAC.servicios.EmailEnvioService;
 import GIDAC.servicios.GrupoInvestigacionService;
 import GIDAC.servicios.RolService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -36,6 +37,9 @@ public class AppProyecto implements CommandLineRunner {
 	private RolService rolService;
         
         @Autowired
+	private EmailEnvioService emailEnvioService;
+        
+        @Autowired
 	private GrupoInvestigacionService grupoInvestigacionService;
 
 	@Autowired
@@ -47,6 +51,25 @@ public class AppProyecto implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
+            
+            try{  
+                emailEnvioService.enviarEmailResetearContrasenia("cjdmaigua@gmail.com", "12345");
+            }catch(Exception exception){
+                throw new Exception("Error al enviar el mensaje 1: "+exception);
+            }
+            
+            try{  
+                emailEnvioService.enviarEmailResetearContrasenia1("cjdmaigua@gmail.com", "12345");
+            }catch(Exception exception){
+                throw new Exception("Error al enviar el mensaje 2: "+exception);
+            }
+            
+            try{  
+                emailEnvioService.enviarEmailResetearContrasenia2("cjdmaigua@gmail.com", "12345");
+            }catch(Exception exception){
+                throw new Exception("Error al enviar el mensaje 3: "+exception);
+            }
+//            
             try{
                             
                             

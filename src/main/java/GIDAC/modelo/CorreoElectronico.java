@@ -57,6 +57,30 @@ public class CorreoElectronico {
         return mailBody.toString();
     }
     
+    public String reseteoContraseniaUsuarioMensaje1(String correo, String contrasenia){
+        String mailBody = "";
+        mailBody += "<!DOCTYPE html>";
+        mailBody += "<html xmlns:th=\"http://www.thymeleaf.org\">";
+        mailBody += "<head>";
+        mailBody += "<title>Registro usuario</title>";
+        mailBody += "<meta charset='utf-8'>";
+        mailBody += "</head>";
+        mailBody += "<body>";
+        mailBody += "<center><h2 style=background-color:#231C1D;color:#E8DDB5>" + "EcoAndes" + "</h2></center>";
+        mailBody += "<center><h4 style=background-color:#E8DDB5;color:#231C1D>" + "Actuaización de datos" + "</h4>";
+        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Nombre: </b>" + correo +"</h5><br>";
+        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Contraseña: </b>" + contrasenia +"</h5><br>";
+        mailBody += "</body>";
+        mailBody += "</html>";
+        return mailBody;
+    }
+    
+    public String reseteoContraseniaUsuarioMensaje2(String correo, String contrasenia){
+        String mailBody = "";
+        mailBody += "Contraseña: " + contrasenia;
+        return mailBody;
+    }
+    
     public String editarUsuarioMensajeConNuevoCorreo(String nombre, String apellido, String cedula, String correoAntiguo, String correoNuevo, String contrasenia, Date fecha){
         String mailBody = "";
         mailBody += "<center><h2 style=background-color:#231C1D;color:#E8DDB5>" + "EcoAndes" + "</h2></center>";

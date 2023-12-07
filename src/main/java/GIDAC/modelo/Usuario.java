@@ -47,7 +47,11 @@ public class Usuario implements UserDetails {
     
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "usuario")
     @JsonIgnoreProperties("usuario")
-    private Set<Acceso> Acceso = new HashSet<>();
+    private Set<Acceso> acceso = new HashSet<>();
+    
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "usuario")
+    @JsonIgnoreProperties("usuario")
+    private Set<EmailEnvio> emailEnvio = new HashSet<>();
     
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "usuario")
     @JsonIgnoreProperties("usuario")
@@ -141,11 +145,11 @@ public class Usuario implements UserDetails {
     }
      
     public Set<Acceso> getAcceso() {
-        return Acceso;
+        return acceso;
     }
 
-    public void setAcceso(Set<Acceso> Acceso) {
-        this.Acceso = Acceso;
+    public void setAcceso(Set<Acceso> acceso) {
+        this.acceso = acceso;
     }
     
     public byte[] getImagenPerfil() {
@@ -235,5 +239,14 @@ public class Usuario implements UserDetails {
     public void setInformacionEcoAndes(Set<InformacionEcoAndes> informacionEcoAndes) {
         this.informacionEcoAndes = informacionEcoAndes;
     }
+
+    public Set<EmailEnvio> getEmailEnvio() {
+        return emailEnvio;
+    }
+
+    public void setEmailEnvio(Set<EmailEnvio> emailEnvio) {
+        this.emailEnvio = emailEnvio;
+    }
+    
     
 }
