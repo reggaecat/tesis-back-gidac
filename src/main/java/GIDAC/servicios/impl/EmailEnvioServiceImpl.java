@@ -122,12 +122,14 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); // Reemplaza con el destinatario
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); 
                 message.setSubject("Resetear contraseña");
                 
                 CorreoElectronico oCor=new CorreoElectronico();
-                
-                message.setText(oCor.reseteoContraseniaUsuarioMensaje(email, clave));
+                String correoHTML = oCor.reseteoContraseniaUsuarioMensaje(email, clave);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
+                //message.setText(oCor.reseteoContraseniaUsuarioMensaje(email, clave));
                 
                 Transport.send(message);
                 System.out.println("..........................................");

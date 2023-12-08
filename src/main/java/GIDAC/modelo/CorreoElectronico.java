@@ -67,9 +67,9 @@ public class CorreoElectronico {
         mailBody += "</head>";
         mailBody += "<body>";
         mailBody += "<center><h2 style=background-color:#231C1D;color:#E8DDB5>" + "EcoAndes" + "</h2></center>";
-        mailBody += "<center><h4 style=background-color:#E8DDB5;color:#231C1D>" + "Actuaización de datos" + "</h4>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Nombre: </b>" + correo +"</h5><br>";
-        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Contraseña: </b>" + contrasenia +"</h5><br>";
+        mailBody += "<center><h4 style=background-color:#E8DDB5;color:#231C1D>" + "Actuaización de datos" + "</h4></center>";
+        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Nombre: </b>" + correo +"</h5><br></center>";
+        mailBody += "<center><h5 style=color:#231C1D;>" + "<b>Contraseña: </b>" + contrasenia +"</h5><br></center>";
         mailBody += "</body>";
         mailBody += "</html>";
         return mailBody;
