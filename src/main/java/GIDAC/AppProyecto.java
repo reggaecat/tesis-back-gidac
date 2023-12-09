@@ -83,9 +83,11 @@ public class AppProyecto implements CommandLineRunner {
                 Rol rol = new Rol();
                 rol.setIdRol(1);
                 rol.setNombreRol("ADMINISTRADOR");
-                rol=(Rol) rolService.save(rol);
                 usuario.setRol(rol);
-                Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
+                emailEnvioService.enviarEmailResetearContrasenia(usuario);
+                emailEnvioService.enviarEmailRegistroUsuario(usuario);
+                emailEnvioService.enviarEmailActualizacionUsuario(usuario);
+                
 
                 }catch(Exception exception){
                     System.out.println("error al guardar-------------------------------------");

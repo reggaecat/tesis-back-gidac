@@ -25,19 +25,30 @@ public class CorreoElectronico {
                         "  <head>" +
                         "    <meta charset='UTF-8'> " +
                         "    <meta name='viewport' content='width=device-width, initial-scale=1.0'> " +
-                        "    <link rel='preconnect' href='https://fonts.googleapis.com'> " +
-                        "    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin> " +
-                        "    <link href='https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap' rel='stylesheet'> " +
+                        
+                        "   <style>" +
+                        "   @import url('https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap'); " +
+                        "   </style>" +
+                
                         "     <title>Reseteo contraseña</title>" +
                         " </head> " +
                         " <body> " +
+                
+                        "     <tbody> " +
+                        "     <tr> " +
+                        "     <td> " +
+                        "     <table width='550' cellpadding='0' cellspacing='0' border='0' align='center'> " +
+                        "     <tbody> " +
+                        "     <tr> " +
+                
+                
                         "     <td width='100%' bgcolor='#f6f4f5' style='padding:20px'> " +
                         "         <table width='510' align='center' cellspacing='0' cellpadding='0' border='0'> " +
                         "             <tbody> " +
                         "                 <tr> " +
                         "                     <td align='center' bgcolor='#ffffff' " +
                         "                         style='color:white;background-color:rgb(107, 114, 95);font-size:40px;padding-top:30px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:center;'> " +
-                        "                         <div style='font-family:Rubik Microbe,cursive; '> " +
+                        "                         <div style='font-family:\"Rubik Microbe\",sans-serif; '> " +
                         "                             <div style='font-size: 40px;'>EcoAndes</div> " +
                         "                         </div> " +
                         "                     </td> " +
@@ -109,6 +120,16 @@ public class CorreoElectronico {
                         "             </tbody> " +
                         "         </table> " +
                         "     </td> " +
+                               
+                                
+                                
+                        "    </tr> " +
+                        "    </tbody> " +
+                        "    </table> " +
+                        "    </td> " +
+                        "    </tr> " +
+                        "    </tbody> " +
+                                
                         " </body> " +
                         " </html>");
         
@@ -123,19 +144,30 @@ public class CorreoElectronico {
                         "  <head>" +
                         "    <meta charset='UTF-8'> " +
                         "    <meta name='viewport' content='width=device-width, initial-scale=1.0'> " +
-                        "    <link rel='preconnect' href='https://fonts.googleapis.com'> " +
-                        "    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin> " +
-                        "    <link href='https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap' rel='stylesheet'> " +
+                        
+                        "   <style>" +
+                        "   @import url('https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap'); +" +
+                        "   </style>" +
+                
                         "     <title>Registrar datos usuario</title>" +
                         " </head> " +
                         " <body> " +
+                
+                        "     <tbody> " +
+                        "     <tr> " +
+                        "     <td> " +
+                        "     <table width='550' cellpadding='0' cellspacing='0' border='0' align='center'> " +
+                        "     <tbody> " +
+                        "     <tr> " +
+                
+                
                         "     <td width='100%' bgcolor='#f6f4f5' style='padding:20px'> " +
                         "         <table width='510' align='center' cellspacing='0' cellpadding='0' border='0'> " +
                         "             <tbody> " +
                         "                 <tr> " +
                         "                     <td align='center' bgcolor='#ffffff' " +
                         "                         style='color:white;background-color:rgb(107, 114, 95);font-size:40px;padding-top:30px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:center;'> " +
-                        "                         <div style='font-family:Rubik Microbe,cursive; '> " +
+                        "                         <div style='font-family:Rubik Microbe,sans-serif; '> " +
                         "                             <div style='font-size: 40px;'>EcoAndes</div> " +
                         "                         </div> " +
                         "                     </td> " +
@@ -237,6 +269,16 @@ public class CorreoElectronico {
                         "             </tbody> " +
                         "         </table> " +
                         "     </td> " +
+                                
+                                
+                        "    </tr> " +
+                        "    </tbody> " +
+                        "    </table> " +
+                        "    </td> " +
+                        "    </tr> " +
+                        "    </tbody> " +
+                                
+                                
                         " </body> " +
                         " </html>");
         
@@ -254,16 +296,30 @@ public class CorreoElectronico {
                         "    <link rel='preconnect' href='https://fonts.googleapis.com'> " +
                         "    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin> " +
                         "    <link href='https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap' rel='stylesheet'> " +
+                
+                        "   <style>" +
+                        "   @import url('https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap'); +" +
+                        "   </style>" +
+                
                         "     <title>Registrar datos usuario</title>" +
                         " </head> " +
                         " <body> " +
+                
+                
+                        "     <tbody> " +
+                        "     <tr> " +
+                        "     <td> " +
+                        "     <table width='550' cellpadding='0' cellspacing='0' border='0' align='center'> " +
+                        "     <tbody> " +
+                        "     <tr> " +
+                
                         "     <td width='100%' bgcolor='#f6f4f5' style='padding:20px'> " +
                         "         <table width='510' align='center' cellspacing='0' cellpadding='0' border='0'> " +
                         "             <tbody> " +
                         "                 <tr> " +
                         "                     <td align='center' bgcolor='#ffffff' " +
                         "                         style='color:white;background-color:rgb(107, 114, 95);font-size:40px;padding-top:30px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:center;'> " +
-                        "                         <div style='font-family:Rubik Microbe,cursive; '> " +
+                        "                         <div style='font-family:Rubik Microbe,sans-serif; '> " +
                         "                             <div style='font-size: 40px;'>EcoAndes</div> " +
                         "                         </div> " +
                         "                     </td> " +
@@ -365,6 +421,15 @@ public class CorreoElectronico {
                         "             </tbody> " +
                         "         </table> " +
                         "     </td> " +
+                                
+                                
+                        "    </tr> " +
+                        "    </tbody> " +
+                        "    </table> " +
+                        "    </td> " +
+                        "    </tr> " +
+                        "    </tbody> " +
+                                
                         " </body> " +
                         " </html>");
         
@@ -383,16 +448,31 @@ public class CorreoElectronico {
                         "    <link rel='preconnect' href='https://fonts.googleapis.com'> " +
                         "    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin> " +
                         "    <link href='https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap' rel='stylesheet'> " +
+                
+                        "   <style>" +
+                        "   @import url('https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap'); +" +
+                        "   </style>" +
+                
                         "     <title>Actualizar datos usuario</title>" +
                         " </head> " +
                         " <body> " +
+                
+                
+                        "     <tbody> " +
+                        "     <tr> " +
+                        "     <td> " +
+                        "     <table width='550' cellpadding='0' cellspacing='0' border='0' align='center'> " +
+                        "     <tbody> " +
+                        "     <tr> " +
+                
+                        
                         "     <td width='100%' bgcolor='#f6f4f5' style='padding:20px'> " +
                         "         <table width='510' align='center' cellspacing='0' cellpadding='0' border='0'> " +
                         "             <tbody> " +
                         "                 <tr> " +
                         "                     <td align='center' bgcolor='#ffffff' " +
                         "                         style='color:white;background-color:rgb(107, 114, 95);font-size:40px;padding-top:30px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:center;'> " +
-                        "                         <div style='font-family:Rubik Microbe,cursive; '> " +
+                        "                         <div style='font-family:Rubik Microbe,sans-serif; '> " +
                         "                             <div style='font-size: 40px;'>EcoAndes</div> " +
                         "                         </div> " +
                         "                     </td> " +
@@ -483,6 +563,15 @@ public class CorreoElectronico {
                         "             </tbody> " +
                         "         </table> " +
                         "     </td> " +
+                        
+                        "    </tr> " +
+                        "    </tbody> " +
+                        "    </table> " +
+                        "    </td> " +
+                        "    </tr> " +
+                        "    </tbody> " +
+                                
+                                
                         " </body> " +
                         " </html>");
         
@@ -500,16 +589,31 @@ public class CorreoElectronico {
                         "    <link rel='preconnect' href='https://fonts.googleapis.com'> " +
                         "    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin> " +
                         "    <link href='https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap' rel='stylesheet'> " +
+                
+                        "   <style>" +
+                        "   @import url('https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap'); +" +
+                        "   </style>" +
+                
                         "     <title>Respuesta de solicitud</title>" +
                         " </head> " +
                         " <body> " +
+                
+                
+                        "     <tbody> " +
+                        "     <tr> " +
+                        "     <td> " +
+                        "     <table width='550' cellpadding='0' cellspacing='0' border='0' align='center'> " +
+                        "     <tbody> " +
+                        "     <tr> " +
+                
+                
                         "     <td width='100%' bgcolor='#f6f4f5' style='padding:20px'> " +
                         "         <table width='510' align='center' cellspacing='0' cellpadding='0' border='0'> " +
                         "             <tbody> " +
                         "                 <tr> " +
                         "                     <td align='center' bgcolor='#ffffff' " +
                         "                         style='color:white;background-color:rgb(107, 114, 95);font-size:40px;padding-top:30px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:center;'> " +
-                        "                         <div style='font-family:Rubik Microbe,cursive; '> " +
+                        "                         <div style='font-family:Rubik Microbe,sans-serif; '> " +
                         "                             <div style='font-size: 40px;'>EcoAndes</div> " +
                         "                         </div> " +
                         "                     </td> " +
@@ -554,6 +658,14 @@ public class CorreoElectronico {
                         "             </tbody> " +
                         "         </table> " +
                         "     </td> " +
+                                
+                        "    </tr> " +
+                        "    </tbody> " +
+                        "    </table> " +
+                        "    </td> " +
+                        "    </tr> " +
+                        "    </tbody> " +
+                                
                         " </body> " +
                         " </html>");
         
@@ -571,16 +683,33 @@ public class CorreoElectronico {
                         "    <link rel='preconnect' href='https://fonts.googleapis.com'> " +
                         "    <link rel='preconnect' href='https://fonts.gstatic.com' crossorigin> " +
                         "    <link href='https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap' rel='stylesheet'> " +
+                
+                        "   <style>" +
+                        "   @import url('https://fonts.googleapis.com/css2?family=Rubik+Microbe&display=swap'); +" +
+                        "   </style>" +
+                
+                
                         "     <title>Respuesta de solicitud</title>" +
                         " </head> " +
                         " <body> " +
+                
+                
+                        "     <tbody> " +
+                        "     <tr> " +
+                        "     <td> " +
+                        "     <table width='550' cellpadding='0' cellspacing='0' border='0' align='center'> " +
+                        "     <tbody> " +
+                        "     <tr> " +
+                
+                
+                
                         "     <td width='100%' bgcolor='#f6f4f5' style='padding:20px'> " +
                         "         <table width='510' align='center' cellspacing='0' cellpadding='0' border='0'> " +
                         "             <tbody> " +
                         "                 <tr> " +
                         "                     <td align='center' bgcolor='#ffffff' " +
                         "                         style='color:white;background-color:rgb(107, 114, 95);font-size:40px;padding-top:30px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:center;'> " +
-                        "                         <div style='font-family:Rubik Microbe,cursive; '> " +
+                        "                         <div style='font-family:Rubik Microbe,sans-serif; '> " +
                         "                             <div style='font-size: 40px;'>EcoAndes</div> " +
                         "                         </div> " +
                         "                     </td> " +
@@ -630,6 +759,14 @@ public class CorreoElectronico {
                         "             </tbody> " +
                         "         </table> " +
                         "     </td> " +
+                                
+                        "    </tr> " +
+                        "    </tbody> " +
+                        "    </table> " +
+                        "    </td> " +
+                        "    </tr> " +
+                        "    </tbody> " +
+                                
                         " </body> " +
                         " </html>");
         
