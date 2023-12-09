@@ -17,9 +17,14 @@ public interface EmailEnvioService <T> {
     public T findById(Integer id);
     public void delete(Integer id);
     public void restore(Integer id);
-    public void enviarEmailResetearContrasenia(String email, String clave)throws Exception ;
-    public void enviarEmailResetearContrasenia1(String email, String clave)throws Exception ;
-    public void enviarEmailResetearContrasenia2(String email, String clave)throws Exception ;
+    public void enviarEmailResetearContrasenia(T object)throws Exception ;
+    public void enviarEmailRegistroUsuario(T object)throws Exception ;
+    public void enviarEmailActualizacionUsuario(T object)throws Exception ;
+    public void enviarEmailActualizacionUsuarioEmailDiferente(T object, String email)throws Exception ;
+    public void enviarEmailActualizacionPerfilUsuario(T object)throws Exception ;
+    public void enviarEmailActualizacionPerfilUsuarioEmailDiferente(T object, String email)throws Exception ;
+    public void enviarEmailAprobarSolicitudDescarga(T object)throws Exception ;
+    public void enviarEmailRechazarSolicitudDescarga(T object)throws Exception ;
     public List<T> findAll();
     public List<T>  findByVigencia(Boolean vigencia);
 }

@@ -12,6 +12,7 @@ import GIDAC.modelo.SolicitudDescarga;
 import GIDAC.modelo.Usuario;
 import GIDAC.modelo.contadorSolicitudes;
 import GIDAC.servicios.DatoRecolectadoService;
+import GIDAC.servicios.EmailEnvioService;
 import GIDAC.servicios.EstadoSolicitudActualizarService;
 import GIDAC.servicios.EstadoSolicitudDescargaService;
 import GIDAC.servicios.GrupoInvestigacionService;
@@ -54,7 +55,8 @@ public class SolicitudesController {
     @Autowired
     private GrupoInvestigacionService grupoInvestigacionService;
     
-
+    @Autowired
+    private EmailEnvioService emailEnvioService;
     
     @GetMapping("/contador-solicitudes/{id}")
     public contadorSolicitudes contadorSolicitudes(@PathVariable Integer id){
@@ -85,12 +87,6 @@ public class SolicitudesController {
         }
         oC.setContSolEliminar(contadorEliminar);
         oC.setContSolAcceso(contadorDescarga);
-        
-        System.out.println("-----------------------------------------------------");
-        System.out.println(""+id);
-        System.out.println(""+oC.getContSolAcceso());
-        System.out.println(""+oC.getContSolEliminar());
-        System.out.println("-----------------------------------------------------");
         return oC;
     } 
     
@@ -111,7 +107,7 @@ public class SolicitudesController {
     }
     
     @GetMapping("/solicitud-aprobada/{id}")
-    public Object aprobarSolicitud(@PathVariable("id") Integer id)
+    public Object aprobarSolicitud(@PathVariable("id") Integer id) throws Exception
     {
         cValidaciones validaciones = new cValidaciones();
         RespuestaSolicitudDescarga respuestaSolicitudDescarga=new RespuestaSolicitudDescarga();
@@ -129,11 +125,12 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
+        emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga);
         return solicitudDescargaService.save(oC);    
     }
     
     @GetMapping("/solicitud-rechazada/{id}/{respuesta}")
-    public Object rechazarSolicitud(@PathVariable("id") Integer id,@PathVariable("respuesta") String respuesta)
+    public Object rechazarSolicitud(@PathVariable("id") Integer id,@PathVariable("respuesta") String respuesta) throws Exception
     {
         cValidaciones validaciones = new cValidaciones();
         RespuestaSolicitudDescarga respuestaSolicitudDescarga=new RespuestaSolicitudDescarga();
@@ -151,6 +148,7 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
+        emailEnvioService.enviarEmailRechazarSolicitudDescarga(respuestaSolicitudDescarga);
         return solicitudDescargaService.save(oC); 
         
     }

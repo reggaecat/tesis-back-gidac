@@ -3,9 +3,12 @@ package GIDAC.controladores;
 import GIDAC.modelo.CorreoElectronico;
 import GIDAC.modelo.GrupoInvestigacion;
 import GIDAC.modelo.ProyectoInvestigacion;
+import GIDAC.modelo.Rol;
 import GIDAC.modelo.Usuario;
+import GIDAC.servicios.EmailEnvioService;
 import GIDAC.servicios.GrupoInvestigacionService;
 import GIDAC.servicios.ProyectoInvestigacionService;
+import GIDAC.servicios.RolService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.security.SecureRandom;
@@ -43,19 +46,22 @@ public class UsuarioController {
     @Autowired
     private JavaMailSender mailSender;
    
+    @Autowired
+    private EmailEnvioService emailEnvioService;
+    
+    @Autowired
+    private RolService rolService;
 
     @PostMapping("/")
     public Usuario guardarUsuario(@RequestBody Usuario usuario) throws Exception{
-        
+        Rol rol=(Rol) rolService.findById(usuario.getRol().getIdRol());
+        usuario.setRol(rol);
         cValidaciones validaciones=new cValidaciones();
-        String email=usuario.getEmail();
         String clave=generarClave();
         usuario.setFechaCreacion(validaciones.fechaActual());
-        usuario.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
-
         System.out.println("-----------------------------------------------------------");
         System.out.println("Contraseña: "+clave);
-
+        System.out.println("-----------------------------------------------------------");
         return usuarioService.guardarUsuario(usuario);
         
     }
@@ -65,68 +71,17 @@ public class UsuarioController {
         
         Usuario usuarioActual =usuarioService.obtenerUsuarioId(usuario.getIdUsuario());
         cValidaciones validaciones=new cValidaciones();
-        String email=usuario.getEmail();
         usuario.setFechaCreacion(usuarioActual.getFechaCreacion());
         usuario.setFechaActualizacion(validaciones.fechaActual());
         usuario.setContrasenia(usuarioActual.getContrasenia());
+        usuario.setRol(usuarioActual.getRol());
+        if(usuarioActual.getEmail().equals(usuario.getEmail())){
+            emailEnvioService.enviarEmailActualizacionUsuario(usuario);
+        }else{
+            emailEnvioService.enviarEmailActualizacionUsuarioEmailDiferente(usuario,usuarioActual.getEmail());
+        }
         return usuarioService.actualizarUsuario(usuario);
         
-    }
-    
-//    public ResponseEntity<?> guardarUsuario(@RequestBody Usuario usuario) throws Exception{
-//        try{
-//            String email=usuario.getEmail();
-//            String clave=generarClave();
-//            usuario.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
-//            if(enviarCorreoElectronico1(email,clave)==true){
-//                usuarioService.guardarUsuario(usuario);
-//                return ResponseEntity.ok("Usuario guardado exitosamente");
-//            }else{
-//                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el correo electrónico.");
-//            }
-//        }catch(Exception e){
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el correo electrónico.");
-//        }
-//    }
-    
-    public boolean enviarCorreoElectronico1(Usuario usuario, String clave) {
-        
-            CorreoElectronico correoElectronico=new CorreoElectronico();
-            cValidaciones validaciones =new cValidaciones();
-            String mensaje=correoElectronico.registrarUsuarioMensaje(usuario.getNombreUsuario(), usuario.getApellidoUsuario(), usuario.getCedula(), usuario.getEmail(), clave, validaciones.fechaActual());
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(usuario.getEmail());
-            message.setFrom("espoch.gidac@outlook.com");
-            message.setSubject("Registro de administrador");
-            message.setText(mensaje);
-            
-            try {
-                mailSender.send(message);
-                return true;
-            } catch (MailException e) {
-                System.out.println("error "+e);
-                return false;
-            }
-    }
-    
-    public boolean enviarCorreoElectronico(Usuario usuario, String clave) {
-        CorreoElectronico correoElectronico = new CorreoElectronico();
-        cValidaciones validaciones = new cValidaciones();
-        String mensaje = correoElectronico.registrarUsuarioMensaje(usuario.getNombreUsuario(), usuario.getApellidoUsuario(), usuario.getCedula(), usuario.getEmail(), clave, validaciones.fechaActual());
-
-        try {
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(usuario.getEmail());
-            message.setFrom("espoch.gidac@outlook.com");
-            message.setSubject("Registro de administrador");
-            message.setText(mensaje);
-
-            mailSender.send(message);
-            return true;
-        } catch (MailException e) {
-            System.out.println("Error al enviar el correo: " + e.getMessage());
-            return false;
-        }
     }
     
     private static final String CARACTERES =

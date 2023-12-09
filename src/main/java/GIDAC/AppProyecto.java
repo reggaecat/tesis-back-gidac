@@ -20,9 +20,11 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import java.util.HashSet;
 import java.util.Set;
 import GIDAC.servicios.UsuarioService;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
+import java.util.Locale;
 
 
 
@@ -51,59 +53,44 @@ public class AppProyecto implements CommandLineRunner {
 
 	@Override
 	public void run(String... args) throws Exception {
-            
-            try{  
-                emailEnvioService.enviarEmailResetearContrasenia("cjdmaigua@gmail.com", "12345");
-            }catch(Exception exception){
-                throw new Exception("Error al enviar el mensaje 1: "+exception);
-            }
-            
-            try{  
-                emailEnvioService.enviarEmailResetearContrasenia1("cjdmaigua@gmail.com", "12345");
-            }catch(Exception exception){
-                throw new Exception("Error al enviar el mensaje 2: "+exception);
-            }
-            
-            try{  
-                emailEnvioService.enviarEmailResetearContrasenia2("cjdmaigua@gmail.com", "12345");
-            }catch(Exception exception){
-                throw new Exception("Error al enviar el mensaje 3: "+exception);
-            }
+            cValidaciones oVal=new cValidaciones();
+//            try{  
+//                emailEnvioService.enviarEmailResetearContrasenia("cjdmaigua@gmail.com", "12345");
+//            }catch(Exception exception){
+//                throw new Exception("Error al enviar el mensaje 1: "+exception);
+//            }
+//            
+//            try{  
+//                emailEnvioService.enviarEmailResetearContrasenia1("cjdmaigua@gmail.com", "12345");
+//            }catch(Exception exception){
+//                throw new Exception("Error al enviar el mensaje 2: "+exception);
+//            }
+//            
+//            try{  
+//                emailEnvioService.enviarEmailResetearContrasenia2("cjdmaigua@gmail.com", "12345");
+//            }catch(Exception exception){
+//                throw new Exception("Error al enviar el mensaje 3: "+exception);
+//            }
 //            
             try{
-                            
-                            
-                            
-//				Usuario usuario = new Usuario();
-//				usuario.setNombreUsuario("Juan Carlos");
-//				usuario.setApellidoUsuario("Maigua Rizo");
-//				usuario.setContrasenia(bCryptPasswordEncoder.encode("12345"));
-//				usuario.setEmail("cjd@gmail.com");
-//
-//				Rol rol = new Rol();
-//				rol.setIdRol(1);
-//				rol.setNombreRol("ADMINISTRADOR");
-//                                Rol rolGuardado=(Rol) rolService.save(rol);
-//                                usuario.setRol(rol);
-//				Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
-//				System.out.println(usuarioGuardado.getUsername());
-//                                
-//                                
-//                                rol.setIdRol(2);
-//				rol.setNombreRol("DIRECTOR");
-//                                rolGuardado=(Rol) rolService.save(rol);
-//                                
-//                                rol.setIdRol(3);
-//				rol.setNombreRol("INVESTIGADOR");
-//                                rolGuardado=(Rol) rolService.save(rol);
-                                
-                                
-                                
+                Usuario usuario = new Usuario();
+                usuario.setNombreUsuario("Juan Carlos");
+                usuario.setApellidoUsuario("Maigua Rizo");
+                usuario.setCedula("0550458681");
+                usuario.setContrasenia("12345");
+                usuario.setEmail("cjdmaigua@gmail.com");
+                usuario.setFechaCreacion(oVal.fechaActual());
+                Rol rol = new Rol();
+                rol.setIdRol(1);
+                rol.setNombreRol("ADMINISTRADOR");
+                rol=(Rol) rolService.save(rol);
+                usuario.setRol(rol);
+                Usuario usuarioGuardado = usuarioService.guardarUsuario(usuario);
 
-			}catch(Exception exception){
-                            System.out.println("error al guardar-------------------------------------");
-				                        System.out.println(exception);
-			}
+                }catch(Exception exception){
+                    System.out.println("error al guardar-------------------------------------");
+                                                System.out.println(exception);
+                }
         
 			try{
                             

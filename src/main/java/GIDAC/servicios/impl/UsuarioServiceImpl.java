@@ -10,6 +10,7 @@ import GIDAC.repositorios.GrupoInvestigacionRepository;
 import GIDAC.repositorios.ProyectoInvestigacionRepository;
 import GIDAC.repositorios.RolRepository;
 import GIDAC.repositorios.UsuarioRepository;
+import GIDAC.servicios.EmailEnvioService;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import GIDAC.servicios.UsuarioService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Service
 public class UsuarioServiceImpl implements UsuarioService {
@@ -39,6 +41,12 @@ public class UsuarioServiceImpl implements UsuarioService {
     @Autowired
     private AreaInvestigacionRepository areaInvestigacionRepository;
     
+    
+    @Autowired
+    private EmailEnvioService emailEnvioService;
+    
+    @Autowired
+    private BCryptPasswordEncoder bCryptPasswordEncoder;
     
     @Override
     public Usuario obtenerEmail(String email) {
@@ -67,6 +75,8 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new UsuarioFoundException("El usuario ya esta presente");
         }
         else{
+            emailEnvioService.enviarEmailRegistroUsuario(usuario);
+            usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getContrasenia()));
             usuarioLocal = usuarioRepository.save(usuario);
         }
         return usuarioLocal;

@@ -4,6 +4,8 @@ package GIDAC.servicios.impl;
 import GIDAC.controladores.cValidaciones;
 import GIDAC.modelo.CorreoElectronico;
 import GIDAC.modelo.EmailEnvio;
+import GIDAC.modelo.RespuestaSolicitudDescarga;
+import GIDAC.modelo.Usuario;
 import GIDAC.repositorios.EmailEnvioRepository;
 import GIDAC.servicios.EmailEnvioService;
 import java.util.List;
@@ -100,7 +102,141 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
     }
 
     @Override
-    public void enviarEmailResetearContrasenia(String email, String clave)throws Exception  {
+    public void enviarEmailResetearContrasenia(Object object)throws Exception  {
+        Usuario usuario=(Usuario) object;
+        List<EmailEnvio> oLista=repository.findByVigencia(true);
+        if(!oLista.isEmpty()){
+            EmailEnvio emailEnvio= oLista.get(0);    
+            final String username = emailEnvio.getEmail(); 
+            final String password = emailEnvio.getContrasenia(); 
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", emailEnvio.getHost());
+            props.put("mail.smtp.port", emailEnvio.getPort());
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(usuario.getEmail())); 
+                message.setSubject("Reseteo de contraseña");
+                
+                CorreoElectronico oCor=new CorreoElectronico();
+                String correoHTML = oCor.reseteoContraseniaUsuario(usuario);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
+                
+                Transport.send(message);
+                System.out.println("El correo se ha enviado correctamente.");
+            } catch (MessagingException e) {
+                System.err.println("No se pudo enviar el correo 1: " + e.getMessage());
+            } catch (Exception ex) {
+                System.err.println("Ocurrió un error inesperado 1: " + ex.getMessage());
+            }       
+        }else{
+            throw new Exception("No existe email para enviar");
+        }
+        
+    }
+
+    @Override
+    public void enviarEmailRegistroUsuario(Object object) throws Exception {
+        Usuario usuario=(Usuario) object;
+        List<EmailEnvio> oLista=repository.findByVigencia(true);
+        if(!oLista.isEmpty()){
+            EmailEnvio emailEnvio= oLista.get(0);    
+            final String username = emailEnvio.getEmail(); 
+            final String password = emailEnvio.getContrasenia(); 
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", emailEnvio.getHost());
+            props.put("mail.smtp.port", emailEnvio.getPort());
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(usuario.getEmail())); 
+                message.setSubject("Usuario Registrado");
+                
+                CorreoElectronico oCor=new CorreoElectronico();
+                String correoHTML = oCor.registrarUsuario(usuario);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
+                
+                Transport.send(message);
+                System.out.println("El correo se ha enviado correctamente.");
+            } catch (MessagingException e) {
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
+            } catch (Exception ex) {
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
+            }       
+        }else{
+            throw new Exception("No existe email para enviar");
+        }
+    }
+
+        @Override
+    public void enviarEmailActualizacionPerfilUsuario(Object object) throws Exception {
+        Usuario usuario=(Usuario) object;
+        List<EmailEnvio> oLista=repository.findByVigencia(true);
+        if(!oLista.isEmpty()){
+            EmailEnvio emailEnvio= oLista.get(0);    
+            final String username = emailEnvio.getEmail(); 
+            final String password = emailEnvio.getContrasenia(); 
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", emailEnvio.getHost());
+            props.put("mail.smtp.port", emailEnvio.getPort());
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(usuario.getEmail())); 
+                message.setSubject("Perfil Actualizado");
+                
+                CorreoElectronico oCor=new CorreoElectronico();
+                String correoHTML = oCor.actualizacionPerfilUsuario(usuario);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
+                
+                Transport.send(message);
+                System.out.println("El correo se ha enviado correctamente.");
+            } catch (MessagingException e) {
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
+            } catch (Exception ex) {
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
+            }       
+        }else{
+            throw new Exception("No existe email para enviar");
+        }
+    }
+    
+    @Override
+    public void enviarEmailActualizacionPerfilUsuarioEmailDiferente(Object object, String email) throws Exception {
+        Usuario usuario=(Usuario) object;
         List<EmailEnvio> oLista=repository.findByVigencia(true);
         if(!oLista.isEmpty()){
             EmailEnvio emailEnvio= oLista.get(0);    
@@ -123,31 +259,29 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
                 message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); 
-                message.setSubject("Resetear contraseña");
+                message.setSubject("Perfil Actualizado");
                 
                 CorreoElectronico oCor=new CorreoElectronico();
-                String correoHTML = oCor.reseteoContraseniaUsuarioMensaje(email, clave);
+                String correoHTML = oCor.actualizacionPerfilUsuario(usuario);
     
                 message.setContent(correoHTML, "text/html; charset=utf-8");
-                //message.setText(oCor.reseteoContraseniaUsuarioMensaje(email, clave));
                 
                 Transport.send(message);
-                System.out.println("..........................................");
-                System.out.println("El correo 1 se ha enviado correctamente.");
-                System.out.println("..........................................");
+                System.out.println("El correo se ha enviado correctamente.");
             } catch (MessagingException e) {
-                System.err.println("No se pudo enviar el correo 1: " + e.getMessage());
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
             } catch (Exception ex) {
-                System.err.println("Ocurrió un error inesperado 1: " + ex.getMessage());
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
             }       
         }else{
             throw new Exception("No existe email para enviar");
         }
-        
     }
 
+
     @Override
-    public void enviarEmailResetearContrasenia1(String email, String clave) throws Exception {
+    public void enviarEmailActualizacionUsuario(Object object) throws Exception {
+        Usuario usuario=(Usuario) object;
         List<EmailEnvio> oLista=repository.findByVigencia(true);
         if(!oLista.isEmpty()){
             EmailEnvio emailEnvio= oLista.get(0);    
@@ -169,29 +303,29 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); // Reemplaza con el destinatario
-                message.setSubject("Resetear contraseña");
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(usuario.getEmail())); 
+                message.setSubject("Usuario Actualizado");
                 
                 CorreoElectronico oCor=new CorreoElectronico();
-                
-                message.setText(oCor.reseteoContraseniaUsuarioMensaje1(email, clave));
+                String correoHTML = oCor.actualizarUsuario(usuario);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
                 
                 Transport.send(message);
-                System.out.println("..........................................");
-                System.out.println("El correo 2 se ha enviado correctamente.");
-                System.out.println("..........................................");
+                System.out.println("El correo se ha enviado correctamente.");
             } catch (MessagingException e) {
-                System.err.println("No se pudo enviar el correo 2: " + e.getMessage());
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
             } catch (Exception ex) {
-                System.err.println("Ocurrió un error inesperado 2: " + ex.getMessage());
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
             }       
         }else{
             throw new Exception("No existe email para enviar");
         }
     }
-
+    
     @Override
-    public void enviarEmailResetearContrasenia2(String email, String clave) throws Exception {
+    public void enviarEmailActualizacionUsuarioEmailDiferente(Object object, String email) throws Exception {
+        Usuario usuario=(Usuario) object;
         List<EmailEnvio> oLista=repository.findByVigencia(true);
         if(!oLista.isEmpty()){
             EmailEnvio emailEnvio= oLista.get(0);    
@@ -203,7 +337,6 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
             props.put("mail.smtp.starttls.enable", "true");
             props.put("mail.smtp.host", emailEnvio.getHost());
             props.put("mail.smtp.port", emailEnvio.getPort());
-            
 
             Session session = Session.getInstance(props, new Authenticator() {
                 protected PasswordAuthentication getPasswordAuthentication() {
@@ -214,24 +347,113 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); // Reemplaza con el destinatario
-                message.setSubject("Resetear contraseña");
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(email)); 
+                message.setSubject("Usuario Actualizado");
                 
                 CorreoElectronico oCor=new CorreoElectronico();
-                
-                message.setText(oCor.reseteoContraseniaUsuarioMensaje2(email, clave));
+                String correoHTML = oCor.actualizarUsuario(usuario);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
                 
                 Transport.send(message);
-                System.out.println("..........................................");
-                System.out.println("El correo 3 se ha enviado correctamente.");
-                System.out.println("..........................................");
+                System.out.println("El correo se ha enviado correctamente.");
             } catch (MessagingException e) {
-                System.err.println("No se pudo enviar el correo 3: " + e.getMessage());
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
             } catch (Exception ex) {
-                System.err.println("Ocurrió un error inesperado 3: " + ex.getMessage());
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
             }       
         }else{
             throw new Exception("No existe email para enviar");
         }
     }
+
+    @Override
+    public void enviarEmailAprobarSolicitudDescarga(Object object) throws Exception {
+        RespuestaSolicitudDescarga respuesta=(RespuestaSolicitudDescarga) object;
+        List<EmailEnvio> oLista=repository.findByVigencia(true);
+        if(!oLista.isEmpty()){
+            EmailEnvio emailEnvio= oLista.get(0);    
+            final String username = emailEnvio.getEmail(); 
+            final String password = emailEnvio.getContrasenia(); 
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", emailEnvio.getHost());
+            props.put("mail.smtp.port", emailEnvio.getPort());
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(respuesta.getSolicitudDescarga().getEmial())); 
+                message.setSubject("Respuesta de solicitud de descarga");
+                
+                CorreoElectronico oCor=new CorreoElectronico();
+                String correoHTML = oCor.aprobacionSolicitud(respuesta);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
+                
+                Transport.send(message);
+                System.out.println("El correo se ha enviado correctamente.");
+            } catch (MessagingException e) {
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
+            } catch (Exception ex) {
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
+            }       
+        }else{
+            throw new Exception("No existe email para enviar");
+        }
+    }
+
+    @Override
+    public void enviarEmailRechazarSolicitudDescarga(Object object) throws Exception {
+        RespuestaSolicitudDescarga respuesta=(RespuestaSolicitudDescarga) object;
+        List<EmailEnvio> oLista=repository.findByVigencia(true);
+        if(!oLista.isEmpty()){
+            EmailEnvio emailEnvio= oLista.get(0);    
+            final String username = emailEnvio.getEmail(); 
+            final String password = emailEnvio.getContrasenia(); 
+
+            Properties props = new Properties();
+            props.put("mail.smtp.auth", "true");
+            props.put("mail.smtp.starttls.enable", "true");
+            props.put("mail.smtp.host", emailEnvio.getHost());
+            props.put("mail.smtp.port", emailEnvio.getPort());
+
+            Session session = Session.getInstance(props, new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    return new PasswordAuthentication(username, password);
+                }
+            });
+
+            try {
+                Message message = new MimeMessage(session);
+                message.setFrom(new InternetAddress(username));
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(respuesta.getSolicitudDescarga().getEmial())); 
+                message.setSubject("Respuesta de solicitud de descarga");
+                
+                CorreoElectronico oCor=new CorreoElectronico();
+                String correoHTML = oCor.rechazoSolicitud(respuesta);
+    
+                message.setContent(correoHTML, "text/html; charset=utf-8");
+                
+                Transport.send(message);
+                System.out.println("El correo se ha enviado correctamente.");
+            } catch (MessagingException e) {
+                System.err.println("No se pudo enviar el correo" + e.getMessage());
+            } catch (Exception ex) {
+                System.err.println("Ocurrió un error inesperado" + ex.getMessage());
+            }       
+        }else{
+            throw new Exception("No existe email para enviar");
+        }
+    }
+
+    
 }

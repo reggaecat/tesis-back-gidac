@@ -7,6 +7,8 @@ import GIDAC.modelo.JwtRequest;
 import GIDAC.modelo.JwtResponse;
 import GIDAC.modelo.Usuario;
 import GIDAC.modelo.Visitantes;
+import GIDAC.servicios.EmailEnvioService;
+import GIDAC.servicios.RolService;
 import GIDAC.servicios.impl.UserDetailsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -48,11 +50,17 @@ public class AuthenticationController {
     private UsuarioService usuarioService;
     
     @Autowired
+    private RolService rolService;
+    
+    @Autowired
     private VisitantesService crudVisitante;
     
     
     @Autowired
     private JavaMailSender mailSender;
+    
+    @Autowired
+    private EmailEnvioService emailEnvioService;
     
     @Autowired
     private JwtUtils jwtUtils;
@@ -105,19 +113,26 @@ public class AuthenticationController {
         }
     }
     @PostMapping("/editar-perfil")    
-    public ResponseEntity<Usuario> editarUsuarioActual(@RequestParam("user") String datosJson, @RequestParam("imagen") MultipartFile imagen) throws JsonProcessingException{
+    public ResponseEntity<Usuario> editarUsuarioActual(@RequestParam("user") String datosJson, @RequestParam("imagen") MultipartFile imagen) throws JsonProcessingException, Exception{
         cValidaciones validaciones =new cValidaciones();
         Usuario usuario = new ObjectMapper().readValue(datosJson, Usuario.class);
         usuario.setFechaActualizacion(validaciones.fechaActual());
-        usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
-        if(!imagen.isEmpty()){
-            try{
-                usuario.setImagenPerfil(imagen.getBytes());
-                
-            }catch(Exception e){
-                System.out.println("Error al ingresar la imagen");
-            }
+        Usuario usuarioAux=usuarioService.obtenerUsuarioId(usuario.getIdUsuario());
+        usuario.setRol(usuarioAux.getRol());
+        if(usuarioAux.getEmail().equals(usuario.getEmail())){
+            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
+        }else{
+            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
         }
+        usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
+//        if(!imagen.isEmpty()){
+//            try{
+//                usuario.setImagenPerfil(imagen.getBytes());
+//                
+//            }catch(Exception e){
+//                System.out.println("Error al ingresar la imagen");
+//            }
+//        }
         return ResponseEntity.ok(usuarioService.actualizarUsuario(usuario)); 
     } 
     
@@ -153,23 +168,14 @@ public class AuthenticationController {
     
     
     @PostMapping("/enviar-email-recuperar-contrasenia")
-    public ResponseEntity<?> enviarCorreoElectronico1(@RequestBody CorreoElectronico correoElectronico) {
+    public ResponseEntity<?> enviarCorreoElectronico1(@RequestBody CorreoElectronico correoElectronico) throws Exception {
         Usuario usuarioLocal = usuarioService.obtenerPorEmail(correoElectronico.getDestinatario());
-        cValidaciones validaciones =new cValidaciones();
         if(usuarioLocal != null){
-            String clave=generarClave();
-            String mensaje=correoElectronico.reseteoContraseniaUsuarioMensaje(usuarioLocal.getEmail(), clave);
-            
-            usuarioLocal.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
-            
-            SimpleMailMessage message = new SimpleMailMessage();
-            message.setTo(correoElectronico.getDestinatario());
-            message.setFrom("espoch.gidac@outlook.com");
-            message.setSubject("Reseteo de contraseña");
-            message.setText(mensaje);
-            
             try {
-                mailSender.send(message);
+                String clave=generarClave();
+                usuarioLocal.setContrasenia(clave);
+                emailEnvioService.enviarEmailResetearContrasenia(usuarioLocal);
+                usuarioLocal.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
                 usuarioService.actualizarUsuario(usuarioLocal);
                 return ResponseEntity.ok("Correo electrónico enviado correctamente.");
             } catch (MailException e) {
