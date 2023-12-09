@@ -80,6 +80,7 @@ public class AppProyecto implements CommandLineRunner {
                 usuario.setContrasenia("12345");
                 usuario.setEmail("cjdmaigua@gmail.com");
                 usuario.setFechaCreacion(oVal.fechaActual());
+                usuario.setFechaActualizacion(oVal.fechaActual());
                 Rol rol = new Rol();
                 rol.setIdRol(1);
                 rol.setNombreRol("ADMINISTRADOR");

@@ -32,8 +32,10 @@ public class CorreoElectronico {
                 
                         "     <title>Reseteo contraseña</title>" +
                         " </head> " +
-                        " <body> " +
-                
+                        " <body > " +
+                       
+                        "     <div align='center'> " +
+
                         "     <tbody> " +
                         "     <tr> " +
                         "     <td> " +
@@ -129,7 +131,7 @@ public class CorreoElectronico {
                         "    </td> " +
                         "    </tr> " +
                         "    </tbody> " +
-                                
+                        "     </div> " +
                         " </body> " +
                         " </html>");
         
@@ -151,7 +153,7 @@ public class CorreoElectronico {
                 
                         "     <title>Registrar datos usuario</title>" +
                         " </head> " +
-                        " <body> " +
+                        " <body align='center'> " +
                 
                         "     <tbody> " +
                         "     <tr> " +
@@ -306,6 +308,7 @@ public class CorreoElectronico {
                         " <body> " +
                 
                 
+                        
                         "     <tbody> " +
                         "     <tr> " +
                         "     <td> " +
