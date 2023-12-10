@@ -10,6 +10,7 @@ import GIDAC.repositorios.EmailEnvioRepository;
 import GIDAC.servicios.EmailEnvioService;
 import java.util.List;
 import java.util.Properties;
+import javax.activation.DataHandler;
 import javax.mail.*;
 import javax.mail.internet.*;
 import org.springframework.context.ApplicationContext;
@@ -17,6 +18,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
+import javax.activation.DataSource;
+import javax.activation.FileDataSource;
+import java.io.File;
+import java.io.IOException;
 
 @Service
 public class EmailEnvioServiceImpl implements EmailEnvioService {
@@ -368,7 +374,7 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
     }
 
     @Override
-    public void enviarEmailAprobarSolicitudDescarga(Object object) throws Exception {
+    public void enviarEmailAprobarSolicitudDescarga(Object object, MultipartFile file) throws Exception {
         RespuestaSolicitudDescarga respuesta=(RespuestaSolicitudDescarga) object;
         List<EmailEnvio> oLista=repository.findByVigencia(true);
         if(!oLista.isEmpty()){
@@ -397,7 +403,28 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
                 CorreoElectronico oCor=new CorreoElectronico();
                 String correoHTML = oCor.aprobacionSolicitud(respuesta);
     
-                message.setContent(correoHTML, "text/html; charset=utf-8");
+                MimeBodyPart messageBodyPart = new MimeBodyPart();
+                messageBodyPart.setContent(correoHTML, "text/html; charset=utf-8");
+                
+                // Adjuntar archivo al correo
+                if (file != null) {
+                    MimeBodyPart attachmentPart = new MimeBodyPart();
+                    DataSource source = new FileDataSource(convertMultiPartToFile(file));
+                    attachmentPart.setDataHandler(new DataHandler(source));
+                    attachmentPart.setFileName(file.getOriginalFilename());
+
+                    Multipart multipart = new MimeMultipart();
+                    multipart.addBodyPart(messageBodyPart);
+                    multipart.addBodyPart(attachmentPart);
+
+                    message.setContent(multipart);
+                } else {
+                    // Si no hay archivo adjunto, solo establecer el contenido del correo electrónico
+                    message.setContent(correoHTML, "text/html; charset=utf-8");
+                }
+
+                
+                //message.setContent(correoHTML, "text/html; charset=utf-8");
                 
                 Transport.send(message);
                 System.out.println("El correo se ha enviado correctamente.");
@@ -409,6 +436,12 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
         }else{
             throw new Exception("No existe email para enviar");
         }
+    }
+    
+    private File convertMultiPartToFile(MultipartFile file) throws IOException {
+        File convFile = new File(file.getOriginalFilename());
+        file.transferTo(convFile);
+        return convFile;
     }
 
     @Override

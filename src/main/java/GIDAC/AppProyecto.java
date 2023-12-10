@@ -72,28 +72,28 @@ public class AppProyecto implements CommandLineRunner {
 //                throw new Exception("Error al enviar el mensaje 3: "+exception);
 //            }
 //            
-            try{
-                Usuario usuario = new Usuario();
-                usuario.setNombreUsuario("Juan Carlos");
-                usuario.setApellidoUsuario("Maigua Rizo");
-                usuario.setCedula("0550458681");
-                usuario.setContrasenia("12345");
-                usuario.setEmail("cjdmaigua@gmail.com");
-                usuario.setFechaCreacion(oVal.fechaActual());
-                usuario.setFechaActualizacion(oVal.fechaActual());
-                Rol rol = new Rol();
-                rol.setIdRol(1);
-                rol.setNombreRol("ADMINISTRADOR");
-                usuario.setRol(rol);
-                emailEnvioService.enviarEmailResetearContrasenia(usuario);
-                emailEnvioService.enviarEmailRegistroUsuario(usuario);
-                emailEnvioService.enviarEmailActualizacionUsuario(usuario);
-                
-
-                }catch(Exception exception){
-                    System.out.println("error al guardar-------------------------------------");
-                                                System.out.println(exception);
-                }
+//            try{
+//                Usuario usuario = new Usuario();
+//                usuario.setNombreUsuario("Juan Carlos");
+//                usuario.setApellidoUsuario("Maigua Rizo");
+//                usuario.setCedula("0550458681");
+//                usuario.setContrasenia("12345");
+//                usuario.setEmail("cjdmaigua@gmail.com");
+//                usuario.setFechaCreacion(oVal.fechaActual());
+//                usuario.setFechaActualizacion(oVal.fechaActual());
+//                Rol rol = new Rol();
+//                rol.setIdRol(1);
+//                rol.setNombreRol("ADMINISTRADOR");
+//                usuario.setRol(rol);
+//                emailEnvioService.enviarEmailResetearContrasenia(usuario);
+//                emailEnvioService.enviarEmailRegistroUsuario(usuario);
+//                emailEnvioService.enviarEmailActualizacionUsuario(usuario);
+//                
+//
+//                }catch(Exception exception){
+//                    System.out.println("error al guardar-------------------------------------");
+//                                                System.out.println(exception);
+//                }
         
 			try{
                             

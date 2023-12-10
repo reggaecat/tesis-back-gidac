@@ -25,6 +25,12 @@ import GIDAC.servicios.SolicitudDescargaService;
 import GIDAC.servicios.RespuestaSolicitudActualizarService;
 import GIDAC.servicios.RespuestaSolicitudDescargaService;
 import GIDAC.servicios.SolicitudActualizarService;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import java.io.InputStream;
+import jxl.Sheet;
+import jxl.Workbook;
+import org.springframework.web.multipart.MultipartFile;
 
 @RestController
 @RequestMapping("/solicitud")
@@ -106,6 +112,31 @@ public class SolicitudesController {
         return solicitudDescargaService.save(oC);    
     }
     
+    @PostMapping("/solicitud-aprobada-envio-mensaje")
+    public Object solicitudAprobadaEnvioMensaje(@RequestParam("solicitudDescarga") String datosJson, @RequestParam("file") MultipartFile file) throws JsonProcessingException, Exception{
+        System.out.println("....................llega");
+        SolicitudDescarga oC1 = new ObjectMapper().readValue(datosJson, SolicitudDescarga.class);
+        
+        cValidaciones validaciones = new cValidaciones();
+        RespuestaSolicitudDescarga respuestaSolicitudDescarga=new RespuestaSolicitudDescarga();
+        respuestaSolicitudDescarga.setRespuesta("La Escuela Superior Politecnica de chimborazo (ESPOCH), da acceso a los datos:");
+        respuestaSolicitudDescarga.setFechaRespuesta(validaciones.fechaActual());
+        
+        SolicitudDescarga oC=(SolicitudDescarga) solicitudDescargaService.findById(oC1.getIdSolicitudDescarga());
+        respuestaSolicitudDescarga.setSolicitudDescarga(oC);
+        respuestaSolicitudDescargaService.guardar(respuestaSolicitudDescarga);
+        
+        EstadoSolicitudDescarga estadoSolicitudDescarga=new EstadoSolicitudDescarga();
+        estadoSolicitudDescarga.setIdEstadoDescarga(2);
+        if(null==estadoSolicitudDescargaService.buscarPorId(2)){
+            estadoSolicitudDescarga.setNombreEstadoDescarga("Aprobado");
+            estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
+        }
+        oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
+        emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga, file);
+        return solicitudDescargaService.save(oC);    
+    }
+    
     @GetMapping("/solicitud-aprobada/{id}")
     public Object aprobarSolicitud(@PathVariable("id") Integer id) throws Exception
     {
@@ -125,7 +156,7 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
-        emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga);
+        //emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga);
         return solicitudDescargaService.save(oC);    
     }
     

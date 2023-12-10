@@ -6,6 +6,7 @@ package GIDAC.servicios;
 
 
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
@@ -23,7 +24,7 @@ public interface EmailEnvioService <T> {
     public void enviarEmailActualizacionUsuarioEmailDiferente(T object, String email)throws Exception ;
     public void enviarEmailActualizacionPerfilUsuario(T object)throws Exception ;
     public void enviarEmailActualizacionPerfilUsuarioEmailDiferente(T object, String email)throws Exception ;
-    public void enviarEmailAprobarSolicitudDescarga(T object)throws Exception ;
+    public void enviarEmailAprobarSolicitudDescarga(T object, MultipartFile file)throws Exception ;
     public void enviarEmailRechazarSolicitudDescarga(T object)throws Exception ;
     public List<T> findAll();
     public List<T>  findByVigencia(Boolean vigencia);

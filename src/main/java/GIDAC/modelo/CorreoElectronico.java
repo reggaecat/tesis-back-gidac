@@ -153,7 +153,8 @@ public class CorreoElectronico {
                 
                         "     <title>Registrar datos usuario</title>" +
                         " </head> " +
-                        " <body align='center'> " +
+                        " <body> " +
+                        "     <div align='center'> " +
                 
                         "     <tbody> " +
                         "     <tr> " +
@@ -280,7 +281,7 @@ public class CorreoElectronico {
                         "    </tr> " +
                         "    </tbody> " +
                                 
-                                
+                        "     </div> " +
                         " </body> " +
                         " </html>");
         
@@ -306,8 +307,8 @@ public class CorreoElectronico {
                         "     <title>Registrar datos usuario</title>" +
                         " </head> " +
                         " <body> " +
-                
-                
+                        "     <div align='center'> " +
+               
                         
                         "     <tbody> " +
                         "     <tr> " +
@@ -432,7 +433,7 @@ public class CorreoElectronico {
                         "    </td> " +
                         "    </tr> " +
                         "    </tbody> " +
-                                
+                        "     </div> " +        
                         " </body> " +
                         " </html>");
         
@@ -459,6 +460,7 @@ public class CorreoElectronico {
                         "     <title>Actualizar datos usuario</title>" +
                         " </head> " +
                         " <body> " +
+                        "     <div align='center'> " +
                 
                 
                         "     <tbody> " +
@@ -574,7 +576,7 @@ public class CorreoElectronico {
                         "    </tr> " +
                         "    </tbody> " +
                                 
-                                
+                        "     </div> " +        
                         " </body> " +
                         " </html>");
         
@@ -601,6 +603,7 @@ public class CorreoElectronico {
                         " </head> " +
                         " <body> " +
                 
+                        "     <div align='center'> " +
                 
                         "     <tbody> " +
                         "     <tr> " +
@@ -668,7 +671,7 @@ public class CorreoElectronico {
                         "    </td> " +
                         "    </tr> " +
                         "    </tbody> " +
-                                
+                        "     </div> " +       
                         " </body> " +
                         " </html>");
         
@@ -696,6 +699,7 @@ public class CorreoElectronico {
                         " </head> " +
                         " <body> " +
                 
+                        "     <div align='center'> " +
                 
                         "     <tbody> " +
                         "     <tr> " +
@@ -769,7 +773,7 @@ public class CorreoElectronico {
                         "    </td> " +
                         "    </tr> " +
                         "    </tbody> " +
-                                
+                        "     </div> " +        
                         " </body> " +
                         " </html>");
         
