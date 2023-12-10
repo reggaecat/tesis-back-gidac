@@ -21,6 +21,7 @@ public class UnidadMedidaController {
     {
         cValidaciones oV=new cValidaciones();
         oC.setFechaCreacion(oV.fechaActual());
+        System.out.println("....................................."+oC.getIdUnidadMedida());
         return service.guardar(oC);    
     }
     

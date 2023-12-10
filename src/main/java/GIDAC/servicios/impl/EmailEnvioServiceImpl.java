@@ -19,10 +19,10 @@ import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.JavaMailSenderImpl;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import java.io.File;
 import java.io.IOException;
+import javax.activation.DataSource;
+import javax.mail.util.ByteArrayDataSource;
 
 @Service
 public class EmailEnvioServiceImpl implements EmailEnvioService {
@@ -405,33 +405,30 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
     
                 MimeBodyPart messageBodyPart = new MimeBodyPart();
                 messageBodyPart.setContent(correoHTML, "text/html; charset=utf-8");
-                
-                // Adjuntar archivo al correo
-                if (file != null) {
+
+                Multipart multipart = new MimeMultipart();
+                multipart.addBodyPart(messageBodyPart);
+            
+                if (file != null && !file.isEmpty()) {
                     MimeBodyPart attachmentPart = new MimeBodyPart();
-                    DataSource source = new FileDataSource(convertMultiPartToFile(file));
+                    DataSource source = new ByteArrayDataSource(file.getInputStream(), file.getContentType());
                     attachmentPart.setDataHandler(new DataHandler(source));
                     attachmentPart.setFileName(file.getOriginalFilename());
-
-                    Multipart multipart = new MimeMultipart();
-                    multipart.addBodyPart(messageBodyPart);
                     multipart.addBodyPart(attachmentPart);
-
-                    message.setContent(multipart);
-                } else {
-                    // Si no hay archivo adjunto, solo establecer el contenido del correo electrónico
-                    message.setContent(correoHTML, "text/html; charset=utf-8");
                 }
 
                 
                 //message.setContent(correoHTML, "text/html; charset=utf-8");
                 
+                message.setContent(multipart);
                 Transport.send(message);
                 System.out.println("El correo se ha enviado correctamente.");
             } catch (MessagingException e) {
                 System.err.println("No se pudo enviar el correo" + e.getMessage());
+                e.printStackTrace();
             } catch (Exception ex) {
                 System.err.println("Ocurrió un error inesperado" + ex.getMessage());
+                ex.printStackTrace();
             }       
         }else{
             throw new Exception("No existe email para enviar");
