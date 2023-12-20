@@ -748,7 +748,7 @@ public class CorreoElectronico {
                         "                 <tr> " +
                         "                     <td align='left' bgcolor='#ffffff' " +
                         "                         style='font-family:Arial,sans-serif;color:#333333;font-size:12px;padding-top:0px;padding-right:30px;padding-left:30px;padding-bottom:0px;text-align:center;line-height:22px'> " +
-                        "                         <strong> Recahzada </strong> " +
+                        "                         <strong> RECHAZADA </strong> " +
                         "                     </td> " +
                         "                 </tr> " +
                         "                 <tr> " +
