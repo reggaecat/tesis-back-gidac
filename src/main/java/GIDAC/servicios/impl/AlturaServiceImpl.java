@@ -38,11 +38,16 @@ public class AlturaServiceImpl implements AlturaService {
         repository.deleteById(id);
     }
 
-    @Override
-    public Altura buscarPorAlturaMinimaAlturaMaximaAbreviatura(float alturaMinima, float alturaMaxima, String abreviatura) {
-        return repository.findByAlturaMinimaAndAlturaMaximaAndUnidadMedida_Abreviatura(alturaMinima,alturaMaxima, abreviatura);
-    }
+//    @Override
+//    public Altura buscarPorAlturaMinimaAlturaMaximaAbreviatura(float alturaMinima, float alturaMaxima, String abreviatura) {
+//        return repository.findByAlturaMinimaAndAlturaMaximaAndUnidadMedida_Abreviatura(alturaMinima,alturaMaxima, abreviatura);
+//    }
 
+    @Override
+    public List<Altura> buscarPorVigenciaAlturaAbreviatura(Boolean vigencia, Double altura, String abreviatura) {
+        return repository.findByVigenciaAndAlturaAndUnidadMedida_Abreviatura(vigencia, altura, abreviatura);
+    }
+    
     @Override
     public List<Object[]>  obtenerAlturasUsadas() {
         return repository.obtenerAlturasUsadas();

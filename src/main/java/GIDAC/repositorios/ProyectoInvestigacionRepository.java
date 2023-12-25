@@ -16,5 +16,6 @@ import org.springframework.data.repository.CrudRepository;
  */
 public interface ProyectoInvestigacionRepository extends CrudRepository<ProyectoInvestigacion, Integer>{
     List<ProyectoInvestigacion> findByVigenciaAndEstadoProyectoInvestigacion_nombreEstadoProyecto(Boolean vigencia, String estado);
+    List<ProyectoInvestigacion> findByVigencia(Boolean vigencia);
     
 }

@@ -4,18 +4,20 @@
  */
 package GIDAC.servicios;
 
+
 import java.util.List;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  *
  * @author My Notebook
  */
-public interface ProyectoInvestigacionService<T> {
-    public List<T> findAll();
-    public List<T> findInvestigacionesPublicas();
-    public List<T> findAllVigentes(Boolean vigencia);
+public interface TiempoEdicionDatoService <T> {
     public T save(T objeto);
+    public T update(T objeto);
     public T findById(Integer id);
     public void delete(Integer id);
-    
+    public void restore(Integer id);
+    public List<T> findAll();
+    public List<T>  findByVigencia(Boolean vigencia);
 }

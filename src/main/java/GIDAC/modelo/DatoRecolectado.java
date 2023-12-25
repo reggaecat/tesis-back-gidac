@@ -19,6 +19,7 @@ public class DatoRecolectado {
     private boolean editable=true;
     private Date fechaCreacion;
     private Date fechaActualizacion;
+    private Date fechaMaximaEdicion;
     
     @OneToMany(mappedBy = "datoRecolectado",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -107,6 +108,14 @@ public class DatoRecolectado {
 
     public void setVariableUnidadMedida(VariableUnidadMedida variableUnidadMedida) {
         this.variableUnidadMedida = variableUnidadMedida;
+    }
+
+    public Date getFechaMaximaEdicion() {
+        return fechaMaximaEdicion;
+    }
+
+    public void setFechaMaximaEdicion(Date fechaMaximaEdicion) {
+        this.fechaMaximaEdicion = fechaMaximaEdicion;
     }
 
     

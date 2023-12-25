@@ -18,4 +18,6 @@ public interface ConglomeradoRepository extends JpaRepository<Conglomerado,Integ
                 "   WHERE c.id_proyecto=:idProyecto AND p.vigencia=true",
             nativeQuery=true)
     List<Object[]> obtenerConglomeradosUsados(@Param("idProyecto") Integer idProyecto);
+    
+    
 }

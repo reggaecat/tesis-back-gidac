@@ -59,6 +59,7 @@ public class UsuarioController {
         cValidaciones validaciones=new cValidaciones();
         String clave=generarClave();
         usuario.setFechaCreacion(validaciones.fechaActual());
+        usuario.setContrasenia(clave);
         System.out.println("-----------------------------------------------------------");
         System.out.println("Contraseña: "+clave);
         System.out.println("-----------------------------------------------------------");

@@ -17,9 +17,8 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
     List<DatoRecolectado> findByVigenciaAndDatasetProfundidadParcelaProfundidadIdProfundidadAndDatasetProfundidadParcelaParcelaIdParcela(Boolean vigencia,Integer idProfundidad, Integer idParcela);
     //List<DatoRecolectado> findByVigenciaAndVariable(Boolean vigencia, Variable variable);
     
-    List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
-            float alturaMinima, 
-            float alturaMaxima,
+    List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+            Double alturaMinima, 
             Boolean vigenciaAltura,
             String abreAltrua,
             String codigoConglomerado,
@@ -35,8 +34,6 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             Integer idVUM,
             String valor,
             Boolean vigencia);
-    
-    List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(float alturaMinima, float alturaMaxima,String abreAltrua,String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
     
     List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaIdAlturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(Integer idAltura, String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
             
@@ -74,10 +71,9 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             "    JOIN proyecto_investigacion pi ON pi.id_proyecto=ds.id_proyecto" +
             "	 JOIN dato_recolectado dr ON dr.id_dataset = ds.id_dataset" +
             "	 join variable_unidad_medida vum ON vum.id_variable_unidad_medida = dr.id_variable_unidad_medida"+
-            "    WHERE a.altura_minima=:alturaMinima AND a.altura_maxima=:alturaMaxima AND uma.abreviatura=':abreAltrua' AND c.codigo_conglomerado=':codigoConglomerado' AND pi.id_proyecto=:idProyConglomerado AND p.codigo_parcela=':codigoParcela' AND pr.profundidad_minima=:profundidadMinima AND pr.profundidad_maxima=:profundidadMaxima AND ump.abreviatura=':abreProfundidad' AND ds.fecha_salida_campo=:fechaSalidaCampo AND vum.id_variable_unidad_medida=:idVUM AND dr.valor=':valor'",
+            "    WHERE a.altura=:altura AND uma.abreviatura=':abreAltrua' AND c.codigo_conglomerado=':codigoConglomerado' AND pi.id_proyecto=:idProyConglomerado AND p.codigo_parcela=':codigoParcela' AND pr.profundidad_minima=:profundidadMinima AND pr.profundidad_maxima=:profundidadMaxima AND ump.abreviatura=':abreProfundidad' AND ds.fecha_salida_campo=:fechaSalidaCampo AND vum.id_variable_unidad_medida=:idVUM AND dr.valor=':valor'",
             nativeQuery=true)
-    List<Object[]> obtenerDatoRepetido(@Param("alturaMinima") float alturaMinima, 
-            @Param("alturaMaxima") float alturaMaxima,
+    List<Object[]> obtenerDatoRepetido(@Param("altura") Double altura, 
             @Param("abreAltrua") String abreAltrua,
             @Param("codigoConglomerado") String codigoConglomerado,
             @Param("idProyConglomerado") Integer idProyConglomerado,
@@ -453,12 +449,12 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
     //---------------------------------------------------------------------------------------------
     //DASH INVESTIGADOR
     
-     @Query(value="SELECT a.altura_minima, a.altura_maxima, um.abreviatura, COUNT(a.id_altura)" +
+     @Query(value="SELECT a.altura, um.abreviatura, COUNT(a.id_altura)" +
                     "   FROM altura a JOIN unidad_medida um on um.id_unidad_medida=a.id_unidad_medida" +
                     "   JOIN conglomerado c on c.id_altura=a.id_altura" +
                     "   WHERE um.vigencia=true" +
-                    "   GROUP BY a.altura_minima, a.altura_maxima, um.abreviatura" +
-                    "   ORDER BY 4 DESC" +
+                    "   GROUP BY a.altura, um.abreviatura" +
+                    "   ORDER BY 3 DESC" +
                     "   LIMIT 5",
             nativeQuery=true)
     List<Object[]> obtenerAlturasMasUsuadas();
@@ -656,14 +652,43 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
             nativeQuery=true)
     BigInteger obtenerCantidadProyectosVigentes(@Param("idUsuario") Integer idUsuario);
     
-    
-    
     @Query(value="SELECT COUNT(pi.id_proyecto)" +
                 "   FROM proyecto_investigacion pi JOIN grupo_investigacion gi on gi.id_proyecto=pi.id_proyecto" +
                 "   JOIN usuario u on u.id_usuario=gi.id_usuario" +
                 "   WHERE pi.vigencia=false AND u.id_usuario=:idUsuario",
             nativeQuery=true)
     BigInteger obtenerCantidadProyectosEliminados(@Param("idUsuario") Integer idUsuario);
+    
+    //-------------------------------------------------------------
+    //Admin datos
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto=epi.id_estado_proyecto" +
+                "   WHERE pi.vigencia=true AND pi.id_estado_proyecto=1",
+                nativeQuery=true)
+    BigInteger obtenerCantidadProyectosPorEstadoPrivadoAdminDatos();
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM estado_proyecto_investigacion epi JOIN proyecto_investigacion pi on pi.id_estado_proyecto=epi.id_estado_proyecto" +
+                "   WHERE pi.vigencia=true AND pi.id_estado_proyecto=2",
+            nativeQuery=true)
+    BigInteger obtenerCantidadProyectosPorEstadoPublicoAdminDatos();
+    
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM proyecto_investigacion pi" +
+                "   WHERE pi.vigencia=true",
+            nativeQuery=true)
+    BigInteger obtenerCantidadProyectosVigentesAdminDatos();
+    
+    @Query(value="SELECT COUNT(pi.id_proyecto)" +
+                "   FROM proyecto_investigacion pi" +
+                "   WHERE pi.vigencia=false",
+            nativeQuery=true)
+    BigInteger obtenerCantidadProyectosEliminadosAdminDatos();
+    
+    //-------------------------------------------------------------
+    
+    
     
     
     
@@ -872,13 +897,13 @@ public interface DatoRecolectadoRepository extends JpaRepository<DatoRecolectado
                 "        WHEN 11 THEN 'Noviembre'" +
                 "        WHEN 12 THEN 'Diciembre'" +
                 "    END AS mes, " + 
-            "   DAY(sa.fecha_envio_solicitud) AS dia,"+
+            " EXTRACT(DAY FROM sa.fecha_envio_solicitud) AS dia,"+
             "   COUNT(sa.id_solicitud_actualizar) AS total_registros" +
             "   FROM solicitud_actualizar_dato sa JOIN grupo_investigacion gi on gi.id_proyecto=sa.id_proyecto" +
             "   JOIN proyecto_investigacion pi ON pi.id_proyecto=gi.id_proyecto" +
             "   JOIN usuario u ON u.id_usuario=gi.id_usuario" +
             "   WHERE u.id_usuario=:idUsuario" +
-            "   GROUP BY EXTRACT(YEAR FROM sa.fecha_envio_solicitud), EXTRACT(MONTH FROM sa.fecha_envio_solicitud)" +
+            "   GROUP BY EXTRACT(YEAR FROM sa.fecha_envio_solicitud), EXTRACT(MONTH FROM sa.fecha_envio_solicitud), EXTRACT(DAY FROM sa.fecha_envio_solicitud)" +
             "   ORDER BY 1,2,4",
             nativeQuery=true)
     List<Object[]> obtenerGraficaSolicitudesActualizarPorDia(@Param("idUsuario") Integer idUsuario);

@@ -26,16 +26,15 @@ public interface VariableService<T>{
     public List<Object[]> litsarVairbalesConDatosConFiltroFamiliaInvestigador(Integer idFamilia, Integer idProyecto);
     public List<Object[]> litsarVairbalesIncompletas();
     public void eliminar(Integer id);
-    
     public void activar(Integer id);
-    
     public List<Object[]> listarCatalogoParaPerfilado();
     public List<Object[]> listarCatalogoParaPerfiladoPorProyecto(Integer id);
     public List<Object[]> listarCatalogoParaPerfiladoPorProyectoCodigoDataset(Integer id, Integer codigoDataset);
     public List<Object[]> listarCatalogoParaPerfiladoPorProyectoOganizacion(Integer id, Integer idOrganizacion);
     public List<Object[]> listarCatalogoParaPerfiladoPorProyectoOganizacionCodigoDataset(Integer id, Integer idOrganizacion, Integer codigoDataset);
-    
     public List<T> buscarPorVigencia(Boolean vigencia);
     public List<T> buscarPorVigenciaAndCodigoVariable(Boolean vigencia, String codigoVariable);
     public T findByVigenciaAndIdVariableAndCodigoVariable(Boolean vigencia, Integer idVariable,String codigoVariable);
+    public byte[] dowloadPdf();
+    public byte[] dowloadExcel();
 }

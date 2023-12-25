@@ -55,6 +55,10 @@ public class Usuario implements UserDetails {
     
     @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "usuario")
     @JsonIgnoreProperties("usuario")
+    private Set<TiempoEdicionDato> tiempoEdicionDato = new HashSet<>();
+    
+    @OneToMany(cascade = CascadeType.ALL,fetch = FetchType.LAZY,mappedBy = "usuario")
+    @JsonIgnoreProperties("usuario")
     private Set<InformacionEcoAndes> informacionEcoAndes = new HashSet<>();
     
    
@@ -247,6 +251,15 @@ public class Usuario implements UserDetails {
     public void setEmailEnvio(Set<EmailEnvio> emailEnvio) {
         this.emailEnvio = emailEnvio;
     }
+
+    public Set<TiempoEdicionDato> getTiempoEdicionDato() {
+        return tiempoEdicionDato;
+    }
+
+    public void setTiempoEdicionDato(Set<TiempoEdicionDato> tiempoEdicionDato) {
+        this.tiempoEdicionDato = tiempoEdicionDato;
+    }
+    
     
     
 }

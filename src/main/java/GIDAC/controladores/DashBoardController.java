@@ -27,18 +27,16 @@ public class DashBoardController {
     public List<DashDatos> obtenerAlturasMasUsuadas(){
         List<Object[]> listaObject= service.obtenerAlturasMasUsuadas();
         List<DashDatos> listaEquivalencia = new ArrayList<>();
-        float dato1=0;
-        float dato2=0;
+        Double dato1=0.0;
         String dato3="";
         double dato4=0;
         for (Object[] objeto : listaObject) {
             DashDatos variable = new DashDatos();
-            dato1=(float) objeto[0];
-            dato2=(float) objeto[1];
-            dato3=(String) objeto[2];
-            BigInteger bigIntegerValue =(BigInteger) objeto[3];
+            dato1=(Double) objeto[0];
+            dato3=(String) objeto[1];
+            BigInteger bigIntegerValue =(BigInteger) objeto[2];
             dato4=bigIntegerValue.doubleValue();
-            variable.setIndicador(dato1+ " - "+ dato2+ " "+ dato3);
+            variable.setIndicador(dato1+" "+ dato3);
             variable.setValor(dato4);
             listaEquivalencia.add(variable);
         }
@@ -379,8 +377,6 @@ public class DashBoardController {
     //director
     @GetMapping("/obtener-estado-proyectos/{id}")
     public List<contadorDashAdmin> obtenerEstadoProyecto(@PathVariable Integer id){
-        System.out.println("--------------------------------------------------------------------------------------------------");
-        System.out.println("id: "+id);
         BigInteger bigIntegerValue;
         contadorDashAdmin oc=new contadorDashAdmin();
         List<contadorDashAdmin> listaEquivalencia = new ArrayList<>();
@@ -391,6 +387,24 @@ public class DashBoardController {
         bigIntegerValue= service.obtenerCantidadProyectosVigentes(id);
         oc.setContAdmin(bigIntegerValue.intValue());
         bigIntegerValue= service.obtenerCantidadProyectosEliminados(id);
+        oc.setContDirec(bigIntegerValue.intValue());
+        listaEquivalencia.add(oc);
+        return listaEquivalencia;
+    }
+    
+    //director
+    @GetMapping("/obtener-indicadores-proyecto")
+    public List<contadorDashAdmin> obtenerIndicadoresProyecto(){
+        BigInteger bigIntegerValue;
+        contadorDashAdmin oc=new contadorDashAdmin();
+        List<contadorDashAdmin> listaEquivalencia = new ArrayList<>();
+        bigIntegerValue= service.obtenerCantidadProyectosPorEstadoPublicoAdminDatos();
+        oc.setContInves(bigIntegerValue.intValue());
+        bigIntegerValue= service.obtenerCantidadProyectosPorEstadoPrivadoAdminDatos();
+        oc.setContVisit(bigIntegerValue.intValue());
+        bigIntegerValue= service.obtenerCantidadProyectosVigentesAdminDatos();
+        oc.setContAdmin(bigIntegerValue.intValue());
+        bigIntegerValue= service.obtenerCantidadProyectosEliminadosAdminDatos();
         oc.setContDirec(bigIntegerValue.intValue());
         listaEquivalencia.add(oc);
         return listaEquivalencia;

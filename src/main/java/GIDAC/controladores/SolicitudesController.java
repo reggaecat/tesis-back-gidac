@@ -19,7 +19,8 @@ import GIDAC.servicios.GrupoInvestigacionService;
 import java.util.ArrayList;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
+import GIDAC.servicios.TiempoEdicionDatoService;
+import GIDAC.modelo.TiempoEdicionDato;
 import java.util.List;
 import GIDAC.servicios.SolicitudDescargaService;
 import GIDAC.servicios.RespuestaSolicitudActualizarService;
@@ -28,6 +29,7 @@ import GIDAC.servicios.SolicitudActualizarService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.io.InputStream;
+import java.util.Date;
 import jxl.Sheet;
 import jxl.Workbook;
 import org.springframework.web.multipart.MultipartFile;
@@ -60,6 +62,9 @@ public class SolicitudesController {
     
     @Autowired
     private GrupoInvestigacionService grupoInvestigacionService;
+    
+    @Autowired
+    private TiempoEdicionDatoService tiempoEdicionDatoService;
     
     @Autowired
     private EmailEnvioService emailEnvioService;
@@ -241,7 +246,7 @@ public class SolicitudesController {
     @GetMapping("/aprobar-solicitud-eliminar/{id}")
     public Object aprobarSolicitudEliminar(@PathVariable("id") Integer id)
     {
-        String respuesta="El dato del proyecto de investigacion ha sido elimado de forma correcta";
+        String respuesta="El dato del proyecto de investigacion ha sido aproabada para su actualizacion";
         cValidaciones validaciones = new cValidaciones();
         EstadoSolicitudActualizar estadoSolicitudActualizar=new EstadoSolicitudActualizar();
         estadoSolicitudActualizar.setIdEstadoSolicitud(2);
@@ -251,7 +256,22 @@ public class SolicitudesController {
         }
         SolicitudActualizarDato solicitudActualizar=(SolicitudActualizarDato) solicitudActualizarService.findById(id);
         DatoRecolectado oCar=(DatoRecolectado) datoRecolectadoService.buscarPorId(solicitudActualizar.getDatoRecolectado().getIdDatoRecolectado());
-        oCar.setVigencia(false);
+        oCar.setVigencia(true);
+        oCar.setEditable(true);
+        
+        
+        List<TiempoEdicionDato> oLista=tiempoEdicionDatoService.findAll();
+        Date fechaActual=validaciones.fechaActual();
+        int dias=1;
+        if(!oLista.isEmpty()){
+            TiempoEdicionDato oTiempoEdicionDato=oLista.get(0);    
+            double tiempoDouble = oTiempoEdicionDato.getTiempo();
+            dias = (int) Math.round(tiempoDouble);
+        }
+        
+        oCar.setFechaMaximaEdicion(validaciones.agregarFechaMaximaEdicion(fechaActual, dias));
+        
+        
         oCar.setFechaActualizacion(validaciones.fechaActual());
         
         datoRecolectadoService.guardar(oCar);

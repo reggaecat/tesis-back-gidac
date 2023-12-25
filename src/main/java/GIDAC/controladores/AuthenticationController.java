@@ -119,11 +119,11 @@ public class AuthenticationController {
         usuario.setFechaActualizacion(validaciones.fechaActual());
         Usuario usuarioAux=usuarioService.obtenerUsuarioId(usuario.getIdUsuario());
         usuario.setRol(usuarioAux.getRol());
-        if(usuarioAux.getEmail().equals(usuario.getEmail())){
-            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
-        }else{
-            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
-        }
+//        if(usuarioAux.getEmail().equals(usuario.getEmail())){
+//            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
+//        }else{
+//            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
+//        }
         usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
 //        if(!imagen.isEmpty()){
 //            try{

@@ -10,8 +10,7 @@ import java.util.List;
 public class modeloDescarga{
     
     
-    private float alturaMinima;
-    private float alturaMaxima;
+    private Double altura;
     private String unidadMedidaAltura;
     private Integer idConglomerado;
     private String codigoConglomerado;
@@ -33,25 +32,14 @@ public class modeloDescarga{
 
     private List<valoresDescarga> valorDescarga;
 
-    public float getAlturaMinima() {
-        return alturaMinima;
+    public Double getAltura() {
+        return altura;
     }
-
-    public float getAlturaMaxima() {
-        return alturaMaxima;
-    }
-
-    public void setAlturaMinima(float alturaMinima) {
-        this.alturaMinima = alturaMinima;
-    }
-
-    public void setAlturaMaxima(float alturaMaxima) {
-        this.alturaMaxima = alturaMaxima;
-    }
-
-   
-
     
+    public void setAltura(Double altura) {
+        this.altura = altura;
+    }
+
 
     public Integer getIdConglomerado() {
         return idConglomerado;

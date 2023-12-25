@@ -40,6 +40,12 @@ public class AccesoController {
         return service.findAllByRol("INVESTIGADOR");
     }
     
+    @GetMapping("/listar-accesos-admin-datos")
+    public List<Acceso> mostrarAccesoAdminDirector()
+    {
+        return service.findAllByRol("ADMINISTRADOR DE DATOS");
+    }
+    
     
     @GetMapping("/obtener-acceso/{id}")
     public Object obtenerRol(@PathVariable Integer id)

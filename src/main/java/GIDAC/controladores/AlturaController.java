@@ -70,7 +70,7 @@ public class AlturaController {
     public List<Altura> listar()
     {
         List<Altura> oC= service.buscarPorVigencia(true);
-        oC.sort(Comparator.comparing(Altura::getAlturaMinima));
+        oC.sort(Comparator.comparing(Altura::getAltura));
         return oC;
     }
     
@@ -78,7 +78,7 @@ public class AlturaController {
     public List<Altura> listarEliminados()
     {
         List<Altura> oC= service.buscarPorVigencia(false);
-        oC.sort(Comparator.comparing(Altura::getAlturaMinima));
+        oC.sort(Comparator.comparing(Altura::getAltura));
         return oC;
     }
     

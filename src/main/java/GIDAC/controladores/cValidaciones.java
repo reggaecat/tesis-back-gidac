@@ -169,10 +169,10 @@ public class cValidaciones {
         return fechaActual;
     }
     
-    public boolean conpararFechaHora(Date fechaCreacion , Date fechaActual){
+    public boolean conpararFechaHora(Date fechaCreacion , Date fechaActual, int dias){
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(fechaCreacion);
-        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        calendar.add(Calendar.DAY_OF_YEAR, dias);
         Date fechaCreacionMasUnDia = calendar.getTime();
         
         if (fechaCreacionMasUnDia.before(fechaActual)) {
@@ -181,4 +181,21 @@ public class cValidaciones {
             return false;
         }
     }
+    
+    public Date agregarFechaMaximaEdicion(Date fechaCreacion, int dias){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(fechaCreacion);
+        calendar.add(Calendar.DAY_OF_YEAR, dias);
+        Date fechaMaxima = calendar.getTime();
+        return fechaMaxima;
+    }
+    
+    public boolean compararFechaMaxima(Date fechaMaxima , Date fechaActual){
+        if (fechaMaxima.before(fechaActual)) {
+            return true;
+        } else{
+            return false;
+        }
+    }
+    
 }

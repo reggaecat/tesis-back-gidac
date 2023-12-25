@@ -81,6 +81,10 @@ public interface DatoRecolectadoService<T>{
     public BigInteger obtenerCantidadProyectosPorEstadoPrivado(Integer idUsuario);
     public BigInteger obtenerCantidadProyectosVigentes(Integer idUsuario);
     public BigInteger obtenerCantidadProyectosEliminados(Integer idUsuario);
+    public BigInteger obtenerCantidadProyectosPorEstadoPublicoAdminDatos();
+    public BigInteger obtenerCantidadProyectosPorEstadoPrivadoAdminDatos();
+    public BigInteger obtenerCantidadProyectosVigentesAdminDatos();
+    public BigInteger obtenerCantidadProyectosEliminadosAdminDatos();
     public BigInteger obtenerCantidadSolicitudesDescarga(Integer idUsuario);
     public BigInteger obtenerCantidadSolicitudesDescargaSolicitado(Integer idUsuario);
     public BigInteger obtenerCantidadSolicitudesDescargaAprobadas(Integer idUsuario);
@@ -109,9 +113,8 @@ public interface DatoRecolectadoService<T>{
     public BigInteger obtenerCantidadSolicitudesActualizarAcesptadoInvestigador(Integer idUsuario);
     public BigInteger obtenerCantidadSolicitudesActualizarRechazadoInvestigador(Integer idUsuario);
     
-    public List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
-            float alturaMinima, 
-            float alturaMaxima,
+    public List<DatoRecolectado> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+            Double altura, 
             Boolean vigenciaAltura,
             String abreAltrua,
             String codigoConglomerado,
@@ -128,8 +131,7 @@ public interface DatoRecolectadoService<T>{
             String valor,
             Boolean vigencia);
     
-    public List<Object[]> obtenerDatoRepetido( float alturaMinima, 
-             float alturaMaxima,
+    public List<Object[]> obtenerDatoRepetido( Double altura,
              String abreAltrua,
              String codigoConglomerado,
              Integer idProyConglomerado,
@@ -140,7 +142,6 @@ public interface DatoRecolectadoService<T>{
              Date fechaSalidaCampo,
              Integer idVUM,
              String valor);
-    List<T> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMinimaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaMaximaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(float alturaMinima, float alturaMaxima,String abreAltrua,String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
-    List<T> findByDatasetProfundidadParcelaParcelaConglomeradoAlturaIdAlturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(Integer idAltura, String codigoConglomerado,Integer idProyConglomerado,String codigoParcela,Double profundidadMinima, Double profundidadMaxima,String abreProfundidad,Date fechaSalidaCampo,Integer idVUM,String valor,Boolean vigencia);
+    
 }
 

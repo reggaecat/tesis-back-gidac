@@ -84,6 +84,20 @@ public class ProyectoInvestigacionControlador {
         return crud.findInvestigacionesPublicas();
     }
     
+    //listar investigaciones vigentes true
+    @GetMapping("/investigacion-vigentes-true")
+    public List<ProyectoInvestigacion> listarInvestigacionesVigentesTrue()
+    {
+        return crud.findAllVigentes(true);
+    }
+    
+    //listar investigaciones vigentes false
+    @GetMapping("/investigacion-vigentes-false")
+    public List<ProyectoInvestigacion> listarInvestigacionesVigentesFalse()
+    {
+        return crud.findAllVigentes(false);
+    }
+    
     //listarParaFiltrar
     @GetMapping("/investigacion-mapa")
     public List<ProyectoInvestigacion> listarMapa()

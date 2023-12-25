@@ -13,8 +13,9 @@ public class Altura {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer idAltura;
     
-    private float alturaMinima;
-    private float alturaMaxima;
+    private Double altura;
+//    private float alturaMinima;
+//    private float alturaMaxima;
     
     @OneToMany(mappedBy = "altura",fetch = FetchType.LAZY,cascade = CascadeType.ALL)
     @JsonIgnore
@@ -53,21 +54,31 @@ public class Altura {
         return idAltura;
     }
 
-    public float getAlturaMinima() {
-        return alturaMinima;
+    public Double getAltura() {
+        return altura;
     }
 
-    public float getAlturaMaxima() {
-        return alturaMaxima;
+    public void setAltura(Double altura) {
+        this.altura = altura;
     }
 
-    public void setAlturaMinima(float alturaMinima) {
-        this.alturaMinima = alturaMinima;
-    }
-
-    public void setAlturaMaxima(float alturaMaxima) {
-        this.alturaMaxima = alturaMaxima;
-    }
+    
+    
+//    public float getAlturaMinima() {
+//        return alturaMinima;
+//    }
+//
+//    public float getAlturaMaxima() {
+//        return alturaMaxima;
+//    }
+//
+//    public void setAlturaMinima(float alturaMinima) {
+//        this.alturaMinima = alturaMinima;
+//    }
+//
+//    public void setAlturaMaxima(float alturaMaxima) {
+//        this.alturaMaxima = alturaMaxima;
+//    }
 
     public Set<Conglomerado> getConglomerado() {
         return conglomerado;

@@ -52,4 +52,9 @@ public class ProyectoInvestigacionServiceImpl implements ProyectoInvestigacionSe
        DAO.deleteById(id);
    }
 
+    @Override
+    public List findAllVigentes(Boolean vigencia) {
+        return DAO.findByVigencia(vigencia);
+    }
+
 }

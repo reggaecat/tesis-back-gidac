@@ -25,6 +25,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -355,5 +358,24 @@ public class VariableController {
         service.activar(id);
     }
     
+    //Obtener pdf
+    @GetMapping("/pdf")
+    public ResponseEntity<byte[]> dowloadPDF() {
+        byte[] pdfBytes = service.dowloadPdf(); 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "catalogo.pdf"); 
+        return ResponseEntity.ok().headers(headers).body(pdfBytes);
+    }
+    
+    //Obtener excel
+    @GetMapping("/excel")
+    public ResponseEntity<byte[]> dowloadExcel() {
+        byte[] pdfBytes = service.dowloadExcel(); 
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_PDF);
+        headers.setContentDispositionFormData("attachment", "catalogo.xlsx"); 
+        return ResponseEntity.ok().headers(headers).body(pdfBytes);
+    }
     
 }

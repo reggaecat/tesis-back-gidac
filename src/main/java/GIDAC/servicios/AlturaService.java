@@ -14,7 +14,8 @@ import java.util.List;
 public interface AlturaService<T>{
     public T guardar(T objeto);
     public T buscarPorId(Integer id);
-    public T buscarPorAlturaMinimaAlturaMaximaAbreviatura(float alturaMinima, float alturaMaxima, String abreviatura);
+    //public T buscarPorAlturaMinimaAlturaMaximaAbreviatura(float alturaMinima, float alturaMaxima, String abreviatura);
+    public List<T> buscarPorVigenciaAlturaAbreviatura(Boolean vigencia, Double altura, String abreviatura);
     public List<T> buscarTodos();
     public void eliminar(Integer id);
     List<Object[]> obtenerAlturasUsadas();
