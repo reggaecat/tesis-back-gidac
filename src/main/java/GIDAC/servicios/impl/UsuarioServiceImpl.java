@@ -75,7 +75,7 @@ public class UsuarioServiceImpl implements UsuarioService {
             throw new UsuarioFoundException("El usuario ya esta presente");
         }
         else{
-            //emailEnvioService.enviarEmailRegistroUsuario(usuario);
+            emailEnvioService.enviarEmailRegistroUsuario(usuario);
             usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getContrasenia()));
             usuarioLocal = usuarioRepository.save(usuario);
         }
