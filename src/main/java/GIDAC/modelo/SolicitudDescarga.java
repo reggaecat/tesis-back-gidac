@@ -17,7 +17,7 @@ public class SolicitudDescarga {
 
     private String nombre;
     private String apellido;
-    private String emial;
+    private String email;
     private String institucion;
     private String motivo;
     private Date fechaEnvioSolicitud;
@@ -49,11 +49,7 @@ public class SolicitudDescarga {
     public String getApellido() {
         return apellido;
     }
-
-    public String getEmial() {
-        return emial;
-    }
-
+    
     public String getInstitucion() {
         return institucion;
     }
@@ -68,10 +64,6 @@ public class SolicitudDescarga {
 
     public void setApellido(String apellido) {
         this.apellido = apellido;
-    }
-
-    public void setEmial(String emial) {
-        this.emial = emial;
     }
 
     public void setInstitucion(String institucion) {
@@ -118,4 +110,14 @@ public class SolicitudDescarga {
     public SolicitudDescarga(){
 
     }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+    
+    
 }

@@ -350,7 +350,7 @@ public class CorreoElectronico {
                         "                 <tr> " +
                         "                     <td align='left' bgcolor='#ffffff' " +
                         "                         style='font-family:Arial,sans-serif;color:#333333;font-size:12px;padding-top:0px;padding-right:30px;padding-left:30px;padding-bottom:20px;text-align:left;line-height:16px'> " +
-                        "                         Se ha registrado exitosamente los siguientes datos:</td> " +
+                        "                         Se ha actualizado exitosamente los siguientes datos:</td> " +
                         "                 </tr> " +
 
                         "                 <tr> "+

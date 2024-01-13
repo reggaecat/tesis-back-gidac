@@ -276,6 +276,7 @@ public class AppProyecto implements CommandLineRunner {
             try{  
                 if(usuarioService.obtenerUsuarioId(1)==null){
                     Usuario usuario = new Usuario();
+                    usuario.setIdUsuario(1);
                     usuario.setNombreUsuario("Juan Carlos");
                     usuario.setApellidoUsuario("Maigua Rizo");
                     usuario.setCedula("0550458681");
@@ -289,6 +290,30 @@ public class AppProyecto implements CommandLineRunner {
                     usuario.setRol(rol);
                     usuarioGuardado = usuarioService.guardarUsuario(usuario);
                 }
+            }catch(Exception exception){
+                throw new Exception("Error al administrador: "+exception);
+            }
+            
+            try{  
+                
+                    Usuario usuario = new Usuario();
+                    usuario.setIdUsuario(1);
+                    usuario.setNombreUsuario("Juan Carlos");
+                    usuario.setApellidoUsuario("Maigua Rizo");
+                    usuario.setCedula("0550458681");
+                    usuario.setContrasenia("12345");
+                    usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getContrasenia()));
+                    usuario.setEmail("cjdmaigua@gmail.com");
+                    usuario.setTelefono("0979199469");
+                    
+                    usuario.setFechaCreacion(oVal.fechaActual());
+                    usuario.setFechaActualizacion(oVal.fechaActual());
+                    Rol rol = new Rol();
+                    rol.setIdRol(1);
+                    rol.setNombreRol("ADMINISTRADOR");
+                    usuario.setRol(rol);
+                    usuarioGuardado = usuarioService.actualizarUsuario(usuario);
+                
             }catch(Exception exception){
                 throw new Exception("Error al administrador: "+exception);
             }

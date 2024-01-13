@@ -18,7 +18,6 @@ public class Parcela {
     private String nombreParcela;
     private String coordenadaX;
     private String coordenadaY;
-    private String sistemaCoordenada;
     private Date fechaCreacion;
     private Date fechaActualizacion;
     private boolean vigencia=true;
@@ -61,10 +60,6 @@ public class Parcela {
         this.coordenadaY = coordenadaY;
     }
 
-    public void setSistemaCoordenada(String sistemaCoordenada) {
-        this.sistemaCoordenada = sistemaCoordenada;
-    }
-
     public void setVigencia(boolean vigencia) {
         this.vigencia = vigencia;
     }
@@ -87,10 +82,6 @@ public class Parcela {
 
     public String getCoordenadaY() {
         return coordenadaY;
-    }
-
-    public String getSistemaCoordenada() {
-        return sistemaCoordenada;
     }
 
     public boolean isVigencia() {

@@ -119,11 +119,11 @@ public class AuthenticationController {
         usuario.setFechaActualizacion(validaciones.fechaActual());
         Usuario usuarioAux=usuarioService.obtenerUsuarioId(usuario.getIdUsuario());
         usuario.setRol(usuarioAux.getRol());
-        if(usuarioAux.getEmail().equals(usuario.getEmail())){
-            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
-        }else{
-            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
-        }
+//        if(usuarioAux.getEmail().equals(usuario.getEmail())){
+//            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
+//        }else{
+//            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
+//        }
         usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
 //        if(!imagen.isEmpty()){
 //            try{
@@ -168,24 +168,25 @@ public class AuthenticationController {
     
     
     @PostMapping("/enviar-email-recuperar-contrasenia")
-    public ResponseEntity<?> enviarCorreoElectronico1(@RequestBody CorreoElectronico correoElectronico) throws Exception {
+    public Boolean enviarCorreoElectronico1(@RequestBody CorreoElectronico correoElectronico) throws Exception {
         Usuario usuarioLocal = usuarioService.obtenerPorEmail(correoElectronico.getDestinatario());
         if(usuarioLocal != null){
             try {
                 String clave=generarClave();
+                System.out.println("clave usuario:         "+clave);
                 usuarioLocal.setContrasenia(clave);
-                emailEnvioService.enviarEmailResetearContrasenia(usuarioLocal);
+                //emailEnvioService.enviarEmailResetearContrasenia(usuarioLocal);
                 usuarioLocal.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
                 usuarioService.actualizarUsuario(usuarioLocal);
-                return ResponseEntity.ok("Correo electrónico enviado correctamente.");
+                return true;
             } catch (MailException e) {
                 System.out.println("error "+e);
-                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error al enviar el correo electrónico.");
+                return false;
             }
         }
         else{
             System.out.println("El usuario no existe");
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("El correo no esta registrado en el sistema.");
+            return false;
         }
     }
     

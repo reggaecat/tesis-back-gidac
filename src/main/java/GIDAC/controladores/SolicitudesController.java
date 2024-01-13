@@ -119,7 +119,7 @@ public class SolicitudesController {
     
     @PostMapping("/solicitud-aprobada-envio-mensaje")
     public Object solicitudAprobadaEnvioMensaje(@RequestParam("solicitudDescarga") String datosJson, @RequestParam("file") MultipartFile file) throws JsonProcessingException, Exception{
-        System.out.println("....................llega");
+        
         SolicitudDescarga oC1 = new ObjectMapper().readValue(datosJson, SolicitudDescarga.class);
         
         cValidaciones validaciones = new cValidaciones();
@@ -138,7 +138,7 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
-        emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga, file);
+        //emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga, file);
         return solicitudDescargaService.save(oC);    
     }
     
@@ -184,7 +184,7 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
-        emailEnvioService.enviarEmailRechazarSolicitudDescarga(respuestaSolicitudDescarga);
+        //emailEnvioService.enviarEmailRechazarSolicitudDescarga(respuestaSolicitudDescarga);
         return solicitudDescargaService.save(oC); 
         
     }

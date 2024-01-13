@@ -397,7 +397,7 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(respuesta.getSolicitudDescarga().getEmial())); 
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(respuesta.getSolicitudDescarga().getEmail())); 
                 message.setSubject("Respuesta de solicitud de descarga");
                 
                 CorreoElectronico oCor=new CorreoElectronico();
@@ -465,7 +465,7 @@ public class EmailEnvioServiceImpl implements EmailEnvioService {
             try {
                 Message message = new MimeMessage(session);
                 message.setFrom(new InternetAddress(username));
-                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(respuesta.getSolicitudDescarga().getEmial())); 
+                message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(respuesta.getSolicitudDescarga().getEmail())); 
                 message.setSubject("Respuesta de solicitud de descarga");
                 
                 CorreoElectronico oCor=new CorreoElectronico();

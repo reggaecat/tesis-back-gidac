@@ -1794,7 +1794,7 @@ public class DatoRecolectadoController {
                                     profundidadParcela.setIdProfundidad(profundidad.getIdProfundidad());
                                     profundidadParcela.setParcela(parcela);
                                     profundidadParcela.setProfundidad(profundidad);
-                                    profundidadParcela.setFechaSalidaCampo(fechaSalida);
+                                    //profundidadParcela.setFechaSalidaCampo(fechaSalida);
                                     profundidadParcela=(ProfundidadParcela) profundidadParcelaService.guardar(profundidadParcela);
                                 }
                                 controlColumnas=16;
@@ -1808,8 +1808,14 @@ public class DatoRecolectadoController {
                                         
                                         
                                         DatoRecolectado datoRecolectado=new DatoRecolectado(); 
-                                        if(dato.equals("")){valor="NA";}
-                                        else{dato=dato.replaceAll("\\,","."); valor=dato;}
+                                        if(variableEncontrada.getNombreTipoVariable().equals("Numérico")){
+                                            if(dato.equals("")){valor="0";}
+                                            else{dato=dato.replaceAll("\\,","."); valor=dato;}
+                                        }else{
+                                            if(dato.equals("")){valor="NA";}
+                                            else{dato=dato.replaceAll("\\,","."); valor=dato;}
+                                        }
+                                        
                                         
                                         Dataset dataset=new Dataset();
                                         dataset.setProfundidadParcela(profundidadParcela);

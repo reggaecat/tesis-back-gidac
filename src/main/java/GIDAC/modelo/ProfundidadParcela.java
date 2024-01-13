@@ -27,7 +27,6 @@ public class ProfundidadParcela {
     @JoinColumn(name = "id_parcela", insertable = false, updatable = false)
     private Parcela parcela;
     
-    private Date fechaSalidaCampo;
     private Date fechaCreacion;
     private Date fechaActualizacion;
     private boolean vigencia=true;
@@ -65,13 +64,6 @@ public class ProfundidadParcela {
         return parcela;
     }
 
-    public Date getFechaSalidaCampo() {
-        return fechaSalidaCampo;
-    }
-
-    public void setFechaSalidaCampo(Date fechaSalidaCampo) {
-        this.fechaSalidaCampo = fechaSalidaCampo;
-    }
 
     public Date getFechaCreacion() {
         return fechaCreacion;
