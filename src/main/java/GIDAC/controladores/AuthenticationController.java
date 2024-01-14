@@ -119,11 +119,11 @@ public class AuthenticationController {
         usuario.setFechaActualizacion(validaciones.fechaActual());
         Usuario usuarioAux=usuarioService.obtenerUsuarioId(usuario.getIdUsuario());
         usuario.setRol(usuarioAux.getRol());
-//        if(usuarioAux.getEmail().equals(usuario.getEmail())){
-//            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
-//        }else{
-//            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
-//        }
+        if(usuarioAux.getEmail().equals(usuario.getEmail())){
+            emailEnvioService.enviarEmailActualizacionPerfilUsuario(usuario);
+        }else{
+            emailEnvioService.enviarEmailActualizacionPerfilUsuarioEmailDiferente(usuario,usuarioAux.getEmail());
+        }
         usuario.setContrasenia(this.bCryptPasswordEncoder.encode(usuario.getPassword()));
 //        if(!imagen.isEmpty()){
 //            try{
@@ -175,7 +175,7 @@ public class AuthenticationController {
                 String clave=generarClave();
                 System.out.println("clave usuario:         "+clave);
                 usuarioLocal.setContrasenia(clave);
-                //emailEnvioService.enviarEmailResetearContrasenia(usuarioLocal);
+                emailEnvioService.enviarEmailResetearContrasenia(usuarioLocal);
                 usuarioLocal.setContrasenia(this.bCryptPasswordEncoder.encode(clave));
                 usuarioService.actualizarUsuario(usuarioLocal);
                 return true;

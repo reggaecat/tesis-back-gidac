@@ -33,13 +33,22 @@ public class DatasetController {
     @PostMapping("/guardar-dataset")
     public Object guardar(@RequestBody Dataset oC)
     {
-        ProfundidadParcela profundidadParcela=new ProfundidadParcela();
-        profundidadParcela.setIdParcela(oC.getProfundidadParcela().getIdParcela());
-        profundidadParcela.setIdProfundidad(oC.getProfundidadParcela().getIdProfundidad());
-        profundidadParcela.setProfundidad(oC.getProfundidadParcela().getProfundidad());
-        profundidadParcela.setParcela(oC.getProfundidadParcela().getParcela());
-        profundidadParcelaService.guardar(profundidadParcela);
         
+        List<Dataset> datasetCodigo=service.buscarPorProyecto(oC.getProyectoInvestigacion().getIdProyecto());
+        int codigoDataset=1;
+        if (!datasetCodigo.isEmpty()) {
+            Dataset dsAux=datasetCodigo.get(datasetCodigo.size()-1);
+            codigoDataset=dsAux.getCodigoDataset()+1;
+        }
+//        
+//        ProfundidadParcela profundidadParcela=new ProfundidadParcela();
+//        profundidadParcela.setIdParcela(oC.getProfundidadParcela().getIdParcela());
+//        profundidadParcela.setIdProfundidad(oC.getProfundidadParcela().getIdProfundidad());
+//        profundidadParcela.setProfundidad(oC.getProfundidadParcela().getProfundidad());
+//        profundidadParcela.setParcela(oC.getProfundidadParcela().getParcela());
+//        profundidadParcela = (ProfundidadParcela) profundidadParcelaService.guardar(profundidadParcela);
+//        oC.setProfundidadParcela(profundidadParcela);
+        oC.setCodigoDataset(codigoDataset);
         cValidaciones oV=new cValidaciones();
         oC.setFechaCreacion(oV.fechaActual());
         return service.guardar(oC);    
@@ -95,8 +104,10 @@ public class DatasetController {
             DatasetDatos dato = new DatasetDatos();
             Integer dato1=(Integer) objeto[0];
             Date dato2=(Date) objeto[1];
+            Date dato3=(Date) objeto[2];
             dato.setCodigoDataset(dato1);
-            dato.setFechaDataset(dato2);
+            dato.setFechaInicioDataset(dato2);
+            dato.setFechaFinDataset(dato3);
             listaDataset.add(dato);
         }
         return listaDataset;   
@@ -112,8 +123,10 @@ public class DatasetController {
             DatasetDatos dato = new DatasetDatos();
             Integer dato1=(Integer) objeto[0];
             Date dato2=(Date) objeto[1];
+            Date dato3=(Date) objeto[2];
             dato.setCodigoDataset(dato1);
-            dato.setFechaDataset(dato2);
+            dato.setFechaInicioDataset(dato2);
+            dato.setFechaFinDataset(dato3);
             listaDataset.add(dato);
         }
         return listaDataset;   

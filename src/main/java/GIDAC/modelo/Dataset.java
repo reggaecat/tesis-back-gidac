@@ -18,7 +18,9 @@ public class Dataset {
     private Integer idDataset;
     private Integer codigoDataset;
     @Temporal(TemporalType.DATE)
-    private Date fechaDataset;
+    private Date fechaInicioDataset;
+    @Temporal(TemporalType.DATE)
+    private Date fechaFinDataset;
     @Temporal(TemporalType.DATE)
     private Date fechaSalidaCampo;
     private Date fechaCreacion;
@@ -99,14 +101,6 @@ public class Dataset {
         return fechaActualizacion;
     }
 
-    public Date getFechaDataset() {
-        return fechaDataset;
-    }
-
-    public void setFechaDataset(Date fechaDataset) {
-        this.fechaDataset = fechaDataset;
-    }
-
     public Integer getCodigoDataset() {
         return codigoDataset;
     }
@@ -122,5 +116,22 @@ public class Dataset {
     public void setFechaSalidaCampo(Date fechaSalidaCampo) {
         this.fechaSalidaCampo = fechaSalidaCampo;
     }
+
+    public Date getFechaInicioDataset() {
+        return fechaInicioDataset;
+    }
+
+    public void setFechaInicioDataset(Date fechaInicioDataset) {
+        this.fechaInicioDataset = fechaInicioDataset;
+    }
+
+    public Date getFechaFinDataset() {
+        return fechaFinDataset;
+    }
+
+    public void setFechaFinDataset(Date fechaFinDataset) {
+        this.fechaFinDataset = fechaFinDataset;
+    }
+    
     
 }

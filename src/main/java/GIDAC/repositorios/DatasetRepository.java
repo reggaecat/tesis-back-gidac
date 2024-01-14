@@ -23,14 +23,14 @@ public interface DatasetRepository extends JpaRepository<Dataset,Integer> {
             nativeQuery=true)
     List<Object[]> obtenerDataSetUsados(@Param("idDataset") Integer idDataset);
     
-    @Query(value="  SELECT distinct ds.codigo_dataset, ds.fecha_dataset" +
+    @Query(value="  SELECT distinct ds.codigo_dataset, ds.fecha_inicio_dataset, ds.fecha_fin_dataset" +
                 " FROM dataset ds" +
                 " WHERE ds.id_proyecto=:idProyecto" +
                 " ORDER BY 1 desc",
             nativeQuery=true)
     List<Object[]> obtenerDatasets(@Param("idProyecto") Integer idProyecto);
     
-    @Query(value="  SELECT distinct ds.codigo_dataset, ds.fecha_dataset" +
+    @Query(value="  SELECT distinct ds.codigo_dataset, ds.fecha_inicio_dataset, ds.fecha_fin_dataset" +
                 " FROM dataset ds" +
                 " WHERE ds.id_proyecto=:idProyecto" +
                 " ORDER BY 1 asc",

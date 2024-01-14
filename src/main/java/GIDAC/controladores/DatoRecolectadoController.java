@@ -169,27 +169,12 @@ public class DatoRecolectadoController {
         oC.setFechaCreacion(oV.fechaActual());
         
         Dataset DataSetRes= oC.getDataset();
-        int codigoDataset=1;
-        Date fechaDataset=oC.getDataset().getFechaSalidaCampo();
         
-        if(oC.getDataset().getCodigoDataset()==0){
-            List<Object[]> listaObject= datasetService.obtenerDatasets(oC.getDataset().getProyectoInvestigacion().getIdProyecto());
-            if (!listaObject.isEmpty()) {
-                for (Object[] objeto : listaObject) {
-                    codigoDataset=(Integer) objeto[0]+1;
-                    break;
-                }
-            }
-        }else{
-            //List<Dataset> datasetAux1= (List<Dataset>) datasetService.buscarPorCodigoDatasetParcelaProfundidad(oC.getDataset().getCodigoDataset(), oC.getDataset().getProfundidadParcela().getParcela().getIdParcela(), oC.getDataset().getProfundidadParcela().getProfundidad().getIdProfundidad());
-            List<Dataset> datasetAux1= (List<Dataset>) datasetService.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(oC.getDataset().getCodigoDataset(),oC.getDataset().getProyectoInvestigacion().getIdProyecto());
-            Dataset datasetAux=datasetAux1.get(0);
-            codigoDataset= datasetAux.getCodigoDataset();
-            fechaDataset= datasetAux.getFechaDataset();
-        }
-        
-        DataSetRes.setCodigoDataset(codigoDataset);
-        DataSetRes.setFechaDataset(fechaDataset);
+        List<Dataset> datasetAux1= (List<Dataset>) datasetService.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(oC.getDataset().getCodigoDataset(),oC.getDataset().getProyectoInvestigacion().getIdProyecto());
+        Dataset datasetAux=datasetAux1.get(0);
+        DataSetRes.setCodigoDataset(datasetAux.getCodigoDataset());
+        DataSetRes.setFechaInicioDataset(datasetAux.getFechaInicioDataset());
+        DataSetRes.setFechaFinDataset(datasetAux.getFechaFinDataset());
         DataSetRes.setFechaCreacion(oV.fechaActual());
         
         ProfundidadParcela pp=oC.getDataset().getProfundidadParcela();
@@ -225,32 +210,22 @@ public class DatoRecolectadoController {
         oC.setFechaActualizacion(oV.fechaActual());
         
         Dataset DataSetRes= oD.getDataset();
-        int codigoDataset=oC.getDataset().getCodigoDataset();
-        Date fechaDataset=oC.getDataset().getFechaSalidaCampo();
         
-        if(oC.getDataset().getCodigoDataset()==0){
-            List<Object[]> listaObject= datasetService.obtenerDatasets(oD.getDataset().getProyectoInvestigacion().getIdProyecto());
-            if (!listaObject.isEmpty()) {
-                for (Object[] objeto : listaObject) {
-                    codigoDataset=(Integer) objeto[0]+1;
-                    break;
-                }
-            }
-        }else{
-            List<Dataset> datasetAux1= (List<Dataset>) datasetService.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(codigoDataset, oD.getDataset().getProyectoInvestigacion().getIdProyecto());
-            Dataset datasetAux=datasetAux1.get(0);
-            fechaDataset= datasetAux.getFechaDataset();
-        }
+        List<Dataset> datasetAux1= (List<Dataset>) datasetService.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(oC.getDataset().getCodigoDataset(),oC.getDataset().getProyectoInvestigacion().getIdProyecto());
+        Dataset datasetAux=datasetAux1.get(0);
+        DataSetRes.setCodigoDataset(datasetAux.getCodigoDataset());
+        DataSetRes.setFechaInicioDataset(datasetAux.getFechaInicioDataset());
+        DataSetRes.setFechaFinDataset(datasetAux.getFechaFinDataset());
+        DataSetRes.setFechaCreacion(oV.fechaActual());
         
-        DataSetRes.setCodigoDataset(codigoDataset);
-        DataSetRes.setFechaDataset(fechaDataset);
-        DataSetRes.setFechaActualizacion(oV.fechaActual());
-        ProfundidadParcela pp=oD.getDataset().getProfundidadParcela();
-        pp.setIdParcela(oD.getDataset().getProfundidadParcela().getParcela().getIdParcela());
-        pp.setIdProfundidad(oD.getDataset().getProfundidadParcela().getProfundidad().getIdProfundidad());
+        ProfundidadParcela pp=oC.getDataset().getProfundidadParcela();
+        pp.setIdParcela(oC.getDataset().getProfundidadParcela().getParcela().getIdParcela());
+        pp.setIdProfundidad(oC.getDataset().getProfundidadParcela().getProfundidad().getIdProfundidad());
         DataSetRes.setProfundidadParcela(pp);
-        DataSetRes.setProyectoInvestigacion(oD.getDataset().getProyectoInvestigacion());
+        
+        DataSetRes.setProyectoInvestigacion(oC.getDataset().getProyectoInvestigacion());
         DataSetRes.setVigencia(true);
+        
         Dataset respuesta=(Dataset) datasetService.guardar(DataSetRes);
         
         oC.setDataset(respuesta);
@@ -1573,10 +1548,11 @@ public class DatoRecolectadoController {
      
     //registrar datos
     @PostMapping("/registrar-datos-xls")
-    public void registrarXLS(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
+    public void registrarXLS(@RequestParam("proyectoInvestigacion") String datosJson,@RequestParam("datasetSeleccionado") String datosDatasetJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
         
         ObjectMapper objectMapper=new ObjectMapper();
         ProyectoInvestigacion oC1Aux = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
+        DatasetDatos oDatasetDatos1= new ObjectMapper().readValue(datosDatasetJson, DatasetDatos.class);
         List<VariablesEncontradas> variablesEncontradas = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
         ProyectoInvestigacion oC1=new ProyectoInvestigacion();
         oC1.setIdProyecto(oC1Aux.getIdProyecto());
@@ -1589,14 +1565,15 @@ public class DatoRecolectadoController {
         int cont=1;
         
         int controlModulos=1;
-      
-        List<Dataset> datasetCodigo=datasetService.buscarPorProyecto(oC1.getIdProyecto());
-        int codigoDataset=1;
-        if (!datasetCodigo.isEmpty()) {
-            Dataset dsAux=datasetCodigo.get(datasetCodigo.size()-1);
-            codigoDataset=dsAux.getCodigoDataset()+1;
-        }
         
+        Dataset dataSetRes= new Dataset();
+        
+        List<Dataset> datasetAux1= (List<Dataset>) datasetService.findByCodigoDatasetAndProyectoInvestigacionIdProyecto(oDatasetDatos1.getCodigoDataset(),oC1Aux.getIdProyecto());
+        Dataset datasetAux=datasetAux1.get(0);
+        dataSetRes.setCodigoDataset(datasetAux.getCodigoDataset());
+        dataSetRes.setFechaInicioDataset(datasetAux.getFechaInicioDataset());
+        dataSetRes.setFechaFinDataset(datasetAux.getFechaFinDataset());
+      
         boolean boolDataset=true;
         try{
             InputStream inputStream = file.getInputStream();
@@ -1821,9 +1798,10 @@ public class DatoRecolectadoController {
                                         dataset.setProfundidadParcela(profundidadParcela);
                                         dataset.setFechaCreacion(cVal.fechaActual());
                                         dataset.setProyectoInvestigacion(oC1);
-                                        dataset.setFechaDataset(fechaDataset);
+                                        dataset.setFechaInicioDataset(dataSetRes.getFechaInicioDataset());
+                                        dataset.setFechaFinDataset(dataSetRes.getFechaFinDataset());
                                         dataset.setFechaSalidaCampo(fechaSalida);
-                                        dataset.setCodigoDataset(codigoDataset);
+                                        dataset.setCodigoDataset(dataSetRes.getCodigoDataset());
                                         dataset=(Dataset) datasetService.guardar(dataset);
                                         
                                         VariableUnidadMedida variableUnidadMedida=new VariableUnidadMedida();

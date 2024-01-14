@@ -76,11 +76,11 @@ public class UsuarioController {
         usuario.setFechaActualizacion(validaciones.fechaActual());
         usuario.setContrasenia(usuarioActual.getContrasenia());
         usuario.setRol(usuarioActual.getRol());
-//        if(usuarioActual.getEmail().equals(usuario.getEmail())){
-//            emailEnvioService.enviarEmailActualizacionUsuario(usuario);
-//        }else{
-//            emailEnvioService.enviarEmailActualizacionUsuarioEmailDiferente(usuario,usuarioActual.getEmail());
-//        }
+        if(usuarioActual.getEmail().equals(usuario.getEmail())){
+            emailEnvioService.enviarEmailActualizacionUsuario(usuario);
+        }else{
+            emailEnvioService.enviarEmailActualizacionUsuarioEmailDiferente(usuario,usuarioActual.getEmail());
+        }
         return usuarioService.actualizarUsuario(usuario);
         
     }

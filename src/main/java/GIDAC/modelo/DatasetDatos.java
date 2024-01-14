@@ -13,16 +13,38 @@ import javax.persistence.TemporalType;
 public class DatasetDatos{
    
     private Integer codigoDataset;
-    private Date fechaDataset;
+    private Date fechaInicioDataset;
+    private Date fechaFinDataset;
     
     public DatasetDatos() {
         // Constructor sin argumentos
     }
 
-    public DatasetDatos(Integer codigoDataset, Date fechaDataset) {
+    public DatasetDatos(Integer codigoDataset, Date fechaInicioDataset, Date fechaFinDataset) {
         this.codigoDataset = codigoDataset;
-        this.fechaDataset = fechaDataset;
+        this.fechaInicioDataset = fechaInicioDataset;
+        this.fechaFinDataset = fechaFinDataset;
     }
+    
+    
+
+    public Date getFechaInicioDataset() {
+        return fechaInicioDataset;
+    }
+
+    public void setFechaInicioDataset(Date fechaInicioDataset) {
+        this.fechaInicioDataset = fechaInicioDataset;
+    }
+
+    public Date getFechaFinDataset() {
+        return fechaFinDataset;
+    }
+
+    public void setFechaFinDataset(Date fechaFinDataset) {
+        this.fechaFinDataset = fechaFinDataset;
+    }
+
+    
 
     public Integer getCodigoDataset() {
         return codigoDataset;
@@ -32,13 +54,6 @@ public class DatasetDatos{
         this.codigoDataset = codigoDataset;
     }
 
-    public Date getFechaDataset() {
-        return fechaDataset;
-    }
-
-    public void setFechaDataset(Date fechaDataset) {
-        this.fechaDataset = fechaDataset;
-    }
-    
+   
     
 }

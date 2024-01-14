@@ -138,7 +138,7 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
-        //emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga, file);
+        emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga, file);
         return solicitudDescargaService.save(oC);    
     }
     
@@ -161,7 +161,6 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
-        //emailEnvioService.enviarEmailAprobarSolicitudDescarga(respuestaSolicitudDescarga);
         return solicitudDescargaService.save(oC);    
     }
     
@@ -184,7 +183,7 @@ public class SolicitudesController {
             estadoSolicitudDescargaService.guardar(estadoSolicitudDescarga);
         }
         oC.setEstadoSolicitudDescarga(estadoSolicitudDescarga);
-        //emailEnvioService.enviarEmailRechazarSolicitudDescarga(respuestaSolicitudDescarga);
+        emailEnvioService.enviarEmailRechazarSolicitudDescarga(respuestaSolicitudDescarga);
         return solicitudDescargaService.save(oC); 
         
     }
