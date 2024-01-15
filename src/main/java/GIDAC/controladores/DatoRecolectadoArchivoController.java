@@ -133,8 +133,6 @@ public class DatoRecolectadoArchivoController {
             
             Sheet sheet = workbook.getSheetAt(0);
 
-            
-
             // Obtener la última fila con datos en la columna seleccionada
             int ultimaFilaConDatos = sheet.getLastRowNum();
 
@@ -170,6 +168,53 @@ public class DatoRecolectadoArchivoController {
             styleOutlaier.setFillForegroundColor(colorIndex);
             styleOutlaier.setFillPattern(FillPatternType.SOLID_FOREGROUND);
             
+            colorIndex = workbook.getCustomPalette().findSimilarColor(0, 0, 0).getIndex();
+            CellStyle styleDatoPrincipal = workbook.createCellStyle();
+            styleDatoPrincipal.setFillForegroundColor(colorIndex);
+            styleDatoPrincipal.setFillPattern(FillPatternType.SOLID_FOREGROUND);
+            
+            for (int j = 0; j <= 14; j++) {
+                for (int i = 2; i <= ultimaFilaConDatos; i++) {
+                    Row row = sheet.getRow(i);
+                    if (row != null) {
+                        Cell cell = row.getCell(j);
+                        if (cell != null) {
+                            cell.setCellStyle(styleCorrecto);
+                        }
+                    }
+                }
+            }
+            
+            for (int j = 0; j <= 14; j++) {
+                for (int i = 2; i <= ultimaFilaConDatos; i++) {
+                    Row row = sheet.getRow(i);
+                    if (row != null) {
+                        Cell cell = row.getCell(j);
+                        String datoPrincipal=cell.getStringCellValue();
+                        if(!datoPrincipal.isEmpty()){
+                            if(j==0){
+                                try{
+                                    Date fechaSalida=oF.Fecha(datoPrincipal);
+                                }catch(Exception e){
+                                    cell.setCellStyle(styleDatoPrincipal);
+                                    System.out.println("Error: "+e);
+                                }    
+                            }else if(j==4 || j==11 || j==14){
+                                try{
+                                    if(medidaService.buscarPorAbreviatura(datoPrincipal)==null){
+                                        cell.setCellStyle(styleDatoPrincipal);
+                                    }
+                                }catch(Exception e){
+                                    cell.setCellStyle(styleDatoPrincipal);
+                                    System.out.println("Error: "+e);
+                                }  
+                            }
+                        }else{
+                            cell.setCellStyle(styleDatoPrincipal);
+                        }   
+                    }
+                }
+            }
             
             
             
@@ -193,61 +238,72 @@ public class DatoRecolectadoArchivoController {
                 for (int i = 2; i <= ultimaFilaConDatos; i++) {
                     Row row = sheet.getRow(i);
                     if (row != null) {
+                        
                         Cell cell = row.getCell(0);
-                        String dato = cell.getStringCellValue();
-                        Date fechaSalidaCampoPerf=oF.Fecha(dato);
+                        String datoRes1=cell.getStringCellValue();
                         
                         cell = row.getCell(3);
-                        dato = cell.getStringCellValue();
-                        Double alturaPef=Double.parseDouble(dato);
+                        String datoRes2=cell.getStringCellValue();
                         
                         cell = row.getCell(4);
-                        String unidadMedidaAlturaPef=cell.getStringCellValue();
+                        String datoRes3=cell.getStringCellValue();
                         
-                        //conglomerado
                         cell = row.getCell(5);
-                        String codigoConglomeradoPef=cell.getStringCellValue();
-
-                        //parcela
+                        String datoRes4=cell.getStringCellValue();
+                        
                         cell = row.getCell(8);
-                        String codigoParcelaPef=cell.getStringCellValue();
-
-                        //purfundidad
+                        String datoRes5=cell.getStringCellValue();
+                        
                         cell = row.getCell(12);
-                        dato = cell.getStringCellValue();
-                        Double profundidadMinimaPef=Double.parseDouble(dato);
+                        String datoRes6=cell.getStringCellValue();
                         
                         cell = row.getCell(13);
-                        dato = cell.getStringCellValue();
-                        Double profundidadMaximaPef=Double.parseDouble(dato);
+                        String datoRes7=cell.getStringCellValue();
                         
                         cell = row.getCell(14);
-                        String unidadMedidaProfundidadPef=cell.getStringCellValue();
-
+                        String datoRes8=cell.getStringCellValue();
+                        
                         cell = row.getCell(columnaAColor);
-                        String valorPef=cell.getStringCellValue();
+                        String datoRes9=cell.getStringCellValue();
                         
-                        List<DatoRecolectado> listaDatoRecolectadoRepetidos=service.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
-                        alturaPef,
-                        true,
-                        unidadMedidaAlturaPef,
-                        codigoConglomeradoPef,
-                        true,
-                        oC1.getIdProyecto(),
-                        codigoParcelaPef,
-                        true,
-                        profundidadMinimaPef, 
-                        profundidadMaximaPef,
-                        true,
-                        unidadMedidaProfundidadPef,
-                        fechaSalidaCampoPerf,
-                        variableEncontrada.getIdVariableUnidadMedida(),
-                        valorPef,
-                        true);
-                        
-                        if(!listaDatoRecolectadoRepetidos.isEmpty()){
-                            cell.setCellStyle(styleRepetido); 
+                        if(!datoRes1.isEmpty() && !datoRes2.isEmpty() && !datoRes3.isEmpty() && !datoRes4.isEmpty() && !datoRes5.isEmpty() && !datoRes6.isEmpty() && !datoRes7.isEmpty() && !datoRes8.isEmpty() && !datoRes9.isEmpty()){
+                            try{
+                                Date fechaSalidaCampoPerf=oF.Fecha(datoRes1);
+                                Double alturaPef=Double.parseDouble(datoRes2);
+                                String unidadMedidaAlturaPef=datoRes3;
+                                String codigoConglomeradoPef=datoRes4;
+                                String codigoParcelaPef=datoRes5;
+                                Double profundidadMinimaPef=Double.parseDouble(datoRes6);
+                                Double profundidadMaximaPef=Double.parseDouble(datoRes7);
+                                String unidadMedidaProfundidadPef=datoRes8;
+                                String valorPef=datoRes9;
+                                List<DatoRecolectado> listaDatoRecolectadoRepetidos=service.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+                                alturaPef,
+                                true,
+                                unidadMedidaAlturaPef,
+                                codigoConglomeradoPef,
+                                true,
+                                oC1.getIdProyecto(),
+                                codigoParcelaPef,
+                                true,
+                                profundidadMinimaPef, 
+                                profundidadMaximaPef,
+                                true,
+                                unidadMedidaProfundidadPef,
+                                fechaSalidaCampoPerf,
+                                variableEncontrada.getIdVariableUnidadMedida(),
+                                valorPef,
+                                true);
+
+                                if(!listaDatoRecolectadoRepetidos.isEmpty()){
+                                    cell.setCellStyle(styleRepetido); 
+                                }
+                            }catch(Exception e){
+                                System.out.println("Error: "+e);
+                            }
                         }
+                        
+                        
                     }
                 } 
                 

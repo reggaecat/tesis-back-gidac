@@ -1002,9 +1002,11 @@ public class DatoRecolectadoController {
                 String dato;
                 for(int colm=15;colm<numColumnas;colm++){
                     dato=hoja.getCell(colm,fila).getContents();
+                    System.out.println("Carga "+dato);
                     for(VariablesEncontradas equivalencia:listaEquivalencia) {
                         if(equivalencia.getNombreTipoVariable().equals("Numérico")){
                             String datoAux="";
+                            
                             boolean confirmarUnidadMedida=true;
                             try{
                                 datoAux=hoja.getCell(colm+1,fila).getContents();
@@ -1014,7 +1016,7 @@ public class DatoRecolectadoController {
                                     confirmarUnidadMedida=true;
                                 }
                             }catch(Exception E){
-                                System.out.println("Carga incorrecta");
+                                System.out.println("Carga incorrecta "+datoAux);
                             }
                             
                             if(confirmarUnidadMedida==false){
@@ -1136,7 +1138,80 @@ public class DatoRecolectadoController {
         return formattedCadena1.equals(formattedCadena2);
     }
 
-    //perfilar datos
+
+     //perfilar datos
+    @PostMapping("/perfilar-datos-comprobar")
+    public boolean perfilarComporbarEstructura(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
+        
+        ObjectMapper objectMapper=new ObjectMapper();
+        ProyectoInvestigacion oC1 = new ObjectMapper().readValue(datosJson, ProyectoInvestigacion.class);
+        
+        List<VariablesEncontradas> variablesEncontradas = objectMapper.readValue(datosJsonVariables, new TypeReference<List<VariablesEncontradas>>() {});
+        
+        List<Perfilado> listaPerfilado=new ArrayList();
+        cValidaciones oF=new cValidaciones();
+        int numColumnas=0;
+        boolean retornoRespuesta=true;
+        int numFilas=0;
+        System.out.println("llega al perfilado");
+        try{
+            InputStream inputStream = file.getInputStream();
+            Workbook archivoExcel= Workbook.getWorkbook(inputStream);
+            Sheet hoja=archivoExcel.getSheet(0);
+            numColumnas=hoja.getColumns();
+            numFilas=hoja.getRows();
+            
+                for(int fila=2;fila<numFilas;fila++){
+                    
+                    String datoRes0=hoja.getCell(0,fila).getContents();
+                    String datoRes1=hoja.getCell(1,fila).getContents();
+                    String datoRes2=hoja.getCell(2,fila).getContents();
+                    String datoRes3=hoja.getCell(3,fila).getContents();
+                    String datoRes4=hoja.getCell(4,fila).getContents();
+                    String datoRes5=hoja.getCell(5,fila).getContents();
+                    String datoRes6=hoja.getCell(6,fila).getContents();
+                    String datoRes7=hoja.getCell(7,fila).getContents();
+                    String datoRes8=hoja.getCell(8,fila).getContents();
+                    String datoRes9=hoja.getCell(9,fila).getContents();
+                    String datoRes10=hoja.getCell(10,fila).getContents();
+                    String datoRes11=hoja.getCell(11,fila).getContents();
+                    String datoRes12=hoja.getCell(12,fila).getContents();
+                    String datoRes13=hoja.getCell(13,fila).getContents();
+                    String datoRes14=hoja.getCell(14,fila).getContents();
+                    if(datoRes0.isEmpty() || datoRes1.isEmpty() || datoRes2.isEmpty() || datoRes3.isEmpty() || datoRes4.isEmpty() || datoRes5.isEmpty() || datoRes6.isEmpty() 
+                       || datoRes7.isEmpty() || datoRes8.isEmpty() || datoRes9.isEmpty() || datoRes10.isEmpty() || datoRes11.isEmpty() || datoRes12.isEmpty() || datoRes13.isEmpty() || datoRes14.isEmpty()){
+                       return false; 
+                    } else{
+                        try{
+                            Date fechaSalida=oF.Fecha(datoRes0);
+                        }catch(Exception e){
+                            System.out.println("Error: "+e);
+                            return false;
+                        }    
+                        try{
+                            if(medidaService.buscarPorAbreviatura(datoRes4)==null){
+                                return false;
+                            }
+                            if(medidaService.buscarPorAbreviatura(datoRes11)==null){
+                                return false;
+                            }
+                            if(medidaService.buscarPorAbreviatura(datoRes14)==null){
+                                return false;
+                            }
+                        }catch(Exception e){
+                            System.out.println("Error: "+e);
+                            return false;
+                        }  
+                    }
+                }
+        }catch(Exception e){
+            System.out.println("Error "+e);
+            return false;
+        }
+        return retornoRespuesta;
+    }
+     
+//perfilar datos
     @PostMapping("/perfilar-datos")
     public List Perfilar(@RequestParam("proyectoInvestigacion") String datosJson, @RequestParam("variablesEncontradas") String datosJsonVariables, @RequestParam("file") MultipartFile file) throws JsonProcessingException{
         
@@ -1150,7 +1225,7 @@ public class DatoRecolectadoController {
         int numColumnas=0;
         int numFilas=0;
         Date fechaDataset=null;
-        
+        System.out.println("llega al perfilado");
         try{
             InputStream inputStream = file.getInputStream();
             Workbook archivoExcel= Workbook.getWorkbook(inputStream);
@@ -1158,8 +1233,7 @@ public class DatoRecolectadoController {
             numColumnas=hoja.getColumns();
             numFilas=hoja.getRows();
             
-            String datoFecha=hoja.getCell(0,numFilas-1).getContents();
-            fechaDataset=oF.Fecha(datoFecha);
+            
             String dato;
             for(VariablesEncontradas variableEncontrada:variablesEncontradas) {
                 
@@ -1190,52 +1264,70 @@ public class DatoRecolectadoController {
                 
                 for(int fila=2;fila<numFilas;fila++){
                     
-                    Date fechaSalidaCampoPerf=oF.Fecha(hoja.getCell(0,fila).getContents());
+                    String datoRes1=hoja.getCell(0,fila).getContents();
+                    String datoRes2=hoja.getCell(3,fila).getContents();
+                    String datoRes3=hoja.getCell(4,fila).getContents();
+                    String datoRes4=hoja.getCell(5,fila).getContents();
+                    String datoRes5=hoja.getCell(8,fila).getContents();
+                    String datoRes6=hoja.getCell(12,fila).getContents();
+                    String datoRes7=hoja.getCell(13,fila).getContents();
+                    String datoRes8=hoja.getCell(14,fila).getContents();
+                    String datoRes9=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+                    if(!datoRes1.isEmpty() && !datoRes2.isEmpty() && !datoRes3.isEmpty() && !datoRes4.isEmpty() && !datoRes5.isEmpty() && !datoRes6.isEmpty() && !datoRes7.isEmpty() && !datoRes8.isEmpty() && !datoRes9.isEmpty()){
                     
-                    //altura
-                    Double alturaPef=Double.parseDouble(hoja.getCell(3,fila).getContents());
-                    String unidadMedidaAlturaPef=hoja.getCell(4,fila).getContents();
+                        try{
+                        
+                            Date fechaSalidaCampoPerf=oF.Fecha(hoja.getCell(0,fila).getContents());
 
-                    //conglomerado
-                    String codigoConglomeradoPef=hoja.getCell(5,fila).getContents();
+                            //altura
+                            Double alturaPef=Double.parseDouble(hoja.getCell(3,fila).getContents());
+                            String unidadMedidaAlturaPef=hoja.getCell(4,fila).getContents();
 
-                    //parcela
-                    String codigoParcelaPef=hoja.getCell(8,fila).getContents();
+                            //conglomerado
+                            String codigoConglomeradoPef=hoja.getCell(5,fila).getContents();
 
-                    //purfundidad
-                    Double profundidadMinimaPef=Double.parseDouble(hoja.getCell(12,fila).getContents());
-                    Double profundidadMaximaPef=Double.parseDouble(hoja.getCell(13,fila).getContents());
-                    String unidadMedidaProfundidadPef=hoja.getCell(14,fila).getContents();
-                    
-                    
+                            //parcela
+                            String codigoParcelaPef=hoja.getCell(8,fila).getContents();
+
+                            //purfundidad
+                            Double profundidadMinimaPef=Double.parseDouble(hoja.getCell(12,fila).getContents());
+                            Double profundidadMaximaPef=Double.parseDouble(hoja.getCell(13,fila).getContents());
+                            String unidadMedidaProfundidadPef=hoja.getCell(14,fila).getContents();
+
+                            dato=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+
+                            String valorPef=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
+
+                            List<DatoRecolectado> listaDatoRecolectadoRepetidos=service.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
+                                alturaPef,
+                                true,
+                                unidadMedidaAlturaPef,
+                                codigoConglomeradoPef,
+                                true,
+                                oC1.getIdProyecto(),
+                                codigoParcelaPef,
+                                true,
+                                profundidadMinimaPef, 
+                                profundidadMaximaPef,
+                                true,
+                                unidadMedidaProfundidadPef,
+                                fechaSalidaCampoPerf,
+                                variableEncontrada.getIdVariableUnidadMedida(),
+                                valorPef,
+                                true);
+
+                            if(!listaDatoRecolectadoRepetidos.isEmpty()){
+                                contadorRepetidos++;
+                                valoresUnicos.add(fila);
+                            }
+                        }catch(Exception e){
+                            System.out.println("Error: "+e);
+                        }
+                        
+                    }
                     
                     
                     dato=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
-                    String valorPef=hoja.getCell(variableEncontrada.getNumeroColumna()-1,fila).getContents();
-                    
-                    List<DatoRecolectado> listaDatoRecolectadoRepetidos=service.findByDatasetProfundidadParcelaParcelaConglomeradoAlturaAlturaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoAlturaUnidadMedidaAbreviaturaAndDatasetProfundidadParcelaParcelaConglomeradoCodigoConglomeradoAndDatasetProfundidadParcelaParcelaConglomeradoVigenciaAndDatasetProfundidadParcelaParcelaConglomeradoProyectoInvestigacionIdProyectoAndDatasetProfundidadParcelaParcelaCodigoParcelaAndDatasetProfundidadParcelaParcelaVigenciaAndDatasetProfundidadParcelaProfundidadProfundidadMinimaAndDatasetProfundidadParcelaProfundidadProfundidadMaximaAndDatasetProfundidadParcelaProfundidadVigenciaAndDatasetProfundidadParcelaProfundidadUnidadMedidaAbreviaturaAndDatasetFechaSalidaCampoAndVariableUnidadMedidaIdVariableUnidadMedidaAndValorAndVigencia(
-                        alturaPef,
-                        true,
-                        unidadMedidaAlturaPef,
-                        codigoConglomeradoPef,
-                        true,
-                        oC1.getIdProyecto(),
-                        codigoParcelaPef,
-                        true,
-                        profundidadMinimaPef, 
-                        profundidadMaximaPef,
-                        true,
-                        unidadMedidaProfundidadPef,
-                        fechaSalidaCampoPerf,
-                        variableEncontrada.getIdVariableUnidadMedida(),
-                        valorPef,
-                        true);
-                    
-                    if(!listaDatoRecolectadoRepetidos.isEmpty()){
-                        contadorRepetidos++;
-                        valoresUnicos.add(fila);
-                    }
-
                 
                     if(dato.equals("")){
                         contadorFaltantes++;
